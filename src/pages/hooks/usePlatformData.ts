@@ -89,7 +89,13 @@ export function usePlatformData(): PlatformDataState {
         return
       }
 
-      setProfile(profileResult.data)
+      const resolvedProfile: ExplorerProfile = {
+        ...profileResult.data,
+        totalXp: xpResult.data.totalXp,
+        rank: xpResult.data.rank,
+      }
+
+      setProfile(resolvedProfile)
       setProgress(progressResult.data)
       setXpSummary(xpResult.data)
       setAchievements(achievementsResult.ok ? achievementsResult.data : [])

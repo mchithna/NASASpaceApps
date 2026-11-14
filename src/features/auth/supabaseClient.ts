@@ -89,6 +89,11 @@ export function getSupabaseConfig(): SupabaseConfig {
   return { supabaseUrl, supabaseAnonKey }
 }
 
+export function isSupabaseConfigured(): boolean {
+  const config = getSupabaseConfig()
+  return Boolean(config.supabaseUrl && config.supabaseAnonKey)
+}
+
 const sessionStoragePrefix = 'novaexplorer.auth.session:'
 
 function sessionStorageKey(url: string): string {

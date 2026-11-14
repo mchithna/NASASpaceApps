@@ -11,7 +11,7 @@ import { createProgressService } from './progress/progressService.ts'
 import { createRewardsService } from './achievements/rewardsService.ts'
 
 export { createAuthService } from './auth/authService.ts'
-export { getSupabaseClient, SupabaseClient } from './auth/supabaseClient.ts'
+export { getSupabaseClient, SupabaseClient, isSupabaseConfigured } from './auth/supabaseClient.ts'
 export { createExplorerService } from './profiles/explorerService.ts'
 export { createProgressService } from './progress/progressService.ts'
 export { createRewardsService } from './achievements/rewardsService.ts'

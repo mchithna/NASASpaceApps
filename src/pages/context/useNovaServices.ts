@@ -18,6 +18,8 @@ export function useNovaServices(): PlatformServicesContextValue {
   return {
     services: defaultMockServices,
     currentPersona: 'registered',
+    isLive: false,
+    isConfigured: false,
     switchPersona: () => {
       // Standalone fallback: switching requires a PlatformServicesProvider
     },

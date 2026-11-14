@@ -10,9 +10,11 @@ import {
   StatCard,
   StatusBanner,
 } from '@/pages/components/index.ts'
+import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function DashboardPage() {
+  const { isLive } = useNovaServices()
   const {
     session,
     profile,
@@ -108,7 +110,7 @@ export function DashboardPage() {
               Mission Telemetry
             </h2>
             <span className="text-xs text-muted">
-              Live mock services telemetry
+              {isLive ? 'Operational telemetry' : 'Live mock services telemetry'}
             </span>
           </div>
 

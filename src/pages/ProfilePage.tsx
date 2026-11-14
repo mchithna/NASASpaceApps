@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { LogOut } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
+import { Button } from '@/components/ui/Button.tsx'
 import { Card } from '@/components/ui/Card.tsx'
 import { ProgressBar } from '@/components/ui/ProgressBar.tsx'
 import { type AvatarId, isAvatarId } from '@/contracts/explorer.ts'
@@ -15,6 +17,7 @@ import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function ProfilePage() {
+  const navigate = useNavigate()
   const { services } = useNovaServices()
   const { session, profile, progress, isLoading, error, refresh } =
     usePlatformData()
@@ -24,8 +27,21 @@ export function ProfilePage() {
   }, [])
 
   const [isSaving, setIsSaving] = useState(false)
+  const [isSigningOut, setIsSigningOut] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true)
+    try {
+      await services.auth.signOut()
+      navigate('/')
+    } catch {
+      setErrorMessage('Failed to sign out of explorer session.')
+    } finally {
+      setIsSigningOut(false)
+    }
+  }
 
   const handleSaveProfile = async ({
     nickname: nextNickname,
@@ -236,6 +252,45 @@ export function ProfilePage() {
               setSuccessMessage(null)
             }}
           />
+        ) : null}
+
+        {/* Account & Session Management Card */}
+        {session && session.status !== 'signed-out' ? (
+          <Card variant="standard" className="p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-1">
+                <h3 className="font-heading text-lg font-semibold text-foreground">
+                  {isGuest ? 'Guest Session Controls' : 'Explorer Account Session'}
+                </h3>
+                <p className="text-xs text-secondary">
+                  {isGuest
+                    ? 'Operating under anonymous guest session. Progress is held in device memory.'
+                    : 'Authenticated with academy credentials. Exploration progress is preserved.'}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                {isGuest ? (
+                  <Link
+                    to="/auth"
+                    className="inline-flex min-h-9 items-center justify-center rounded-control bg-science px-3.5 py-1.5 text-xs font-semibold text-on-bright transition-colors hover:brightness-110 focus-visible:outline-2 focus-visible:outline-focus"
+                  >
+                    Register Account
+                  </Link>
+                ) : null}
+
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={handleSignOut}
+                  loading={isSigningOut}
+                >
+                  <LogOut className="size-3.5 mr-1.5" aria-hidden="true" />
+                  <span>{isGuest ? 'End Guest Session' : 'Sign Out'}</span>
+                </Button>
+              </div>
+            </div>
+          </Card>
         ) : null}
       </div>
     </PageShell>

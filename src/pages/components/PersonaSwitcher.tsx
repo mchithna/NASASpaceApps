@@ -9,9 +9,9 @@ const personas: { id: MockPersona; label: string }[] = [
 ]
 
 export function PersonaSwitcher() {
-  const { currentPersona, switchPersona } = useNovaServices()
+  const { currentPersona, switchPersona, isLive } = useNovaServices()
 
-  if (currentPersona === 'custom') {
+  if (Boolean(import.meta.env.PROD) || isLive || currentPersona === 'custom') {
     return null
   }
 

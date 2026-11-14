@@ -154,7 +154,7 @@ export function OnboardingPage() {
         <StatusBanner
           variant="info"
           title="Guest Explorer Mode"
-          message="Your callsign, avatar, and completed discoveries are stored in memory for this session. You can upgrade to a permanent account at any time from the sign-in portal."
+          message="Your callsign, avatar, and completed discoveries are stored in memory for this session. Anonymous guest sessions cannot be recovered if browser data is cleared. You can upgrade to a permanent account at any time from the sign-in portal."
         />
       ) : null}
 

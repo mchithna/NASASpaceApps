@@ -8,6 +8,8 @@ import {
 export type PlatformServicesContextValue = {
   services: NovaServices
   currentPersona: MockPersona | 'custom'
+  isLive: boolean
+  isConfigured: boolean
   switchPersona: (persona: MockPersona) => void
 }
 
