@@ -109,4 +109,62 @@ describe('Player Systems End-to-End Programmatic Integration Tests', () => {
     const finalSession = await services.auth.getSession()
     expect(finalSession.ok && finalSession.data.status).toBe('signed-out')
   })
+
+  it('enforces multi-user isolation and prevents cross-user state leaks', async () => {
+    const services = createPlayerServices()
+
+    // Explorer 1 signs in as guest
+    await services.auth.startGuestSession()
+    await services.explorer.saveProfile({ nickname: 'Explorer One', avatarId: 'cadet-1' })
+    await services.progress.saveCheckpoint({ missionId: 'opportunity', checkpointId: 'landing' })
+    await services.rewards.grantMilestone({ missionId: 'opportunity', milestoneId: 'introduction' })
+
+    const summary1 = await services.rewards.getXpSummary()
+    expect(summary1.ok && summary1.data.totalXp).toBe(20)
+
+    // Explorer 1 signs out
+    await services.auth.signOut()
+
+    // Explorer 2 starts session
+    await services.auth.startGuestSession()
+    const profile2 = await services.explorer.getProfile()
+    expect(profile2.ok && profile2.data.nickname).toBe('Guest Cadet')
+
+    const summary2 = await services.rewards.getXpSummary()
+    expect(summary2.ok && summary2.data.totalXp).toBe(0)
+
+    const progress2 = await services.progress.getMissionProgress('opportunity')
+    expect(progress2.ok && progress2.data.status).toBe('not_started')
+
+    const achievements2 = await services.rewards.listAchievements()
+    expect(achievements2.ok && achievements2.data.every((a) => a.unlockedAt === null)).toBe(true)
+  })
+
+  it('rejects caller attempts to inject or inflate XP through profile mutations', async () => {
+    const services = createPlayerServices()
+    await services.auth.startGuestSession()
+
+    // Attempting to pass forbidden fields (simulating malicious JS payload)
+    const maliciousPayload = {
+      nickname: 'WhiteHatCadet',
+      avatarId: 'cadet-3',
+      totalXp: 99999, // Injected field
+      rank: 'legacy-guardian', // Injected field
+    }
+
+    // Save profile with sanitized contract (cast as never to simulate raw runtime JSON injection)
+    const updateRes = await services.explorer.saveProfile(
+      maliciousPayload as never,
+    )
+    expect(updateRes.ok).toBe(true)
+
+    // Verify total XP is unchanged and still authoritative (0 XP)
+    const profile = await services.explorer.getProfile()
+    expect(profile.ok).toBe(true)
+    if (profile.ok) {
+      expect(profile.data.nickname).toBe('WhiteHatCadet')
+      expect(profile.data.totalXp).toBe(0)
+      expect(profile.data.rank.name).toBe('Space Cadet')
+    }
+  })
 })

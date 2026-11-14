@@ -204,4 +204,56 @@ describe('RewardsService Implementation and Idempotency Tests', () => {
     expect(summary2.ok && summary2.data.totalXp).toBe(0)
     expect(summary2.ok && summary2.data.events).toHaveLength(0)
   })
+
+  it('handles concurrent milestone grant requests idempotently without inflating XP', async () => {
+    const auth = createAuthService()
+    await auth.startGuestSession()
+    const rewards = createRewardsService({ auth })
+
+    const [res1, res2, res3] = await Promise.all([
+      rewards.grantMilestone({ missionId: 'opportunity', milestoneId: 'introduction' }),
+      rewards.grantMilestone({ missionId: 'opportunity', milestoneId: 'introduction' }),
+      rewards.grantMilestone({ missionId: 'opportunity', milestoneId: 'introduction' }),
+    ])
+
+    expect(res1.ok && res2.ok && res3.ok).toBe(true)
+    const awards = [res1, res2, res3].filter((r) => r.ok && r.data.awarded)
+    expect(awards).toHaveLength(1)
+
+    const summary = await rewards.getXpSummary()
+    expect(summary.ok).toBe(true)
+    if (summary.ok) {
+      expect(summary.data.totalXp).toBe(20)
+      expect(summary.data.events).toHaveLength(1)
+    }
+  })
+
+  it('caps total XP at 500 across all five missions and reaches Legacy Guardian rank', async () => {
+    const auth = createAuthService()
+    await auth.startGuestSession()
+    const rewards = createRewardsService({ auth })
+    const missions = ['surveyor-3', 'opportunity', 'ingenuity', 'insight', 'pioneer-10'] as const
+    const milestones = ['introduction', 'activity', 'discovery', 'legacy'] as const
+
+    for (const missionId of missions) {
+      for (const milestoneId of milestones) {
+        const res = await rewards.grantMilestone({ missionId, milestoneId })
+        expect(res.ok).toBe(true)
+        if (res.ok) {
+          expect(res.data.awarded).toBe(true)
+        }
+      }
+    }
+
+    const summary = await rewards.getXpSummary()
+    expect(summary.ok).toBe(true)
+    if (summary.ok) {
+      expect(summary.data.totalXp).toBe(500)
+      expect(summary.data.events).toHaveLength(20)
+      expect(summary.data.rank.level).toBe(6)
+      expect(summary.data.rank.name).toBe('Legacy Guardian')
+      expect(summary.data.rank.nextRankId).toBeNull()
+      expect(summary.data.rank.xpUntilNextRank).toBeNull()
+    }
+  })
 })
