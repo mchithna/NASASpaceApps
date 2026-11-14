@@ -6,6 +6,7 @@ export type PlatformServicesContextValue = {
   services: NovaServices
   currentPersona: MockPersona | 'custom'
   isLive: boolean
+  isAcceptance?: boolean
   isConfigured: boolean
   switchPersona: (persona: MockPersona) => void
 }

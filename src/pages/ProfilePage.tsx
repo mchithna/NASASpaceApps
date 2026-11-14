@@ -18,7 +18,7 @@ import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function ProfilePage() {
   const navigate = useNavigate()
-  const { services, isLive } = useNovaServices()
+  const { services, isLive, isAcceptance } = useNovaServices()
   const { session, profile, progress, isLoading, error, refresh } =
     usePlatformData()
 
@@ -144,7 +144,7 @@ export function ProfilePage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  {isLive
+                  {isAcceptance ? 'Isolated training profile and rewards are saved in this browser tab. They are not real account data.' : isLive
                     ? 'Guest mission progress is saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is separate from registered account progress.'
                     : 'Development mock visit. Guest progress and profile changes stay in memory and reset on refresh.'}
                 </p>
@@ -264,7 +264,7 @@ export function ProfilePage() {
                 </h3>
                 <p className="text-xs text-secondary">
                   {isGuest
-                    ? isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
+                    ? isAcceptance ? 'Isolated test progress is saved in this browser tab.' : isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
                     : 'Authenticated with academy credentials. Exploration progress is preserved.'}
                 </p>
               </div>

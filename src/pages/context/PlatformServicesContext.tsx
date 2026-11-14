@@ -13,6 +13,7 @@ export type PlatformServicesProviderProps = {
   services?: NovaServices
   initialPersona?: MockPersona
   isLive?: boolean
+  acceptanceMode?: boolean
 }
 
 let sharedPlayerServices: NovaServices | null = null
@@ -24,7 +25,7 @@ function getSharedPlayerServices(): NovaServices {
   return sharedPlayerServices
 }
 
-function DevModeBanner() {
+function DevModeBanner({ acceptanceMode }: { acceptanceMode: boolean }) {
   return (
     <aside
       aria-label="Development Mode Notice"
@@ -36,9 +37,15 @@ function DevModeBanner() {
             Dev Mock Mode
           </span>
           <span className="text-secondary">
-            Supabase credentials not configured in{' '}
-            <code className="text-foreground">.env.local</code>. Running with
-            in-memory mock services.
+            {acceptanceMode ? (
+              'Explicit acceptance fixture. Local tab storage only; no Supabase connection.'
+            ) : (
+              <>
+                Supabase credentials not configured in{' '}
+                <code className="text-foreground">.env.local</code>. Running
+                with in-memory mock services.
+              </>
+            )}
           </span>
         </div>
         <span className="text-[11px] text-muted">
@@ -58,6 +65,7 @@ export function PlatformServicesProvider({
   services: explicitServices,
   initialPersona = 'registered',
   isLive: explicitIsLive,
+  acceptanceMode = false,
 }: PlatformServicesProviderProps) {
   if (
     import.meta.env.PROD &&
@@ -101,6 +109,7 @@ export function PlatformServicesProvider({
         services: explicitServices,
         currentPersona: 'custom',
         isLive: isLiveMode,
+        isAcceptance: import.meta.env.DEV && acceptanceMode,
         isConfigured: isLiveMode,
         switchPersona: (nextPersona: MockPersona) => {
           setCurrentPersona(nextPersona)
@@ -143,6 +152,7 @@ export function PlatformServicesProvider({
     }
   }, [
     explicitServices,
+    acceptanceMode,
     isLiveMode,
     isConfigured,
     mockServicesInstance,
@@ -151,7 +161,9 @@ export function PlatformServicesProvider({
 
   return (
     <PlatformServicesContext.Provider value={value}>
-      {import.meta.env.DEV && !value.isLive ? <DevModeBanner /> : null}
+      {import.meta.env.DEV && !value.isLive ? (
+        <DevModeBanner acceptanceMode={acceptanceMode} />
+      ) : null}
       {children}
     </PlatformServicesContext.Provider>
   )

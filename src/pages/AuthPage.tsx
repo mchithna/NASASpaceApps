@@ -15,7 +15,7 @@ const demoCredentials = import.meta.env.DEV ? (await import('@/mocks/fixtures.ts
 
 export function AuthPage() {
   const navigate = useNavigate()
-  const { services, isLive } = useNovaServices()
+  const { services, isLive, isAcceptance } = useNovaServices()
 
   useEffect(() => {
     document.title = 'Sign In · NovaExplorer'
@@ -186,7 +186,7 @@ export function AuthPage() {
         <StatusBanner
           variant="info"
           title="Prototype Notice"
-          message="Development mock services operate in memory. Profiles and progress reset on refresh and are not saved to an account."
+          message={isAcceptance ? 'Explicit isolated acceptance fixture. Guest progress persists in this tab; registered sign-in is disabled and no real account data is saved.' : 'Development mock services operate in memory. Profiles and progress reset on refresh and are not saved to an account.'}
         />
       )}
 

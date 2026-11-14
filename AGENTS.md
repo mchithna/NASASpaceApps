@@ -150,6 +150,12 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Phase 4B Step 6 adds an explicitly isolated development acceptance fixture and
+Playwright viewport/production checks. See `docs/PHASE4B_ACCEPTANCE_REPORT.md` for
+actual results. Live Supabase acceptance remains blocked: the connector exposes no
+organizations/projects, including after the NOVA nickname was supplied. Do not freeze
+contracts or tag a release until the report's live gates are closed.
+
 Phase 4B Step 5 security hardening is prepared. Read `docs/PHASE4B_SECURITY_AUDIT.md`
 for evidence, fixes, and open gates. The security migration is local only; hosted
 JWT/RLS verification, independent-connection contention, and browser acceptance

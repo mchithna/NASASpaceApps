@@ -4,7 +4,12 @@
  * The mock lives on this component instance. A browser reload drops it.
  */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { useNovaServices } from '@/pages/context/useNovaServices.ts'
+import { acceptanceEnabled } from '@/engine/training/acceptanceServices.ts'
+import { LoadingState } from '@/components/ui/LoadingState.tsx'
+import { ErrorState } from '@/components/ui/ErrorState.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
 import { createMockServices } from '@/mocks/createMockServices.ts'
@@ -17,6 +22,75 @@ import {
 } from '@/engine/training/trainingSimulator.ts'
 
 export function TrainingSimulatorPreview() {
+  return acceptanceEnabled() ? <IntegratedTraining /> : <StandaloneTraining />
+}
+
+function IntegratedTraining() {
+  const { services } = useNovaServices()
+  const navigate = useNavigate()
+  const [module] = useState(createTrainingSimulator)
+  const [runtime] = useState(() => createServiceRuntime(services, module))
+  const [progress, setProgress] = useState<MissionRuntimeState | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loaded, setLoaded] = useState(false)
+  const [attempt, setAttempt] = useState(0)
+  const [activities] = useState(() => {
+    const result = createTrainingActivities()
+    if (!result.ok) throw new Error('Training activity registration failed')
+    return result.value
+  })
+  useEffect(() => {
+    let active = true
+    void runtime
+      .loadProgress(module.mission.id)
+      .then((result) => {
+        if (!active) return
+        if (result.ok) {
+          setProgress(result.data)
+          setError(null)
+        } else setError(result.error.message)
+        setLoaded(true)
+      })
+      .catch(() => {
+        if (active) {
+          setError('Training progress could not be loaded.')
+          setLoaded(true)
+        }
+      })
+    return () => {
+      active = false
+    }
+  }, [runtime, module, attempt])
+  return (
+    <div className="mx-auto flex max-w-5xl flex-col gap-4 p-4">
+      <p>
+        {trainingSimulatorLabel} Isolated acceptance fixture; not saved to a
+        real account.
+      </p>
+      {!loaded ? (
+        <LoadingState label="Loading isolated training" />
+      ) : error ? (
+        <>
+          <ErrorState message={error} />
+          <Button onClick={() => setAttempt((value) => value + 1)}>
+            Retry training
+          </Button>
+        </>
+      ) : (
+        <MissionPlayer
+          key={attempt}
+          module={module}
+          runtime={runtime}
+          activities={activities}
+          progress={progress}
+          onExit={() => navigate('/dashboard')}
+        />
+      )}
+    </div>
+  )
+}
+
+function StandaloneTraining() {
   const [services] = useState(() => createMockServices({ persona: 'guest' }))
   const [runtime] = useState(() => createServiceRuntime(services))
   const [activities] = useState(() => {

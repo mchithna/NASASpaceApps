@@ -12,11 +12,13 @@ import { MissionPlayerPage } from '@/pages/MissionPlayerPage.tsx'
 import { NotFoundPage } from '@/pages/NotFoundPage.tsx'
 import { OnboardingPage } from '@/pages/OnboardingPage.tsx'
 import { ProfilePage } from '@/pages/ProfilePage.tsx'
+import { LoadingState } from '@/components/ui/LoadingState.tsx'
 
 const devRoutes: RouteObject[] = import.meta.env.DEV
   ? [
       {
         path: '/dev/training-simulator',
+        hydrateFallbackElement: <LoadingState label="Loading training simulator" />,
         lazy: async () => {
           const { TrainingSimulatorPreview } =
             await import('@/engine/training/TrainingSimulatorPreview.tsx')
@@ -25,6 +27,7 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
       },
       {
         path: '/dev/components',
+        hydrateFallbackElement: <LoadingState label="Loading component preview" />,
         lazy: async () => {
           const { ComponentShowcasePage } =
             await import('@/pages/ComponentShowcasePage.tsx')

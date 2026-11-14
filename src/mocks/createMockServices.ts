@@ -57,6 +57,9 @@ export type MockServicesOptions = {
   persona?: MockPersona
   /** ISO timestamp factory. Defaults to a fixed clock. */
   clock?: () => string
+  /** Explicit dev/test fixture hydration. Never use for production accounts. */
+  guestSeed?: MockExplorerSeed
+  onGuestChange?: (seed: MockExplorerSeed, active: boolean) => void
 }
 
 type Bucket = {
@@ -158,7 +161,7 @@ export function createMockServices(
 ): NovaServices {
   const clock = options.clock ?? (() => mockTime)
   const persona = options.persona ?? 'signed-out'
-  const guest = bucketFromSeed(createGuestSeed())
+  const guest = bucketFromSeed(options.guestSeed ?? createGuestSeed())
   const accounts: Account[] = [
     {
       email: mockRegisteredCredentials.email,
@@ -169,6 +172,20 @@ export function createMockServices(
   const listeners = new Set<AuthListener>()
 
   let session: AuthSession = initialSession(persona, guest, accounts[0])
+  function publishGuest(): void {
+    options.onGuestChange?.(
+      {
+        profile: copy(guest.profile),
+        progress: copy([...guest.progress.values()]),
+        rewards: copy(guest.rewards),
+        journal: copy(guest.journal),
+        unlockedAchievements: [...guest.achievements].map(
+          ([achievementId, unlockedAt]) => ({ achievementId, unlockedAt }),
+        ),
+      },
+      session.status === 'guest',
+    )
+  }
 
   function publish(): void {
     const snapshot = cloneSession(session)
@@ -179,6 +196,7 @@ export function createMockServices(
 
   function setSession(next: AuthSession): AuthSession {
     session = next
+    publishGuest()
     publish()
     return cloneSession(session)
   }
@@ -290,6 +308,7 @@ export function createMockServices(
     }
     bucket.rewards.push(event)
     const { totalXp, rank } = applyXp(bucket, at)
+    if (bucket === guest) publishGuest()
 
     return {
       awarded: true,
@@ -315,6 +334,7 @@ export function createMockServices(
     }
 
     bucket.achievements.set(achievementId, at)
+    if (bucket === guest) publishGuest()
     return {
       awarded: true as const,
       unlock: { achievementId, unlockedAt: at },
@@ -490,6 +510,7 @@ export function createMockServices(
         avatarId,
         updatedAt: clock(),
       }
+      if (gate.bucket === guest) publishGuest()
 
       return serviceOk(copy(gate.bucket.profile))
     },
@@ -583,6 +604,7 @@ export function createMockServices(
         updatedAt: clock(),
       }
       gate.bucket.progress.set(parsed.data, next)
+      if (gate.bucket === guest) publishGuest()
       return serviceOk(copy(next))
     },
 
@@ -756,6 +778,7 @@ export function createMockServices(
         contentStatus: 'placeholder',
       }
       gate.bucket.journal.push(entry)
+      if (gate.bucket === guest) publishGuest()
 
       return serviceOk({ awarded: true, entry: copy(entry) })
     },

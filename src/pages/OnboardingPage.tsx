@@ -18,7 +18,7 @@ import { useNovaServices } from '@/pages/context/index.ts'
 
 export function OnboardingPage() {
   const navigate = useNavigate()
-  const { services, isLive } = useNovaServices()
+  const { services, isLive, isAcceptance } = useNovaServices()
 
   useEffect(() => {
     document.title = 'Explorer Setup · NovaExplorer'
@@ -154,7 +154,7 @@ export function OnboardingPage() {
         <StatusBanner
           variant="info"
           title="Guest Explorer Mode"
-          message={isLive
+          message={isAcceptance ? 'Isolated guest fixture. Profile and training progress are stored in this tab only, with no real account writes.' : isLive
             ? 'Guest mission progress and discoveries are saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is not copied to a registered account.'
             : 'Development mock visit. Your guest profile, progress, and discoveries stay in memory and reset on refresh.'}
         />

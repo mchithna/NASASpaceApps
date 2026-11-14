@@ -14,7 +14,7 @@ import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function DashboardPage() {
-  const { isLive } = useNovaServices()
+  const { isLive, isAcceptance } = useNovaServices()
   const {
     session,
     profile,
@@ -90,7 +90,7 @@ export function DashboardPage() {
           <StatusBanner
             variant="info"
             title="Guest Session Active"
-            message={isLive
+            message={isAcceptance ? 'Isolated training fixture saved in this browser tab. Synthetic rewards are separate from real account progress.' : isLive
               ? 'Guest progress and discoveries are saved in this browser tab. Closing the tab or clearing browser data can remove them. Guest progress is separate from account progress.'
               : 'Development mock visit. Guest progress is kept in memory and resets on refresh.'}
           />
