@@ -10,3 +10,7 @@ export {
   type StatusBannerVariant,
 } from '@/pages/components/StatusBanner.tsx'
 export { PersonaSwitcher } from '@/pages/components/PersonaSwitcher.tsx'
+export {
+  MissionCardPreview,
+  type MissionCardPreviewProps,
+} from '@/pages/components/MissionCardPreview.tsx'
