@@ -150,6 +150,11 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Phase 4B Step 5 security hardening is prepared. Read `docs/PHASE4B_SECURITY_AUDIT.md`
+for evidence, fixes, and open gates. The security migration is local only; hosted
+JWT/RLS verification, independent-connection contention, and browser acceptance
+remain unverified. Do not mark the deployment security gate complete from source alone.
+
 Phase 4B Step 4 integration code is prepared. The mission player consumes the provider's
 real progress/reward boundary through a validated adapter; package-local chapter exports
 are loaded without router changes. The five factual chapters remain unbuilt. The new

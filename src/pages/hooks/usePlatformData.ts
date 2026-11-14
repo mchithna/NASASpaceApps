@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { AuthSession } from '@/contracts/auth.ts'
 import type { ExplorerProfile } from '@/contracts/explorer.ts'
-import type { MissionProgressOverview, MissionProgress } from '@/contracts/progress.ts'
+import type {
+  MissionProgressOverview,
+  MissionProgress,
+} from '@/contracts/progress.ts'
 import type { ServiceError } from '@/contracts/result.ts'
 import type {
   AchievementRecord,
@@ -24,18 +27,33 @@ export type PlatformDataState = {
 
 export function usePlatformData(): PlatformDataState {
   const { services } = useNovaServices()
+  const requestVersion = useRef(0)
   const [session, setSession] = useState<AuthSession | null>(null)
   const [profile, setProfile] = useState<ExplorerProfile | null>(null)
   const [progress, setProgress] = useState<MissionProgressOverview | null>(null)
   const [xpSummary, setXpSummary] = useState<XpSummary | null>(null)
-  const [achievements, setAchievements] = useState<readonly AchievementRecord[]>([])
-  const [journalEntries, setJournalEntries] = useState<readonly JournalEntry[]>([])
+  const [achievements, setAchievements] = useState<
+    readonly AchievementRecord[]
+  >([])
+  const [journalEntries, setJournalEntries] = useState<readonly JournalEntry[]>(
+    [],
+  )
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<ServiceError | null>(null)
 
   const fetchAll = useCallback(async () => {
+    const version = ++requestVersion.current
+    setError(null)
+    setIsLoading(true)
+    setSession(null)
+    setProfile(null)
+    setProgress(null)
+    setXpSummary(null)
+    setAchievements([])
+    setJournalEntries([])
     try {
       const sessionResult = await services.auth.getSession()
+      if (version !== requestVersion.current) return
       if (!sessionResult.ok) {
         setError(sessionResult.error)
         setIsLoading(false)
@@ -70,6 +88,7 @@ export function usePlatformData(): PlatformDataState {
         services.rewards.listAchievements(),
         services.rewards.listJournalEntries(),
       ])
+      if (version !== requestVersion.current) return
 
       if (!profileResult.ok) {
         setError(profileResult.error)
@@ -113,6 +132,7 @@ export function usePlatformData(): PlatformDataState {
       setJournalEntries(journalResult.data)
       setIsLoading(false)
     } catch {
+      if (version !== requestVersion.current) return
       setError({
         code: 'unavailable',
         message: 'Unable to connect to NovaExplorer services.',
@@ -144,6 +164,7 @@ export function usePlatformData(): PlatformDataState {
 
     return () => {
       ignore = true
+      requestVersion.current += 1
       unsubscribe()
     }
   }, [services, fetchAll])
@@ -168,18 +189,33 @@ export function useMissionProgress(missionId: string): {
   refresh: () => Promise<void>
 } {
   const { services } = useNovaServices()
+  const requestVersion = useRef(0)
   const [progress, setProgress] = useState<MissionProgress | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<ServiceError | null>(null)
 
   const fetchProgress = useCallback(async () => {
-    const result = await services.progress.getMissionProgress(missionId)
-    if (result.ok) {
-      setProgress(result.data)
-    } else {
-      setError(result.error)
+    const version = ++requestVersion.current
+    setProgress(null)
+    setError(null)
+    setIsLoading(true)
+    try {
+      const result = await services.progress.getMissionProgress(missionId)
+      if (version !== requestVersion.current) return
+      if (result.ok) {
+        setProgress(result.data)
+      } else {
+        setError(result.error)
+      }
+      setIsLoading(false)
+    } catch {
+      if (version !== requestVersion.current) return
+      setError({
+        code: 'unavailable',
+        message: 'Mission progress could not be loaded. Please retry.',
+      })
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }, [services, missionId])
 
   const refresh = useCallback(async () => {
@@ -189,25 +225,17 @@ export function useMissionProgress(missionId: string): {
   }, [fetchProgress])
 
   useEffect(() => {
-    let ignore = false
-
-    const run = async () => {
-      const result = await services.progress.getMissionProgress(missionId)
-      if (ignore) return
-      if (result.ok) {
-        setProgress(result.data)
-      } else {
-        setError(result.error)
-      }
-      setIsLoading(false)
-    }
-
-    void run()
-
+    let active = true
+    void Promise.resolve().then(() => { if (active) return fetchProgress() })
+    const unsubscribe = services.auth.subscribe(() => {
+      void fetchProgress()
+    })
     return () => {
-      ignore = true
+      active = false
+      requestVersion.current += 1
+      unsubscribe()
     }
-  }, [services, missionId])
+  }, [services, fetchProgress])
 
   return {
     progress,

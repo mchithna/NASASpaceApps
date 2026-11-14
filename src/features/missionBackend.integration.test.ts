@@ -69,6 +69,102 @@ class TestDatabaseClient extends SupabaseClient {
 }
 
 describe('trusted mission flow in isolated PostgreSQL', () => {
+  it('enforces RLS, column privileges, signed-out access, and rejects forged identifiers', async () => {
+    // Declared first but uses only the beforeAll fixture, before any gameplay.
+    const enabled = await db.query<{
+      relrowsecurity: boolean
+    }>(`SELECT relrowsecurity FROM pg_class
+      WHERE oid IN ('public.profiles'::regclass,'public.mission_progress'::regclass,'public.xp_reward_events'::regclass,
+        'public.unlocked_achievements'::regclass,'public.journal_entries'::regclass,'public.mission_scene_catalog'::regclass)`)
+    expect(enabled.rows).toHaveLength(6)
+    expect(enabled.rows.every((row) => row.relrowsecurity)).toBe(true)
+    expect(
+      (await db.query(`SELECT id FROM public.profiles WHERE id = '${other}'`))
+        .rows,
+    ).toEqual([])
+    expect(
+      (
+        await db.query(
+          `UPDATE public.profiles SET nickname = 'Attacker' WHERE id = '${other}' RETURNING id`,
+        )
+      ).rows,
+    ).toEqual([])
+    await expect(
+      db.query(
+        `INSERT INTO public.profiles(id,nickname,avatar_id) VALUES('${other}','Spoofed','cadet-1')`,
+      ),
+    ).rejects.toThrow('row-level security')
+    for (const statement of [
+      `UPDATE public.profiles SET total_xp = 500 WHERE id = '${user}'`,
+      `UPDATE public.profiles SET id = '${other}' WHERE id = '${user}'`,
+      `UPDATE public.profiles SET kind = 'guest' WHERE id = '${user}'`,
+      `DELETE FROM public.profiles WHERE id = '${other}'`,
+      `DELETE FROM public.mission_progress WHERE user_id = '${other}'`,
+      `INSERT INTO public.xp_reward_events(user_id,mission_id,milestone_id,reward_key,xp) VALUES('${user}','surveyor-3','activity','fake',500)`,
+    ])
+      await expect(db.query(statement)).rejects.toThrow('permission denied')
+    await expect(
+      db.query(
+        `UPDATE public.profiles SET nickname = 'Bad!' WHERE id = '${user}'`,
+      ),
+    ).rejects.toThrow('profile_nickname_characters')
+    await expect(
+      db.query(`SELECT public.rpc_unlock_discovery('surveyor-3','forged')`),
+    ).rejects.toThrow('Unknown mission discovery')
+    await expect(
+      db.query(`SELECT public.rpc_unlock_discovery('ingenuity','test-note')`),
+    ).rejects.toThrow('Unknown mission discovery')
+    await expect(
+      db.query(`SELECT public.rpc_unlock_achievement('forged-story')`),
+    ).rejects.toThrow('Finish the mission')
+    await expect(
+      db.query(
+        `SELECT public.rpc_grant_milestone('unknown-mission','introduction')`,
+      ),
+    ).rejects.toThrow('Unknown mission or milestone')
+    await expect(
+      db.query(
+        `SELECT public.rpc_grant_milestone('surveyor-3','activity',500)`,
+      ),
+    ).rejects.toThrow('does not exist')
+    await expect(
+      db.query(`SELECT public.rpc_complete_mission('surveyor-3', '${other}')`),
+    ).rejects.toThrow('does not exist')
+    await db.exec(
+      `SELECT set_config('request.jwt.claims','{"is_anonymous":true}',false)`,
+    )
+    expect((await db.query(`SELECT id FROM public.profiles`)).rows).toEqual([])
+    await expect(
+      db.query(
+        `INSERT INTO public.profiles(id,nickname,avatar_id) VALUES('${user}','Anon','cadet-1')`,
+      ),
+    ).rejects.toThrow('row-level security')
+    await db.exec(
+      `SELECT set_config('request.jwt.claims','{}',false); SELECT set_config('request.jwt.claim.sub','',false);`,
+    )
+    expect((await db.query(`SELECT id FROM public.profiles`)).rows).toEqual([])
+    await expect(
+      db.query(`SELECT public.rpc_complete_mission('surveyor-3')`),
+    ).rejects.toThrow('registered explorer')
+    await db.exec(`RESET ROLE; SET ROLE anon;`)
+    for (const table of [
+      'profiles',
+      'mission_progress',
+      'xp_reward_events',
+      'unlocked_achievements',
+      'journal_entries',
+    ]) {
+      await expect(db.query(`SELECT * FROM public.${table}`)).rejects.toThrow(
+        'permission denied',
+      )
+    }
+    await expect(
+      db.query(`SELECT public.rpc_grant_milestone('surveyor-3','activity')`),
+    ).rejects.toThrow('permission denied')
+    await db.exec(
+      `RESET ROLE; SET ROLE authenticated; SELECT set_config('request.jwt.claim.sub','${user}',false);`,
+    )
+  })
   beforeAll(async () => {
     db = new PGlite()
     await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
@@ -314,5 +410,21 @@ describe('trusted mission flow in isolated PostgreSQL', () => {
       discoveryId: 'test-note',
     })
     expect(discovery.ok && discovery.data.awarded).toBe(false)
+    await Promise.all(
+      Array.from({ length: 24 }, (_, index) =>
+        db.query(`SELECT public.rpc_grant_milestone('surveyor-3',$1)`, [
+          ['introduction', 'activity', 'discovery', 'legacy'][index % 4],
+        ]),
+      ),
+    )
+    expect(
+      await scalar(`SELECT (p.total_xp - coalesce(sum(e.xp),0))::int AS value FROM public.profiles p
+      LEFT JOIN public.xp_reward_events e ON e.user_id = p.id WHERE p.id = '${other}' GROUP BY p.total_xp`),
+    ).toBe(0)
+    expect(
+      await scalar(
+        `SELECT count(*)::int AS value FROM public.xp_reward_events`,
+      ),
+    ).toBe(4)
   })
 })

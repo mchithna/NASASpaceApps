@@ -7,6 +7,7 @@
 import { useRef, useState } from 'react'
 import type { ActivityCompletionEvent } from '@/contracts/missions.ts'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
+import { serviceError } from '@/contracts/result.ts'
 import { Button } from '@/components/ui/Button.tsx'
 import { Card, CardBody, CardFooter } from '@/components/ui/Card.tsx'
 import { ErrorState } from '@/components/ui/ErrorState.tsx'
@@ -141,7 +142,9 @@ function MissionPlayerSession({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [savedNotice, setSavedNotice] = useState(false)
   const [fallbackRuntime] = useState(() =>
-    services ? createServiceRuntime(services) : createTrainingRuntime(),
+    services ? createServiceRuntime(services) : import.meta.env.DEV ? createTrainingRuntime() : {
+      apply: async () => serviceError('unavailable', 'Mission services are not connected. Reload your saved place.'),
+    },
   )
   const adapter = runtime ?? fallbackRuntime
   const [activityGuard] = useState(createActivityCompletionGuard)

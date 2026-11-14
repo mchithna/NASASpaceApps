@@ -83,6 +83,8 @@ describe('mission route integration (explicit isolated services, no production s
     ).toBe(1)
     await user.click(screen.getByRole('button', { name: 'Exit mission' }))
     await screen.findByRole('heading', { name: 'Mission Control' })
+    expect(screen.getAllByText('100 XP').length).toBeGreaterThan(0)
+    expect(screen.getByText('1 / 5')).toBeInTheDocument()
     expect(resumed.router.state.location.pathname).toBe('/dashboard')
     resumed.unmount()
     open('/missions/surveyor-3', first.services)

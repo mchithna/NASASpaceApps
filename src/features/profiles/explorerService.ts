@@ -32,7 +32,9 @@ export type ExplorerServiceOptions = {
   clock?: () => string
 }
 
-export function createExplorerService(options: ExplorerServiceOptions): ExplorerService {
+export function createExplorerService(
+  options: ExplorerServiceOptions,
+): ExplorerService {
   const { auth, clock = () => new Date().toISOString() } = options
   const client = options.client ?? getSupabaseClient()
 
@@ -121,21 +123,21 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
           updatedAt: at,
         }
 
-        const inserted = await client.query('profiles', {
+        const inserted = await client.query('profiles?on_conflict=id', {
           method: 'POST',
+          headers: { Prefer: 'resolution=ignore-duplicates' },
           body: {
             id: explorerId,
             nickname: defaultProfile.nickname,
             avatar_id: defaultProfile.avatarId,
-            kind: 'registered',
-            total_xp: 0,
           },
         })
 
         if (inserted.error) {
           return serviceError(
             'unavailable',
-            inserted.error.message || 'The explorer profile could not be created.',
+            inserted.error.message ||
+              'The explorer profile could not be created.',
           )
         }
 
@@ -161,7 +163,9 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
       return serviceOk(profile)
     },
 
-    async saveProfile(input: ExplorerProfileUpdate): Promise<ServiceResult<ExplorerProfile>> {
+    async saveProfile(
+      input: ExplorerProfileUpdate,
+    ): Promise<ServiceResult<ExplorerProfile>> {
       const session = await resolveSession()
       if (!session) {
         return serviceError(
@@ -187,10 +191,7 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
       }
 
       if (input.avatarId !== undefined && !isAvatarId(input.avatarId)) {
-        return serviceError(
-          'invalid-input',
-          'Choose an avatar from the list.',
-        )
+        return serviceError('invalid-input', 'Choose an avatar from the list.')
       }
 
       const { explorerId, kind } = session.identity
@@ -209,9 +210,7 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
       }
 
       // Persist to Supabase profiles table
-      const patchBody: Record<string, unknown> = {
-        updated_at: at,
-      }
+      const patchBody: Record<string, unknown> = {}
       if (validatedNickname !== undefined) {
         patchBody['nickname'] = validatedNickname
       }
@@ -219,16 +218,26 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
         patchBody['avatar_id'] = input.avatarId
       }
 
-      const { error } = await client.query(
+      const { data, error } = await client.query<readonly { id: string }[]>(
         `profiles?id=eq.${encodeURIComponent(explorerId)}`,
         {
           method: 'PATCH',
+          headers: { Prefer: 'return=representation' },
           body: patchBody,
         },
       )
 
       if (error) {
-        return serviceError('unavailable', error.message || 'Failed to update profile.')
+        return serviceError(
+          'unavailable',
+          error.message || 'Failed to update profile.',
+        )
+      }
+      if (data?.length !== 1 || data[0]?.id !== explorerId) {
+        return serviceError(
+          'conflict',
+          'Your profile was not updated. Reload your profile and try again.',
+        )
       }
 
       return this.getProfile()

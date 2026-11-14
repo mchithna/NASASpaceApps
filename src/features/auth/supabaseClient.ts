@@ -4,6 +4,8 @@
  * Does not store passwords or service-role keys.
  */
 
+import { assertPublicSupabaseKey } from './publicKey.ts'
+
 export type SupabaseConfig = {
   supabaseUrl: string
   supabaseAnonKey: string
@@ -25,7 +27,8 @@ export type SupabaseSession = {
   user: AuthUser
 }
 
-export type AuthChangeEvent = 'SIGNED_IN' | 'SIGNED_OUT' | 'TOKEN_REFRESHED' | 'INITIAL_SESSION'
+export type AuthChangeEvent =
+  'SIGNED_IN' | 'SIGNED_OUT' | 'TOKEN_REFRESHED' | 'INITIAL_SESSION'
 
 export type SupabaseAuthListener = (
   event: AuthChangeEvent,
@@ -128,14 +131,16 @@ function readStoredSession(url: string): SupabaseSession | null {
   }
 }
 
-function sessionFromAuthPayload(payload: {
-  access_token?: string
-  token_type?: string
-  expires_in?: number
-  expires_at?: number
-  refresh_token?: string
-  user?: AuthUser
-} | null): SupabaseSession | null {
+function sessionFromAuthPayload(
+  payload: {
+    access_token?: string
+    token_type?: string
+    expires_in?: number
+    expires_at?: number
+    refresh_token?: string
+    user?: AuthUser
+  } | null,
+): SupabaseSession | null {
   if (!payload?.access_token || !payload.refresh_token || !payload.user?.id) {
     return null
   }
@@ -151,7 +156,10 @@ function sessionFromAuthPayload(payload: {
   }
 }
 
-function writeStoredSession(url: string, session: SupabaseSession | null): void {
+function writeStoredSession(
+  url: string,
+  session: SupabaseSession | null,
+): void {
   if (url.length === 0 || typeof localStorage === 'undefined') {
     return
   }
@@ -170,11 +178,16 @@ export class SupabaseClient {
   private anonKey: string
   private currentSession: SupabaseSession | null = null
   private listeners = new Set<SupabaseAuthListener>()
+  private refreshPending: Promise<SupabaseSession | null> | null = null
 
   constructor(config?: Partial<SupabaseConfig>) {
     const envConfig = getSupabaseConfig()
-    this.url = (config?.supabaseUrl ?? envConfig.supabaseUrl).replace(/\/+$/, '')
+    this.url = (config?.supabaseUrl ?? envConfig.supabaseUrl).replace(
+      /\/+$/,
+      '',
+    )
     this.anonKey = config?.supabaseAnonKey ?? envConfig.supabaseAnonKey
+    assertPublicSupabaseKey(this.anonKey)
     this.currentSession = readStoredSession(this.url)
   }
 
@@ -182,7 +195,10 @@ export class SupabaseClient {
     return Boolean(this.url && this.anonKey)
   }
 
-  setSession(session: SupabaseSession | null, event: AuthChangeEvent = 'SIGNED_IN'): void {
+  setSession(
+    session: SupabaseSession | null,
+    event: AuthChangeEvent = 'SIGNED_IN',
+  ): void {
     this.currentSession = session
     writeStoredSession(this.url, session)
     for (const listener of this.listeners) {
@@ -198,7 +214,9 @@ export class SupabaseClient {
     return this.currentSession
   }
 
-  onAuthStateChange(listener: SupabaseAuthListener): { unsubscribe: () => void } {
+  onAuthStateChange(listener: SupabaseAuthListener): {
+    unsubscribe: () => void
+  } {
     this.listeners.add(listener)
     return {
       unsubscribe: () => {
@@ -227,13 +245,30 @@ export class SupabaseClient {
       return null
     }
 
+    if (this.refreshPending) return this.refreshPending
+    this.refreshPending = this.refreshSession(current).finally(() => {
+      this.refreshPending = null
+    })
+    return this.refreshPending
+  }
+
+  private async refreshSession(
+    current: SupabaseSession,
+  ): Promise<SupabaseSession | null> {
+    const now = Math.floor(Date.now() / 1000)
     try {
-      const res = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
-        method: 'POST',
-        headers: buildApiHeaders(this.anonKey),
-        body: JSON.stringify({ refresh_token: current.refresh_token }),
-      })
+      const res = await fetch(
+        `${this.url}/auth/v1/token?grant_type=refresh_token`,
+        {
+          method: 'POST',
+          headers: buildApiHeaders(this.anonKey),
+          body: JSON.stringify({ refresh_token: current.refresh_token }),
+        },
+      )
       const json = await res.json()
+      if (this.currentSession !== current) return this.currentSession
+      if (res.status >= 500 || res.status === 429)
+        throw new Error('Session refresh is unavailable. Please retry.')
       if (!res.ok || !json.access_token || !json.refresh_token || !json.user) {
         this.setSession(null, 'SIGNED_OUT')
         return null
@@ -250,23 +285,32 @@ export class SupabaseClient {
       this.setSession(session, 'TOKEN_REFRESHED')
       return session
     } catch {
-      this.setSession(null, 'SIGNED_OUT')
-      return null
+      if (this.currentSession !== current) return this.currentSession
+      throw new Error('Session refresh is unavailable. Please retry.')
     }
   }
 
   private headers(useSession = true): Record<string, string> {
-    const accessToken = useSession ? this.currentSession?.access_token : undefined
+    const accessToken = useSession
+      ? this.currentSession?.access_token
+      : undefined
     return buildApiHeaders(this.anonKey, accessToken)
   }
 
   // --- Auth API ---
-  async signUp(body: { email: string; password: string; data?: Record<string, unknown> }): Promise<{
+  async signUp(body: {
+    email: string
+    password: string
+    data?: Record<string, unknown>
+  }): Promise<{
     data: { user: AuthUser | null; session: SupabaseSession | null } | null
     error: { message: string; status?: number } | null
   }> {
     if (!this.isConfigured) {
-      return { data: null, error: { message: 'Supabase client is not configured.' } }
+      return {
+        data: null,
+        error: { message: 'Supabase client is not configured.' },
+      }
     }
     try {
       const res = await fetch(`${this.url}/auth/v1/signup`, {
@@ -276,15 +320,29 @@ export class SupabaseClient {
       })
       const json = await res.json()
       if (!res.ok) {
-        return { data: null, error: { message: json.msg || json.message || 'Sign up failed', status: res.status } }
+        return {
+          data: null,
+          error: {
+            message: json.msg || json.message || 'Sign up failed',
+            status: res.status,
+          },
+        }
       }
       const session = sessionFromAuthPayload(json.session ?? json)
       if (session) {
         this.setSession(session, 'SIGNED_IN')
       }
-      return { data: { user: json.user ?? session?.user ?? null, session }, error: null }
+      return {
+        data: { user: json.user ?? session?.user ?? null, session },
+        error: null,
+      }
     } catch (err) {
-      return { data: null, error: { message: err instanceof Error ? err.message : 'Network error' } }
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : 'Network error',
+        },
+      }
     }
   }
 
@@ -293,7 +351,10 @@ export class SupabaseClient {
     error: { message: string; status?: number } | null
   }> {
     if (!this.isConfigured) {
-      return { data: null, error: { message: 'Supabase client is not configured.' } }
+      return {
+        data: null,
+        error: { message: 'Supabase client is not configured.' },
+      }
     }
     try {
       const res = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
@@ -303,16 +364,31 @@ export class SupabaseClient {
       })
       const json = await res.json()
       if (!res.ok) {
-        return { data: null, error: { message: json.msg || json.error_description || 'Invalid credentials', status: res.status } }
+        return {
+          data: null,
+          error: {
+            message:
+              json.msg || json.error_description || 'Invalid credentials',
+            status: res.status,
+          },
+        }
       }
       const session = sessionFromAuthPayload(json)
       if (!session) {
-        return { data: null, error: { message: 'Sign in did not return a session.' } }
+        return {
+          data: null,
+          error: { message: 'Sign in did not return a session.' },
+        }
       }
       this.setSession(session, 'SIGNED_IN')
       return { data: { user: session.user, session }, error: null }
     } catch (err) {
-      return { data: null, error: { message: err instanceof Error ? err.message : 'Network error' } }
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : 'Network error',
+        },
+      }
     }
   }
 
@@ -321,7 +397,10 @@ export class SupabaseClient {
     error: { message: string; status?: number } | null
   }> {
     if (!this.isConfigured) {
-      return { data: null, error: { message: 'Supabase client is not configured.' } }
+      return {
+        data: null,
+        error: { message: 'Supabase client is not configured.' },
+      }
     }
     try {
       const res = await fetch(`${this.url}/auth/v1/signup`, {
@@ -334,7 +413,11 @@ export class SupabaseClient {
         return {
           data: null,
           error: {
-            message: json.msg || json.message || json.error_description || 'Guest sign in failed',
+            message:
+              json.msg ||
+              json.message ||
+              json.error_description ||
+              'Guest sign in failed',
             status: res.status,
           },
         }
@@ -352,7 +435,12 @@ export class SupabaseClient {
       this.setSession(session, 'SIGNED_IN')
       return { data: { user: session.user, session }, error: null }
     } catch (err) {
-      return { data: null, error: { message: err instanceof Error ? err.message : 'Network error' } }
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : 'Network error',
+        },
+      }
     }
   }
 
@@ -372,7 +460,10 @@ export class SupabaseClient {
   }
 
   // --- RPC & REST API ---
-  async rpc<T = unknown>(fnName: string, params: Record<string, unknown> = {}): Promise<{
+  async rpc<T = unknown>(
+    fnName: string,
+    params: Record<string, unknown> = {},
+  ): Promise<{
     data: T | null
     error: { message: string; code?: string; status?: number } | null
   }> {
@@ -387,11 +478,23 @@ export class SupabaseClient {
       })
       const json = await res.json()
       if (!res.ok) {
-        return { data: null, error: { message: json.message || json.msg || 'RPC execution failed', code: json.code, status: res.status } }
+        return {
+          data: null,
+          error: {
+            message: json.message || json.msg || 'RPC execution failed',
+            code: json.code,
+            status: res.status,
+          },
+        }
       }
       return { data: json as T, error: null }
     } catch (err) {
-      return { data: null, error: { message: err instanceof Error ? err.message : 'Network error' } }
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : 'Network error',
+        },
+      }
     }
   }
 
@@ -417,25 +520,40 @@ export class SupabaseClient {
       const res = await fetch(`${this.url}/rest/v1/${endpoint}`, {
         method: options.method ?? 'GET',
         headers: customHeaders,
-        body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+        body:
+          options.body !== undefined ? JSON.stringify(options.body) : undefined,
       })
       if (res.status === 204) {
         return { data: null, error: null }
       }
       const json = await res.json()
       if (!res.ok) {
-        return { data: null, error: { message: json.message || json.msg || 'Query failed', code: json.code, status: res.status } }
+        return {
+          data: null,
+          error: {
+            message: json.message || json.msg || 'Query failed',
+            code: json.code,
+            status: res.status,
+          },
+        }
       }
       return { data: json as T, error: null }
     } catch (err) {
-      return { data: null, error: { message: err instanceof Error ? err.message : 'Network error' } }
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : 'Network error',
+        },
+      }
     }
   }
 }
 
 let defaultClient: SupabaseClient | null = null
 
-export function getSupabaseClient(config?: Partial<SupabaseConfig>): SupabaseClient {
+export function getSupabaseClient(
+  config?: Partial<SupabaseConfig>,
+): SupabaseClient {
   if (config) {
     return new SupabaseClient(config)
   }

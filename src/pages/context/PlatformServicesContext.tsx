@@ -1,12 +1,10 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import type { NovaServices } from '@/contracts/services.ts'
 import { createPlayerServices, isSupabaseConfigured } from '@/features/index.ts'
-import {
-  createMockServices,
-  type MockPersona,
-} from '@/mocks/createMockServices.ts'
+import type { MockPersona } from '@/mocks/createMockServices.ts'
 import {
   PlatformServicesContext,
+  createDevelopmentServices,
   type PlatformServicesContextValue,
 } from '@/pages/context/platformServicesContextValue.ts'
 
@@ -38,11 +36,17 @@ function DevModeBanner() {
             Dev Mock Mode
           </span>
           <span className="text-secondary">
-            Supabase credentials not configured in <code className="text-foreground">.env.local</code>. Running with in-memory mock services.
+            Supabase credentials not configured in{' '}
+            <code className="text-foreground">.env.local</code>. Running with
+            in-memory mock services.
           </span>
         </div>
         <span className="text-[11px] text-muted">
-          Setup: copy <code className="text-foreground">.env.example</code> to <code className="text-foreground">.env.local</code> and set <code className="text-foreground">VITE_SUPABASE_URL</code> and <code className="text-foreground">VITE_SUPABASE_PUBLISHABLE_KEY</code>.
+          Setup: copy <code className="text-foreground">.env.example</code> to{' '}
+          <code className="text-foreground">.env.local</code> and set{' '}
+          <code className="text-foreground">VITE_SUPABASE_URL</code> and{' '}
+          <code className="text-foreground">VITE_SUPABASE_PUBLISHABLE_KEY</code>
+          .
         </span>
       </div>
     </aside>
@@ -55,6 +59,14 @@ export function PlatformServicesProvider({
   initialPersona = 'registered',
   isLive: explicitIsLive,
 }: PlatformServicesProviderProps) {
+  if (
+    import.meta.env.PROD &&
+    (explicitIsLive === false || (explicitServices && explicitIsLive !== true))
+  ) {
+    throw new Error(
+      'Production services cannot use mock mode or an unverified override.',
+    )
+  }
   const isConfigured = isSupabaseConfigured()
 
   // Live player services are preferred:
@@ -62,8 +74,9 @@ export function PlatformServicesProvider({
   // 2. In production builds (mocks are NEVER enabled in production).
   // 3. In development when Supabase credentials are configured in .env.local.
   // When explicit mock services are injected without isLive flag (e.g. unit tests), default to false.
-  const shouldDefaultToLive =
-    explicitIsLive !== undefined
+  const shouldDefaultToLive = import.meta.env.PROD
+    ? true
+    : explicitIsLive !== undefined
       ? explicitIsLive
       : explicitServices
         ? false
@@ -74,8 +87,12 @@ export function PlatformServicesProvider({
   const [currentPersona, setCurrentPersona] =
     useState<MockPersona>(initialPersona)
   const [mockServicesInstance, setMockServicesInstance] =
-    useState<NovaServices>(() =>
-      explicitServices ?? createMockServices({ persona: initialPersona }),
+    useState<NovaServices | null>(
+      () =>
+        explicitServices ??
+        (shouldDefaultToLive
+          ? null
+          : (createDevelopmentServices?.({ persona: initialPersona }) ?? null)),
     )
 
   const value = useMemo<PlatformServicesContextValue>(() => {
@@ -102,12 +119,16 @@ export function PlatformServicesProvider({
           if (import.meta.env.DEV) {
             setIsLiveMode(false)
             setCurrentPersona(nextPersona)
-            setMockServicesInstance(createMockServices({ persona: nextPersona }))
+            setMockServicesInstance(
+              createDevelopmentServices?.({ persona: nextPersona }) ?? null,
+            )
           }
         },
       }
     }
 
+    if (!mockServicesInstance || !import.meta.env.DEV)
+      throw new Error('Mock services are development-only.')
     return {
       services: mockServicesInstance,
       currentPersona,
@@ -115,7 +136,9 @@ export function PlatformServicesProvider({
       isConfigured: false,
       switchPersona: (nextPersona: MockPersona) => {
         setCurrentPersona(nextPersona)
-        setMockServicesInstance(createMockServices({ persona: nextPersona }))
+        setMockServicesInstance(
+          createDevelopmentServices?.({ persona: nextPersona }) ?? null,
+        )
       },
     }
   }, [

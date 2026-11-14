@@ -4,13 +4,14 @@ import { KeyRound, UserPlus, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-
 import { Button } from '@/components/ui/Button.tsx'
 import { Card } from '@/components/ui/Card.tsx'
 import { Badge } from '@/components/ui/Badge.tsx'
-import { mockRegisteredCredentials } from '@/mocks/fixtures.ts'
 import { type AvatarId } from '@/contracts/explorer.ts'
 import {
   AvatarSelector,
   StatusBanner,
 } from '@/pages/components/index.ts'
 import { useNovaServices } from '@/pages/context/index.ts'
+
+const demoCredentials = import.meta.env.DEV ? (await import('@/mocks/fixtures.ts')).mockRegisteredCredentials : null
 
 export function AuthPage() {
   const navigate = useNavigate()
@@ -105,8 +106,9 @@ export function AuthPage() {
   }
 
   const handleFillDemoCredentials = () => {
-    setSignInEmail(mockRegisteredCredentials.email)
-    setSignInPassword(mockRegisteredCredentials.password)
+    if (!demoCredentials) return
+    setSignInEmail(demoCredentials.email)
+    setSignInPassword(demoCredentials.password)
     setErrorMessage(null)
   }
 
@@ -149,15 +151,15 @@ export function AuthPage() {
 
           <p className="text-sm text-secondary">
             Jump directly into spacecraft stories, analyze telemetry, and earn
-            milestones immediately. Progress is maintained in memory for this
-            browser session.
+            milestones. Guest mission progress stays in this browser tab; it is
+            separate from registered account progress.
           </p>
 
           <div className="rounded-control border border-warning/30 bg-warning/5 p-3 text-xs text-secondary flex items-start gap-2.5">
             <AlertCircle className="size-4 shrink-0 text-warning mt-0.5" aria-hidden="true" />
             <p>
               <strong className="font-semibold text-foreground">Guest Recovery Limitation:</strong>{' '}
-              Anonymous guest sessions are tied to this browser only and cannot be recovered on other devices or if browser data is cleared. Register an account to permanently safeguard your rank.
+              Anonymous guest sessions are tied to this browser only and cannot be recovered on other devices or if browser data is cleared. Creating an account does not transfer guest progress or rank.
             </p>
           </div>
 
@@ -178,13 +180,13 @@ export function AuthPage() {
         <StatusBanner
           variant="info"
           title="Academy Authorization Gateway"
-          message="Connected to NovaExplorer player systems. Explorer profiles, mission checkpoints, and achievements are saved to your account."
+          message="Registered accounts use server persistence. Guest mission progress is stored only in this browser tab and is not transferred to an account."
         />
       ) : (
         <StatusBanner
           variant="info"
           title="Prototype Notice"
-          message="Development services operate in-memory. Browser-refresh persistence is out of scope until persistent cloud database integration in Phase 4B."
+          message="Development mock services operate in memory. Profiles and progress reset on refresh and are not saved to an account."
         />
       )}
 
@@ -321,7 +323,7 @@ export function AuthPage() {
                   Sign In
                 </Button>
 
-                {!isLive ? (
+                {import.meta.env.DEV && !isLive ? (
                   <button
                     type="button"
                     onClick={handleFillDemoCredentials}
@@ -333,7 +335,7 @@ export function AuthPage() {
               </div>
 
               {/* Demo Account Box */}
-              {!isLive ? (
+              {import.meta.env.DEV && !isLive ? (
                 <div className="rounded-control border border-border bg-surface/40 p-3 text-xs text-muted">
                   <strong className="text-foreground">Pre-seeded Demo Explorer: </strong>
                   <code>nova.cadet@example.com</code> / <code>academy-demo</code> (Level 2 Lunar Explorer with 160 XP).

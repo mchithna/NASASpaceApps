@@ -14,6 +14,9 @@ export function useNovaServices(): PlatformServicesContextValue {
   if (context) {
     return context
   }
+  if (!import.meta.env.DEV || !defaultMockServices) {
+    throw new Error('NovaServices must be provided in production.')
+  }
 
   return {
     services: defaultMockServices,

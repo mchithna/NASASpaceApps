@@ -1,7 +1,8 @@
 /**
  * Hosted Supabase checks. They stay skipped during ordinary unit tests.
- * Run them only after .env.local has the project URL and publishable key:
- * VITE_SUPABASE_LIVE_TESTS=true npm test -- src/features/auth/supabaseLive.live.test.ts
+ * They require separate VITE_SUPABASE_TEST_URL / TEST_PUBLISHABLE_KEY /
+ * TEST_PROJECT_REF and TEST_ACK=isolated-test-only, plus LIVE_TESTS=true.
+ * Never fall back to the application's normal project configuration.
  * These calls create real auth users. They do not use a secret key.
  */
 
@@ -12,13 +13,16 @@ import { createExplorerService } from '@/features/profiles/explorerService.ts'
 import { createProgressService } from '@/features/progress/progressService.ts'
 import { createRewardsService } from '@/features/achievements/rewardsService.ts'
 
-const liveUrl = (import.meta.env.VITE_SUPABASE_URL ?? '').trim()
+const liveUrl = (import.meta.env.VITE_SUPABASE_TEST_URL ?? '').trim()
 const liveKey = resolveSupabaseApiKey(
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
+  import.meta.env.VITE_SUPABASE_TEST_PUBLISHABLE_KEY,
+  undefined,
 )
+const testRef = (import.meta.env.VITE_SUPABASE_TEST_PROJECT_REF ?? '').trim()
 const liveReady =
   import.meta.env.VITE_SUPABASE_LIVE_TESTS === 'true' &&
+  import.meta.env.VITE_SUPABASE_TEST_ACK === 'isolated-test-only' &&
+  testRef.length > 0 && liveUrl === `https://${testRef}.supabase.co` &&
   liveUrl.length > 0 &&
   liveKey.length > 0
 
@@ -53,7 +57,7 @@ describe.skipIf(!liveReady)('hosted Supabase player systems', () => {
     restored.setSession(null, 'SIGNED_OUT')
   })
 
-  it('creates a registered explorer, saves progress, and blocks a second XP grant', async () => {
+  it('creates isolated registered explorers, rejects unpublished progress/rewards, and isolates profiles', async () => {
     const client = hostedClient()
     const auth = createAuthService({ client })
     const explorer = createExplorerService({ auth, client })
@@ -87,26 +91,24 @@ describe.skipIf(!liveReady)('hosted Supabase player systems', () => {
 
     const saved = await progress.saveCheckpoint({
       missionId: 'surveyor-3',
-      checkpointId: 'opening',
+      checkpointId: 'security-audit-undefined',
     })
-    expect(saved.ok).toBe(true)
+    expect(saved.ok).toBe(false)
 
     const loaded = await progress.getMissionProgress('surveyor-3')
-    expect(loaded.ok && loaded.data.currentCheckpointId).toBe('opening')
+    expect(loaded.ok && loaded.data.currentCheckpointId).toBeNull()
 
     const firstGrant = await rewards.grantMilestone({
       missionId: 'surveyor-3',
       milestoneId: 'introduction',
     })
-    expect(firstGrant.ok && firstGrant.data.awarded).toBe(true)
-    expect(firstGrant.ok && firstGrant.data.xpAwarded).toBe(20)
+    expect(firstGrant.ok).toBe(false)
 
     const secondGrant = await rewards.grantMilestone({
       missionId: 'surveyor-3',
       milestoneId: 'introduction',
     })
-    expect(secondGrant.ok && secondGrant.data.awarded).toBe(false)
-    expect(secondGrant.ok && secondGrant.data.xpAwarded).toBe(0)
+    expect(secondGrant.ok).toBe(false)
 
     const achievements = await rewards.listAchievements()
     expect(achievements.ok).toBe(true)

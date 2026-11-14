@@ -54,7 +54,9 @@ export type AuthServiceOptions = {
   initialSession?: AuthSession
 }
 
-export function createAuthService(options: AuthServiceOptions = {}): AuthService {
+export function createAuthService(
+  options: AuthServiceOptions = {},
+): AuthService {
   const client = options.client ?? getSupabaseClient()
   const listeners = new Set<AuthListener>()
 
@@ -84,14 +86,23 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
   return {
     async getSession(): Promise<ServiceResult<AuthSession>> {
       if (client.isConfigured && client.getSession()) {
-        const fresh = await client.ensureFreshSession()
-        session = sessionFromUser(fresh?.user ?? null)
+        try {
+          const fresh = await client.ensureFreshSession()
+          session = sessionFromUser(fresh?.user ?? null)
+        } catch {
+          return serviceError(
+            'unavailable',
+            'Your session could not be refreshed. Please retry when connected.',
+          )
+        }
       }
       return serviceOk({ ...session })
     },
 
     async startGuestSession(): Promise<ServiceResult<AuthSession>> {
       if (!client.isConfigured) {
+        if (import.meta.env.PROD)
+          return serviceError('unavailable', 'Guest sign-in is not configured.')
         const guestId = `guest-${crypto.randomUUID()}`
         session = {
           status: 'guest',
@@ -123,7 +134,9 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
       return serviceOk({ ...session })
     },
 
-    async signIn(credentials: SignInCredentials): Promise<ServiceResult<AuthSession>> {
+    async signIn(
+      credentials: SignInCredentials,
+    ): Promise<ServiceResult<AuthSession>> {
       const email = normalizeEmail(credentials.email)
       if (!email || credentials.password.length === 0) {
         return serviceError('invalid-input', 'Enter your email and password.')
@@ -140,7 +153,10 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
           !client.isConfigured ||
           /network|not configured|unavailable/i.test(message)
         ) {
-          return serviceError('unavailable', 'Sign-in is unavailable right now.')
+          return serviceError(
+            'unavailable',
+            'Sign-in is unavailable right now.',
+          )
         }
         return serviceError(
           'invalid-input',
@@ -159,7 +175,9 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
       return serviceOk({ ...session })
     },
 
-    async signUp(credentials: SignUpCredentials): Promise<ServiceResult<AuthSession>> {
+    async signUp(
+      credentials: SignUpCredentials,
+    ): Promise<ServiceResult<AuthSession>> {
       const email = normalizeEmail(credentials.email)
       if (!email) {
         return serviceError('invalid-input', 'Enter a valid email address.')
@@ -193,12 +211,21 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
       if (error || !data?.user) {
         const msg = error?.message?.toLowerCase() ?? ''
         if (msg.includes('already registered') || msg.includes('conflict')) {
-          return serviceError('conflict', 'An explorer already uses that email.')
+          return serviceError(
+            'conflict',
+            'An explorer already uses that email.',
+          )
         }
         if (/network|not configured|unavailable/i.test(msg)) {
-          return serviceError('unavailable', 'Registration is unavailable right now.')
+          return serviceError(
+            'unavailable',
+            'Registration is unavailable right now.',
+          )
         }
-        return serviceError('invalid-input', error?.message || 'Unable to register account.')
+        return serviceError(
+          'invalid-input',
+          error?.message || 'Unable to register account.',
+        )
       }
 
       if (!data.session) {
@@ -210,16 +237,20 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
 
       // Initialize profile row in database if client is configured
       if (client.isConfigured) {
-        await client.query('profiles', {
+        const created = await client.query('profiles?on_conflict=id', {
           method: 'POST',
+          headers: { Prefer: 'resolution=ignore-duplicates' },
           body: {
             id: data.user.id,
             nickname: nickname.data,
             avatar_id: credentials.avatarId,
-            kind: 'registered',
-            total_xp: 0,
           },
         })
+        if (created.error)
+          return serviceError(
+            'unavailable',
+            'Your account was created, but your explorer profile could not be saved. Sign in and retry profile setup.',
+          )
       }
 
       session = {

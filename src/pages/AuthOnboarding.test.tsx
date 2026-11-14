@@ -61,8 +61,9 @@ describe('AuthPage presentation and mock service integration', () => {
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText(/Development services operate in-memory/i),
+      screen.getByText(/Development mock services operate in memory/i),
     ).toBeInTheDocument()
+    expect(screen.getByText(/Creating an account does not transfer guest progress or rank/i)).toBeInTheDocument()
   })
 
   it('starts guest session and navigates to dashboard on clicking Guest CTA', async () => {
