@@ -139,10 +139,10 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, and this file.
 
-Phase 1 — Project Setup and Foundation has not started.
+Phase 1, Step 1 is complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, Lucide React, ESLint, Prettier, and strict TypeScript checking are configured. The interface is a placeholder home screen.
 
-The application has not been initialized. Dependencies are not installed. Source folders and UI do not exist.
+Authentication, Supabase, explorer profiles, XP, missions, Vitest, React Testing Library, Playwright, shared feature folders, and the application shell are not implemented.
 
-The next implementation task is Phase 1, Step 1: Initialize the React + TypeScript application.
+The next implementation task, when a prompt requests it, is the remainder of Phase 1: the planned test toolchain, shared source folders, and a minimal shell.
 
 Update this status when a requested step is finished. Do not mark incomplete work as completed.

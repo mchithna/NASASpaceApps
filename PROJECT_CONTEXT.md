@@ -17,9 +17,9 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** The repository contains project documentation only. The React application has not been initialized. No dependencies are installed. No source folders, routes, or interface exist. No feature below is implemented.
+**Confirmed status:** Phase 1, Step 1 is complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`, with Tailwind CSS v4, React Router, ESLint, Prettier, and a placeholder home screen. Lucide React is installed and not used on that screen. No Supabase client, authentication, explorer profile, XP, achievement, journal, or mission feature is implemented.
 
-The next implementation task, when it is explicitly requested, is **Phase 1, Step 1: Initialize the React + TypeScript application.**
+The next implementation task, when it is explicitly requested, is the remainder of Phase 1: the planned test toolchain, shared source folders, and a minimal shell.
 
 ## Confirmed decisions
 
@@ -126,7 +126,7 @@ Each chapter is a standalone story. Players may complete the five missions in an
 
 ### Confirmed planned stack
 
-None of these packages are installed yet.
+React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide React, ESLint, and Prettier were added in Phase 1, Step 1 because that prompt requested them. Supabase, Vitest, React Testing Library, and Playwright are not installed.
 
 | Concern | Choice |
 | --- | --- |
@@ -140,7 +140,7 @@ None of these packages are installed yet.
 
 **Proposed Supabase scope:** Supabase Auth for explorer sign-in, and Supabase PostgreSQL for profiles, XP, ranks, achievements, journal entries, and per-mission progress. Row Level Security is expected when tables are designed in Phase 2. The schema does not exist yet.
 
-**Proposed and not confirmed:** an icon set such as Lucide React, ESLint, and a formatting tool. Add them only in a step that asks for them.
+Lucide React is installed for later interface work. It is not used on the placeholder screen.
 
 Environment variables and Supabase project keys are not created. When they are added, secret keys stay out of the client bundle and out of Git.
 
@@ -213,7 +213,7 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
-| 1 | Project Setup & Foundation | Not started. Next step is defined below. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
+| 1 | Project Setup & Foundation | Started. Step 1, application initialization, is complete. The test toolchain, shared folders, and application shell are not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
 | 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
 | 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
 | 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
@@ -222,9 +222,13 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 ### Phase 1, Step 1
 
-**Confirmed next task:** Initialize the React + TypeScript application.
+**Complete.** The React + TypeScript application is initialized in the repository root.
 
-That step has not been started. When a prompt requests it, the work is the application scaffold. Tailwind, React Router, Supabase, Vitest, React Testing Library, Playwright, ESLint, design tokens, pages, and mission folders belong to later prompts unless that prompt explicitly includes them.
+The initialization prompt included Tailwind CSS v4, React Router, Lucide React, ESLint, Prettier, strict TypeScript, a placeholder home screen, and Supabase environment placeholders. Those items are in place. The application does not connect to Supabase.
+
+Not part of this step: authentication, profiles, XP, achievements, missions, Vitest, React Testing Library, Playwright, shared feature folders, design tokens, and the application shell.
+
+The remainder of Phase 1 is not started. Wait for a prompt before adding it.
 
 ## Collaboration
 
@@ -288,7 +292,7 @@ That step has not been started. When a prompt requests it, the work is the appli
 | `PROJECT_CONTEXT.md` | This document |
 | `AGENTS.md` | Persistent instructions for coding agents |
 
-No application files exist yet.
+The repository also contains the Vite application scaffold (`package.json`, `index.html`, `src/`, and the TypeScript, Tailwind, ESLint, and Prettier configuration). No mission, profile, or Supabase client code exists yet.
 
 ## Maintaining this document
 
