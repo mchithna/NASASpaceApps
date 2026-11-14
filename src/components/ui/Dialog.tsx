@@ -41,6 +41,13 @@ export function Dialog({
       className="dialog-surface"
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
+      onKeyDown={(event) => {
+        if (event.key !== 'Escape') {
+          return
+        }
+        event.preventDefault()
+        onClose()
+      }}
       onCancel={(event) => {
         event.preventDefault()
         onClose()

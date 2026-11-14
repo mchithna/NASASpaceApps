@@ -48,6 +48,7 @@ export function Button({
 
   return (
     <button
+      {...props}
       type={type}
       className={cn(
         'inline-flex items-center justify-center rounded-control font-medium motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out motion-safe:active:scale-[0.96] disabled:cursor-not-allowed disabled:active:scale-100',
@@ -57,8 +58,7 @@ export function Button({
         className,
       )}
       disabled={isDisabled}
-      aria-busy={loading || undefined}
-      {...props}
+      aria-busy={loading ? true : undefined}
     >
       {loading ? (
         <LoaderCircle

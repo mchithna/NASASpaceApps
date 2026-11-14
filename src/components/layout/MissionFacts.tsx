@@ -41,10 +41,13 @@ export function MissionFacts({ mission }: MissionFactsProps) {
             <li key={source.id}>
               <a className={textLinkClass} href={source.url}>
                 {source.title}
+                {source.credit ? (
+                  <span className="font-normal text-muted">
+                    {' '}
+                    ({source.credit})
+                  </span>
+                ) : null}
               </a>
-              {source.credit ? (
-                <span className="text-muted"> ({source.credit})</span>
-              ) : null}
             </li>
           ))}
         </ul>

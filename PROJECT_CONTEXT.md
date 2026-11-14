@@ -17,9 +17,9 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** Phase 1, Steps 1 through 4 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, placeholder pages, design tokens, shared UI components, and the five-mission registry are in place. Feature and engine folders exist for later work and do not contain authentication, Supabase access, profiles, XP, or achievement logic. Mission folders contain metadata only. They do not contain scenes, activities, or chapter prose.
+**Confirmed status:** Phase 1 is complete. Steps 1 through 5 are in place: the Vite + React + TypeScript application, routing, layouts, design system, five-mission registry, Vitest, and React Testing Library. Feature and engine folders are reserved. They do not contain authentication, Supabase access, profiles, XP, achievement logic, scenes, or activities. Playwright is not installed.
 
-The next implementation task, when it is explicitly requested, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
+The next implementation task, when it is explicitly requested, is Phase 2: authentication and explorer profiles.
 
 ## Confirmed decisions
 
@@ -136,7 +136,7 @@ Each chapter is a standalone story. Players may complete the five missions in an
 
 ### Confirmed planned stack
 
-React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide React, ESLint, and Prettier were added in Phase 1, Step 1 because that prompt requested them. Vitest was added in Phase 1, Step 4 for registry tests. React Testing Library, Playwright, and Supabase are not installed.
+React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide React, ESLint, and Prettier were added in Phase 1, Step 1. Vitest was added in Phase 1, Step 4. React Testing Library and jsdom were added in Phase 1, Step 5. Playwright and Supabase are not installed.
 
 | Concern | Choice |
 | --- | --- |
@@ -248,7 +248,7 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
-| 1 | Project Setup & Foundation | Started. Steps 1 through 4 are complete: the app, routes, design system, and mission registry are in place. Vitest covers the registry. React Testing Library and Playwright are not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
+| 1 | Project Setup & Foundation | Complete. The app, routes, design system, mission registry, and foundation tests are in place. Playwright is not part of this phase. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
 | 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
 | 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
 | 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
@@ -308,6 +308,19 @@ Included in this step:
 Not part of this step: story scenes, activities, gameplay, XP, achievements, authentication, Supabase, and NASA photographs.
 
 A mission developer changes that mission's `mission.ts`. The registry already imports the package, so the developer does not add the mission to a metadata list. The five ids stay fixed.
+
+### Phase 1, Step 5
+
+**Complete.** The foundation was audited, component tests were added, and the developer README was expanded.
+
+Included in this step:
+
+- Vitest runs in jsdom with React Testing Library
+- Route, not-found, registry, button, dialog, and shared-component tests
+- README sections for setup, architecture, conventions, and branch names
+- Small accessibility fixes for dialog hiding, Escape, button state, and source links
+
+Not part of this step: Playwright, authentication, profiles, XP, gameplay, and the mission engine.
 
 ## Collaboration
 

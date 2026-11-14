@@ -53,6 +53,10 @@ h3 {
   letter-spacing: -0.02em;
 }
 
+dialog:not([open]) {
+  display: none;
+}
+
 .dialog-surface {
   width: min(32rem, calc(100% - 2rem));
   max-height: calc(100% - 2rem);

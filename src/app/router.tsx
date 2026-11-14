@@ -26,7 +26,7 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
     ]
   : []
 
-export const router = createBrowserRouter([
+export const appRoutes: RouteObject[] = [
   {
     element: <PublicLayout />,
     children: [
@@ -54,4 +54,6 @@ export const router = createBrowserRouter([
   },
   ...devRoutes,
   { path: '*', element: <NotFoundPage /> },
-])
+]
+
+export const router = createBrowserRouter(appRoutes)
