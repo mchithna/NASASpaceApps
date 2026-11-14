@@ -6,10 +6,7 @@
 import { isStableKey } from '@/contracts/ids.ts'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
 import type { MissionDefinition } from '@/missions/types.ts'
-import {
-  engineIssue,
-  type EngineIssue,
-} from '@/engine/issues.ts'
+import { engineIssue, type EngineIssue } from '@/engine/issues.ts'
 import {
   isNarrationKind,
   isSceneKind,
@@ -170,15 +167,31 @@ export function validateResume(
   const known = new Set(module.scenes.map((scene) => scene.id))
   const reported = new Set<string>()
 
-  reportUnknown(
-    progress.currentCheckpointId,
-    known,
-    reported,
-    issues,
-  )
+  reportUnknown(progress.currentCheckpointId, known, reported, issues)
 
   for (const checkpointId of progress.completedCheckpointIds) {
     reportUnknown(checkpointId, known, reported, issues)
+  }
+
+  const completed = new Set(progress.completedCheckpointIds)
+  const frontier = module.scenes.findIndex((scene) => !completed.has(scene.id))
+  const current = module.scenes.findIndex(
+    (scene) => scene.id === progress.currentCheckpointId,
+  )
+  if (
+    completed.size !== progress.completedCheckpointIds.length ||
+    (frontier >= 0 &&
+      module.scenes.slice(frontier).some((scene) => completed.has(scene.id))) ||
+    (frontier >= 0 && current > frontier) ||
+    (progress.status === 'completed' && frontier >= 0)
+  ) {
+    issues.push(
+      engineIssue(
+        'invalid-progress',
+        progress.currentCheckpointId,
+        'Saved progress does not match this chapter. Please reload your saved place.',
+      ),
+    )
   }
 
   return issues
@@ -448,7 +461,10 @@ function readActivity(
     seenActivityIds.add(scene.activityId)
   }
 
-  if (typeof scene.activityType !== 'string' || !isStableKey(scene.activityType)) {
+  if (
+    typeof scene.activityType !== 'string' ||
+    !isStableKey(scene.activityType)
+  ) {
     issues.push(
       engineIssue(
         'invalid-activity-type',

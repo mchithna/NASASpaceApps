@@ -89,6 +89,17 @@ export function usePlatformData(): PlatformDataState {
         return
       }
 
+      if (!achievementsResult.ok) {
+        setError(achievementsResult.error)
+        setIsLoading(false)
+        return
+      }
+      if (!journalResult.ok) {
+        setError(journalResult.error)
+        setIsLoading(false)
+        return
+      }
+
       const resolvedProfile: ExplorerProfile = {
         ...profileResult.data,
         totalXp: xpResult.data.totalXp,
@@ -98,8 +109,8 @@ export function usePlatformData(): PlatformDataState {
       setProfile(resolvedProfile)
       setProgress(progressResult.data)
       setXpSummary(xpResult.data)
-      setAchievements(achievementsResult.ok ? achievementsResult.data : [])
-      setJournalEntries(journalResult.ok ? journalResult.data : [])
+      setAchievements(achievementsResult.data)
+      setJournalEntries(journalResult.data)
       setIsLoading(false)
     } catch {
       setError({

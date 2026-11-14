@@ -4,7 +4,7 @@
  * choose a route or talk to auth.
  */
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ActivityCompletionEvent } from '@/contracts/missions.ts'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
 import { Button } from '@/components/ui/Button.tsx'
@@ -20,6 +20,7 @@ import {
   defineActivity,
   validateActivityBindings,
   type ActivityRegistry,
+  type ActivityRegistration,
   type ActivityRenderProps,
 } from '@/engine/activityRegistry.ts'
 import type { EngineServices } from '@/engine/checkpointAdapter.ts'
@@ -34,6 +35,9 @@ import {
   type NavigationAction,
 } from '@/engine/navigation.ts'
 import type { MissionModule } from '@/engine/scenes.ts'
+import { sceneFramingLabels } from '@/engine/scenes.ts'
+import { SceneAttribution } from '@/engine/scenes/SceneAttribution.tsx'
+import { SceneMediaView } from '@/engine/scenes/SceneMediaView.tsx'
 import {
   citationViewFor,
   renderScene,
@@ -77,17 +81,20 @@ export type MissionPlayerProps = {
 
 const trainingActivities = createActivityRegistry([
   ...builtinActivityRegistrations,
-  defineActivity('fixture-check', function TrainingActivity(props: ActivityRenderProps) {
-    return (
-      <Button
-        variant="secondary"
-        disabled={props.completed || props.replay}
-        onClick={props.onComplete}
-      >
-        Finish activity
-      </Button>
-    )
-  }),
+  defineActivity(
+    'fixture-check',
+    function TrainingActivity(props: ActivityRenderProps) {
+      return (
+        <Button
+          variant="secondary"
+          disabled={props.completed || props.replay}
+          onClick={props.onComplete}
+        >
+          Finish activity
+        </Button>
+      )
+    },
+  ),
 ])
 
 export function MissionPlayer(props: MissionPlayerProps) {
@@ -128,7 +135,9 @@ function MissionPlayerSession({
   const [position, setPosition] = useState<EnginePosition | null>(
     initialPosition,
   )
+  const positionRef = useRef(position)
   const [saving, setSaving] = useState(false)
+  const savingRef = useRef(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [savedNotice, setSavedNotice] = useState(false)
   const [fallbackRuntime] = useState(() =>
@@ -138,11 +147,11 @@ function MissionPlayerSession({
   const [activityGuard] = useState(createActivityCompletionGuard)
 
   function run(action: NavigationAction): boolean {
-    if (!position || !playable || saving) {
+    if (!positionRef.current || !playable || savingRef.current) {
       return false
     }
 
-    const result = reduceNavigation(module, position, action)
+    const result = reduceNavigation(module, positionRef.current, action)
     if (!result.ok) {
       setErrorMessage(
         result.issues[0]?.message ?? 'That action is not available.',
@@ -155,16 +164,19 @@ function MissionPlayerSession({
     setSavedNotice(false)
 
     if (next.effects.length === 0) {
+      positionRef.current = next.position
       setPosition(next.position)
       onRuntimeChange?.(runtimeStateFromPosition(next.position))
       return true
     }
 
+    savingRef.current = true
     setSaving(true)
 
     void adapter
       .apply(next.effects)
       .then((applied) => {
+        savingRef.current = false
         setSaving(false)
 
         if (!applied.ok) {
@@ -175,6 +187,7 @@ function MissionPlayerSession({
           return
         }
 
+        positionRef.current = next.position
         setPosition(next.position)
         setSavedNotice(true)
         onRuntimeChange?.(runtimeStateFromPosition(next.position))
@@ -183,6 +196,7 @@ function MissionPlayerSession({
         }
       })
       .catch(() => {
+        savingRef.current = false
         setSaving(false)
         if (action.type === 'complete' && action.activityComplete) {
           activityGuard.release()
@@ -194,6 +208,7 @@ function MissionPlayerSession({
   }
 
   function completeCurrentActivity(sceneId: string): void {
+    if (positionRef.current?.sceneId !== sceneId) return
     if (!activityGuard.claim(sceneId)) {
       return
     }
@@ -210,10 +225,13 @@ function MissionPlayerSession({
   const replay = position?.status === 'completed'
   const navigation =
     position === null ? null : sceneNavigationState(module, position)
-  const citation = scene === null ? null : citationViewFor(module.mission, scene)
+  const citation =
+    scene === null ? null : citationViewFor(module.mission, scene)
   const activityNode =
-    scene?.kind === 'activity'
-      ? (activityRegistry.lookup(scene.activityType)?.render({
+    scene?.kind === 'activity' ? (
+      <RegisteredActivity
+        registration={activityRegistry.lookup(scene.activityType)}
+        activityProps={{
           missionId: module.mission.id,
           sceneId: scene.id,
           activityId: scene.activityId,
@@ -223,8 +241,9 @@ function MissionPlayerSession({
           completed: position?.completedSceneIds.includes(scene.id) ?? false,
           replay,
           onComplete: () => completeCurrentActivity(scene.id),
-        }) ?? null)
-      : null
+        }}
+      />
+    ) : null
   const sceneNode =
     scene && position
       ? renderScene(renderers, {
@@ -271,7 +290,10 @@ function MissionPlayerSession({
       {playable && navigation ? (
         <Card>
           <CardBody className="flex flex-col gap-4">
-            <h2 className="font-heading text-2xl font-semibold text-foreground" aria-live="polite">
+            <h2
+              className="font-heading text-2xl font-semibold text-foreground"
+              aria-live="polite"
+            >
               {scene?.title ?? 'Ready to start'}
             </h2>
             {phase === 'saving' ? (
@@ -350,6 +372,16 @@ function MissionPlayerSession({
   )
 }
 
+function RegisteredActivity({
+  registration,
+  activityProps,
+}: {
+  registration: ActivityRegistration | undefined
+  activityProps: ActivityRenderProps
+}) {
+  return registration?.render(activityProps) ?? null
+}
+
 function SourceList({ citation }: { citation: CitationView }) {
   return (
     <div className="flex flex-col gap-2">
@@ -375,7 +407,9 @@ function SourceList({ citation }: { citation: CitationView }) {
                     {source.title}
                   </a>
                 ) : (
-                  <span className="text-sm text-foreground">{source.title}</span>
+                  <span className="text-sm text-foreground">
+                    {source.title}
+                  </span>
                 )}
                 {source.credit ? (
                   <span className="text-sm text-muted"> {source.credit}</span>
@@ -408,7 +442,24 @@ const defaultSceneRenderers: SceneRendererRegistry = {
       onEnding={context.onEnding}
     />
   ),
-  activity: (context) => context.activity,
+  activity: (context) => (
+    <div className="flex flex-col gap-3">
+      {context.scene.instruction ? (
+        <p className="text-secondary">{context.scene.instruction}</p>
+      ) : null}
+      {context.activity}
+      <SceneMediaView media={context.scene.media} />
+      <SceneAttribution
+        citation={context.citation}
+        requestedSourceCount={context.scene.sourceIds.length}
+        framing={
+          context.scene.framing
+            ? sceneFramingLabels[context.scene.framing]
+            : undefined
+        }
+      />
+    </div>
+  ),
   discovery: (context) => (
     <TypedSceneView
       missionId={context.mission.id}

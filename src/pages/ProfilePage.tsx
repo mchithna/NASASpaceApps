@@ -18,7 +18,7 @@ import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function ProfilePage() {
   const navigate = useNavigate()
-  const { services } = useNovaServices()
+  const { services, isLive } = useNovaServices()
   const { session, profile, progress, isLoading, error, refresh } =
     usePlatformData()
 
@@ -144,16 +144,16 @@ export function ProfilePage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are operating under a local guest session. Your callsign and flight
-                  insignia are kept in memory for this browser session. To preserve your rank
-                  and achievements permanently across devices, register an account.
+                  {isLive
+                    ? 'Guest mission progress is saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is separate from registered account progress.'
+                    : 'Development mock visit. Guest progress and profile changes stay in memory and reset on refresh.'}
                 </p>
                 <div>
                   <Link
                     to="/auth"
                     className="font-semibold text-science hover:underline"
                   >
-                    Create account to keep progress &rarr;
+                    Create a separate account &rarr;
                   </Link>
                 </div>
               </div>
@@ -264,7 +264,7 @@ export function ProfilePage() {
                 </h3>
                 <p className="text-xs text-secondary">
                   {isGuest
-                    ? 'Operating under anonymous guest session. Progress is held in device memory.'
+                    ? isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
                     : 'Authenticated with academy credentials. Exploration progress is preserved.'}
                 </p>
               </div>

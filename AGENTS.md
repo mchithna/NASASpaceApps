@@ -150,6 +150,15 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Phase 4B Step 4 integration code is prepared. The mission player consumes the provider's
+real progress/reward boundary through a validated adapter; package-local chapter exports
+are loaded without router changes. The five factual chapters remain unbuilt. The new
+trusted checkpoint/reward migration is local, not hosted. Step 4 is not yet accepted:
+hosted verification and browser acceptance remain open. Real guest progress now uses
+a versioned tab-local cache; mock training remains isolated and resets on refresh.
+See `docs/PHASE4B_STEP4.md` for the authoritative integration handover. The older phase
+descriptions below record the original Phase 1.5 baseline and are historical.
+
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, `docs/PARALLEL_DEVELOPMENT.md`, and this file.
 
 Phase 1 is complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, Vitest, and React Testing Library are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development. Mission metadata lives in `src/missions/<id>/mission.ts`. `src/missions/registry.ts` imports the five packages.

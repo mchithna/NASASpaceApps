@@ -16,6 +16,14 @@ import { ProfilePage } from '@/pages/ProfilePage.tsx'
 const devRoutes: RouteObject[] = import.meta.env.DEV
   ? [
       {
+        path: '/dev/training-simulator',
+        lazy: async () => {
+          const { TrainingSimulatorPreview } =
+            await import('@/engine/training/TrainingSimulatorPreview.tsx')
+          return { Component: TrainingSimulatorPreview }
+        },
+      },
+      {
         path: '/dev/components',
         lazy: async () => {
           const { ComponentShowcasePage } =

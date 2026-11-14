@@ -21,6 +21,13 @@ import {
   type ServiceResult,
 } from '@/contracts/result.ts'
 import { storyAchievementId } from '@/contracts/rewards.ts'
+import { rankForXp } from '@/contracts/explorer.ts'
+import { serviceFailure } from '@/features/serviceFailure.ts'
+import {
+  isRecord,
+  readGuestCache,
+  writeGuestCache,
+} from '@/features/guestSessionCache.ts'
 import { isMissionId } from '@/missions/registry.ts'
 import { missionIds } from '@/missions/types.ts'
 import {
@@ -46,7 +53,9 @@ function blankProgress(missionId: MissionId, time: string): MissionProgress {
   }
 }
 
-export function createProgressService(options: ProgressServiceOptions): ProgressService {
+export function createProgressService(
+  options: ProgressServiceOptions,
+): ProgressService {
   const { auth, rewards, clock = () => new Date().toISOString() } = options
   const client = options.client ?? getSupabaseClient()
 
@@ -60,6 +69,12 @@ export function createProgressService(options: ProgressServiceOptions): Progress
       const at = clock()
       for (const id of missionIds) {
         map.set(id, blankProgress(id, at))
+      }
+      const stored = readGuestCache(explorerId, 'progress')
+      if (Array.isArray(stored)) {
+        for (const item of stored as unknown[]) {
+          if (isStoredProgress(item)) map.set(item.missionId, item)
+        }
       }
       userProgressStore.set(explorerId, map)
     }
@@ -99,7 +114,9 @@ export function createProgressService(options: ProgressServiceOptions): Progress
   }
 
   return {
-    async getMissionProgress(missionId: string): Promise<ServiceResult<MissionProgress>> {
+    async getMissionProgress(
+      missionId: string,
+    ): Promise<ServiceResult<MissionProgress>> {
       const session = await resolveSession()
       if (!session) {
         return serviceError(
@@ -119,7 +136,10 @@ export function createProgressService(options: ProgressServiceOptions): Progress
         const progressMap = getProgressMap(explorerId)
         const record = progressMap.get(parsedMission.data)
         if (!record) {
-          return serviceError('not-found', 'That mission has no saved progress.')
+          return serviceError(
+            'not-found',
+            'That mission has no saved progress.',
+          )
         }
         return serviceOk(structuredClone(record))
       }
@@ -166,7 +186,9 @@ export function createProgressService(options: ProgressServiceOptions): Progress
       return serviceOk(progress)
     },
 
-    async getProgressOverview(): Promise<ServiceResult<MissionProgressOverview>> {
+    async getProgressOverview(): Promise<
+      ServiceResult<MissionProgressOverview>
+    > {
       const session = await resolveSession()
       if (!session) {
         return serviceError(
@@ -190,7 +212,9 @@ export function createProgressService(options: ProgressServiceOptions): Progress
       return serviceOk({ missions })
     },
 
-    async saveCheckpoint(input: SaveCheckpointInput): Promise<ServiceResult<MissionProgress>> {
+    async saveCheckpoint(
+      input: SaveCheckpointInput,
+    ): Promise<ServiceResult<MissionProgress>> {
       const session = await resolveSession()
       if (!session) {
         return serviceError(
@@ -222,60 +246,22 @@ export function createProgressService(options: ProgressServiceOptions): Progress
       const { explorerId, kind } = session.identity
 
       if (kind === 'registered' && client.isConfigured) {
-        const existing = await this.getMissionProgress(parsedMission.data)
-        if (!existing.ok) {
-          return existing
-        }
-        if (existing.data.status === 'completed') {
-          return serviceError('conflict', 'This mission is already complete.')
-        }
-
-        const completed = [...existing.data.completedCheckpointIds]
-        if (
-          input.completedCheckpointId &&
-          !completed.includes(input.completedCheckpointId)
-        ) {
-          completed.push(input.completedCheckpointId)
-        }
-
-        const at = clock()
-        const next: MissionProgress = {
-          missionId: parsedMission.data,
-          status: 'in_progress',
-          currentCheckpointId: checkpoint.data,
-          completedCheckpointIds: completed,
-          completedAt: null,
-          updatedAt: at,
-        }
-
-        const saved = await client.query(
-          'mission_progress?on_conflict=user_id,mission_id',
-          {
-            method: 'POST',
-            headers: { Prefer: 'resolution=merge-duplicates' },
-            body: {
-              user_id: explorerId,
-              mission_id: parsedMission.data,
-              status: 'in_progress',
-              current_checkpoint_id: checkpoint.data,
-              completed_checkpoint_ids: completed,
-              updated_at: at,
-            },
-          },
-        )
-
-        if (saved.error) {
-          return serviceError(
-            'unavailable',
-            saved.error.message || 'The checkpoint could not be saved.',
+        const saved = await client.rpc<MissionProgress>('rpc_save_checkpoint', {
+          p_mission_id: parsedMission.data,
+          p_checkpoint_id: checkpoint.data,
+          p_completed_checkpoint_id: input.completedCheckpointId ?? null,
+        })
+        if (saved.error || !saved.data)
+          return serviceFailure(
+            saved.error?.message ?? 'The checkpoint could not be saved.',
           )
-        }
-
-        return serviceOk(next)
+        return serviceOk(saved.data)
       }
 
       const progressMap = getProgressMap(explorerId)
-      const current = progressMap.get(parsedMission.data) ?? blankProgress(parsedMission.data, clock())
+      const current =
+        progressMap.get(parsedMission.data) ??
+        blankProgress(parsedMission.data, clock())
 
       if (current.status === 'completed') {
         return serviceError('conflict', 'This mission is already complete.')
@@ -299,12 +285,28 @@ export function createProgressService(options: ProgressServiceOptions): Progress
         updatedAt: at,
       }
 
+      if (
+        !writeGuestCache(
+          explorerId,
+          'progress',
+          [...progressMap.values()].map((record) =>
+            record.missionId === parsedMission.data ? next : record,
+          ),
+        )
+      ) {
+        return serviceError(
+          'unavailable',
+          'Your browser could not save guest progress. Enable storage or sign in, then try again.',
+        )
+      }
       progressMap.set(parsedMission.data, next)
 
       return serviceOk(structuredClone(next))
     },
 
-    async completeMission(input: { missionId: string }): Promise<ServiceResult<MissionCompletionResult>> {
+    async completeMission(input: {
+      missionId: string
+    }): Promise<ServiceResult<MissionCompletionResult>> {
       const session = await resolveSession()
       if (!session) {
         return serviceError(
@@ -326,30 +328,56 @@ export function createProgressService(options: ProgressServiceOptions): Progress
           return existing
         }
         if (existing.data.status === 'not_started') {
-          return serviceError('conflict', 'Start the mission before completing it.')
+          return serviceError(
+            'conflict',
+            'Start the mission before completing it.',
+          )
         }
 
-        const rpcRes = await client.rpc<MissionCompletionResult>('rpc_complete_mission', {
-          p_mission_id: parsedMission.data,
-        })
+        const rpcRes = await client.rpc<MissionCompletionResult>(
+          'rpc_complete_mission',
+          {
+            p_mission_id: parsedMission.data,
+          },
+        )
         if (rpcRes.error || !rpcRes.data) {
           const msg = rpcRes.error?.message ?? ''
           if (msg.includes('conflict')) {
-            return serviceError('conflict', 'Start the mission before completing it.')
+            return serviceError(
+              'conflict',
+              'Start the mission before completing it.',
+            )
           }
           if (msg.includes('not-found')) {
-            return serviceError('not-found', 'That mission has no saved progress.')
+            return serviceError(
+              'not-found',
+              'That mission has no saved progress.',
+            )
           }
-          return serviceError('unavailable', rpcRes.error?.message || 'Failed to complete mission.')
+          return serviceError(
+            'unavailable',
+            rpcRes.error?.message || 'Failed to complete mission.',
+          )
         }
-        return serviceOk(rpcRes.data)
+        return serviceOk({
+          ...rpcRes.data,
+          reward: {
+            ...rpcRes.data.reward,
+            rank: rankForXp(rpcRes.data.reward.totalXp),
+          },
+        })
       }
 
       const progressMap = getProgressMap(explorerId)
-      const current = progressMap.get(parsedMission.data) ?? blankProgress(parsedMission.data, clock())
+      const current =
+        progressMap.get(parsedMission.data) ??
+        blankProgress(parsedMission.data, clock())
 
       if (current.status === 'not_started') {
-        return serviceError('conflict', 'Start the mission before completing it.')
+        return serviceError(
+          'conflict',
+          'Start the mission before completing it.',
+        )
       }
 
       const at = clock()
@@ -363,7 +391,6 @@ export function createProgressService(options: ProgressServiceOptions): Progress
           completedAt: at,
           updatedAt: at,
         }
-        progressMap.set(parsedMission.data, nextProgress)
       }
 
       // Grant legacy milestone and story achievement via rewards if provided
@@ -375,7 +402,7 @@ export function createProgressService(options: ProgressServiceOptions): Progress
         })
         if (grantRes.ok) {
           rewardGrant = grantRes.data
-        }
+        } else return grantRes
       }
 
       if (!rewardGrant) {
@@ -407,10 +434,12 @@ export function createProgressService(options: ProgressServiceOptions): Progress
 
       let achievementUnlock
       if (rewards) {
-        const achRes = await rewards.unlockAchievement(storyAchievementId(parsedMission.data))
+        const achRes = await rewards.unlockAchievement(
+          storyAchievementId(parsedMission.data),
+        )
         if (achRes.ok) {
           achievementUnlock = achRes.data
-        }
+        } else return achRes
       }
 
       if (!achievementUnlock) {
@@ -423,6 +452,21 @@ export function createProgressService(options: ProgressServiceOptions): Progress
         }
       }
 
+      if (
+        !writeGuestCache(
+          explorerId,
+          'progress',
+          [...progressMap.values()].map((record) =>
+            record.missionId === parsedMission.data ? nextProgress : record,
+          ),
+        )
+      ) {
+        return serviceError(
+          'unavailable',
+          'Your browser could not save guest completion. Please try again.',
+        )
+      }
+      progressMap.set(parsedMission.data, nextProgress)
       return serviceOk({
         progress: structuredClone(nextProgress),
         reward: rewardGrant,
@@ -430,4 +474,23 @@ export function createProgressService(options: ProgressServiceOptions): Progress
       })
     },
   }
+}
+
+function isStoredProgress(value: unknown): value is MissionProgress {
+  return (
+    isRecord(value) &&
+    typeof value.missionId === 'string' &&
+    isMissionId(value.missionId) &&
+    ['not_started', 'in_progress', 'completed'].includes(
+      String(value.status),
+    ) &&
+    (value.currentCheckpointId === null ||
+      typeof value.currentCheckpointId === 'string') &&
+    Array.isArray(value.completedCheckpointIds) &&
+    value.completedCheckpointIds.every(
+      (id: unknown) => typeof id === 'string' && isStableKey(id),
+    ) &&
+    (value.completedAt === null || typeof value.completedAt === 'string') &&
+    typeof value.updatedAt === 'string'
+  )
 }

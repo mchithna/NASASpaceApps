@@ -88,7 +88,9 @@ describe('ProgressService Implementation Tests', () => {
     })
     expect(step2Dup.ok).toBe(true)
     if (step2Dup.ok) {
-      expect(step2Dup.data.completedCheckpointIds.filter((id) => id === 'opening')).toHaveLength(1)
+      expect(
+        step2Dup.data.completedCheckpointIds.filter((id) => id === 'opening'),
+      ).toHaveLength(1)
     }
   })
 
@@ -98,7 +100,9 @@ describe('ProgressService Implementation Tests', () => {
     const progress = createProgressService({ auth })
 
     // Cannot complete not_started mission
-    const prematureComplete = await progress.completeMission({ missionId: 'opportunity' })
+    const prematureComplete = await progress.completeMission({
+      missionId: 'opportunity',
+    })
     expect(prematureComplete.ok).toBe(false)
     if (!prematureComplete.ok) {
       expect(prematureComplete.error.code).toBe('conflict')
@@ -111,13 +115,17 @@ describe('ProgressService Implementation Tests', () => {
     })
 
     // Complete mission
-    const completeRes = await progress.completeMission({ missionId: 'opportunity' })
+    const completeRes = await progress.completeMission({
+      missionId: 'opportunity',
+    })
     expect(completeRes.ok).toBe(true)
     if (completeRes.ok) {
       expect(completeRes.data.progress.status).toBe('completed')
       expect(completeRes.data.reward.rewardKey).toBe('opportunity:legacy')
       expect(completeRes.data.reward.xpAwarded).toBe(15)
-      expect(completeRes.data.achievement.unlock.achievementId).toBe('opportunity-story')
+      expect(completeRes.data.achievement.unlock.achievementId).toBe(
+        'opportunity-story',
+      )
     }
 
     // Saving checkpoint on completed mission is rejected
@@ -131,7 +139,9 @@ describe('ProgressService Implementation Tests', () => {
     }
 
     // Replay / repeat completeMission is idempotent
-    const replayComplete = await progress.completeMission({ missionId: 'opportunity' })
+    const replayComplete = await progress.completeMission({
+      missionId: 'opportunity',
+    })
     expect(replayComplete.ok).toBe(true)
     if (replayComplete.ok) {
       expect(replayComplete.data.progress.status).toBe('completed')
@@ -165,7 +175,10 @@ describe('ProgressService Implementation Tests', () => {
 
     // User A
     await auth.startGuestSession()
-    await progress.saveCheckpoint({ missionId: 'ingenuity', checkpointId: 'takeoff' })
+    await progress.saveCheckpoint({
+      missionId: 'ingenuity',
+      checkpointId: 'takeoff',
+    })
 
     const progA = await progress.getMissionProgress('ingenuity')
     expect(progA.ok && progA.data.currentCheckpointId).toBe('takeoff')
@@ -205,8 +218,7 @@ describe('ProgressService Implementation Tests', () => {
     expect(signedIn.ok).toBe(true)
 
     const query = vi.spyOn(client, 'query')
-    query.mockResolvedValueOnce({ data: [], error: null })
-    query.mockResolvedValueOnce({
+    const rpc = vi.spyOn(client, 'rpc').mockResolvedValueOnce({
       data: null,
       error: { message: 'permission denied for table mission_progress' },
     })
@@ -221,6 +233,11 @@ describe('ProgressService Implementation Tests', () => {
     if (!failed.ok) {
       expect(failed.error.code).toBe('unavailable')
     }
-    expect(String(query.mock.calls[1]?.[0])).toContain('on_conflict=user_id,mission_id')
+    expect(rpc).toHaveBeenCalledWith('rpc_save_checkpoint', {
+      p_mission_id: 'surveyor-3',
+      p_checkpoint_id: 'opening',
+      p_completed_checkpoint_id: null,
+    })
+    expect(query).not.toHaveBeenCalled()
   })
 })

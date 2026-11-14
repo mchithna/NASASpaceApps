@@ -13,6 +13,21 @@ import { ProfilePage } from '@/pages/ProfilePage.tsx'
 import { PlatformServicesProvider } from '@/pages/context/index.ts'
 
 describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', () => {
+  it('shows journal read failures instead of an empty journal and recovers on retry', async () => {
+    const user = userEvent.setup()
+    const services = createPlayerServices()
+    await services.auth.startGuestSession()
+    const read = services.rewards.listJournalEntries.bind(services.rewards)
+    let failed = true
+    services.rewards.listJournalEntries = async () => failed
+      ? { ok: false, error: { code: 'unavailable', message: 'Journal connection interrupted.' } }
+      : read()
+    render(<MemoryRouter><PlatformServicesProvider services={services} isLive={true}><JournalPage /></PlatformServicesProvider></MemoryRouter>)
+    await screen.findByText('Journal connection interrupted.')
+    failed = false
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+    await screen.findByRole('heading', { name: 'Discovery Journal' })
+  })
   it('wires guest onboarding and profile setup to real player services', async () => {
     const user = userEvent.setup()
     const services = createPlayerServices()
@@ -44,7 +59,7 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
 
     // Guest recovery warning should be visible
     expect(
-      screen.getByText(/Anonymous guest sessions cannot be recovered/i),
+      screen.getByText(/Guest mission progress and discoveries are saved in this browser tab/i),
     ).toBeInTheDocument()
 
     // Customize callsign and avatar
@@ -309,7 +324,7 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
     ).toBeInTheDocument()
     expect(
       screen.getByText(
-        /You are operating under a local guest session. Your callsign and flight insignia are kept in memory/i,
+        /Guest mission progress is saved in this browser tab. Your callsign and avatar stay in memory/i,
       ),
     ).toBeInTheDocument()
   })

@@ -123,7 +123,7 @@ BEGIN
   NEW.updated_at = now();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS tr_profile_update ON public.profiles;
 CREATE TRIGGER tr_profile_update

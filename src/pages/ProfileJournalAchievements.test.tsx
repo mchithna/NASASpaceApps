@@ -123,8 +123,8 @@ describe('ProfilePage presentation and interactions', () => {
     renderProfilePage('guest')
 
     expect(await screen.findByText('Guest Explorer Session')).toBeInTheDocument()
-    expect(screen.getByText(/You are operating under a local guest session/i)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Create account to keep progress/i })).toBeInTheDocument()
+    expect(screen.getByText(/Development mock visit. Guest progress and profile changes stay in memory/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Create a separate account/i })).toBeInTheDocument()
   })
 
   it('displays signed out status banner when session is signed out', async () => {

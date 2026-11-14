@@ -2,7 +2,11 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import type { MissionProgress } from '@/contracts/progress.ts'
-import { serviceError, serviceOk, type ServiceResult } from '@/contracts/result.ts'
+import {
+  serviceError,
+  serviceOk,
+  type ServiceResult,
+} from '@/contracts/result.ts'
 import { milestoneXp } from '@/contracts/rewards.ts'
 import { createMockServices } from '@/mocks/createMockServices.ts'
 import { createStructuralFixture } from '@/engine/fixture.ts'
@@ -17,6 +21,71 @@ function expectOk<T>(result: ServiceResult<T>): T {
   }
   return result.data
 }
+
+describe('module-aware production adapter', () => {
+  it('does not persist an undefined scene or award an earlier effect in the same batch', async () => {
+    const services = createMockServices({ persona: 'guest' })
+    const runtime = createServiceRuntime(services, createStructuralFixture())
+    const result = await runtime.apply([
+      {
+        type: 'grant-milestone',
+        request: {
+          missionId: 'surveyor-3',
+          milestoneId: 'introduction',
+          checkpointId: 'fixture-opening',
+        },
+      },
+      {
+        type: 'save-checkpoint',
+        input: { missionId: 'surveyor-3', checkpointId: 'undefined-scene' },
+      },
+    ])
+    expect(result.ok).toBe(false)
+    expect(expectOk(await services.rewards.getXpSummary()).totalXp).toBe(0)
+  })
+
+  it('keeps repeated back/forward checkpoints current instead of caching them forever', async () => {
+    const services = createMockServices({ persona: 'guest' })
+    const runtime = createServiceRuntime(services, createStructuralFixture())
+    for (const input of [
+      { missionId: 'surveyor-3', checkpointId: 'fixture-opening' },
+      {
+        missionId: 'surveyor-3',
+        checkpointId: 'fixture-evidence',
+        completedCheckpointId: 'fixture-opening',
+      },
+      { missionId: 'surveyor-3', checkpointId: 'fixture-opening' },
+      { missionId: 'surveyor-3', checkpointId: 'fixture-evidence' },
+      { missionId: 'surveyor-3', checkpointId: 'fixture-opening' },
+    ])
+      expectOk(await runtime.apply([{ type: 'save-checkpoint', input }]))
+    expect(
+      expectOk(await services.progress.getMissionProgress('surveyor-3'))
+        .currentCheckpointId,
+    ).toBe('fixture-opening')
+  })
+
+  it('stops a previous visit on identity change and disposal', async () => {
+    const services = createMockServices({ persona: 'guest' })
+    const session = expectOk(await services.auth.getSession())
+    if (session.status !== 'guest') throw new Error('Expected guest')
+    const runtime = createServiceRuntime(
+      services,
+      createStructuralFixture(),
+      session.identity.explorerId,
+    )
+    await services.auth.signOut()
+    const effect: EngineEffect = {
+      type: 'save-checkpoint',
+      input: { missionId: 'surveyor-3', checkpointId: 'fixture-opening' },
+    }
+    const changed = await runtime.apply([effect])
+    expect(!changed.ok && changed.error.code).toBe('unauthenticated')
+    runtime.dispose()
+    const disposed = await runtime.apply([effect])
+    expect(!disposed.ok && disposed.error.code).toBe('conflict')
+  })
+})
 
 describe('service runtime', () => {
   it('does not send a confirmed reward or completion again', async () => {
@@ -134,14 +203,17 @@ describe('service runtime', () => {
     expect(grants).toBe(1)
     const summary = expectOk(await services.rewards.getXpSummary())
     expect(summary.totalXp).toBe(milestoneXp.activity)
-    const progress = expectOk(await services.progress.getMissionProgress('surveyor-3'))
+    const progress = expectOk(
+      await services.progress.getMissionProgress('surveyor-3'),
+    )
     expect(progress.currentCheckpointId).toBe('finding')
   })
 
   it('shares one in-flight write and rejects an unknown reward key', async () => {
     const services = createMockServices({ persona: 'guest' })
     let calls = 0
-    let release: (value: ServiceResult<MissionProgress>) => void = () => undefined
+    let release: (value: ServiceResult<MissionProgress>) => void = () =>
+      undefined
     const gate = new Promise<ServiceResult<MissionProgress>>((resolve) => {
       release = resolve
     })
@@ -290,7 +362,8 @@ describe('player save states', () => {
   it('waits for the adapter before showing the saved scene', async () => {
     const user = userEvent.setup()
     const services = createMockServices({ persona: 'guest' })
-    let release: (value: ServiceResult<MissionProgress>) => void = () => undefined
+    let release: (value: ServiceResult<MissionProgress>) => void = () =>
+      undefined
     const gate = new Promise<ServiceResult<MissionProgress>>((resolve) => {
       release = resolve
     })

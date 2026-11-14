@@ -90,7 +90,9 @@ export function DashboardPage() {
           <StatusBanner
             variant="info"
             title="Guest Session Active"
-            message="Your progress and journal entries are stored for this active session only. Sign up before leaving to preserve your academy legacy permanently."
+            message={isLive
+              ? 'Guest progress and discoveries are saved in this browser tab. Closing the tab or clearing browser data can remove them. Guest progress is separate from account progress.'
+              : 'Development mock visit. Guest progress is kept in memory and resets on refresh.'}
           />
         ) : null}
 

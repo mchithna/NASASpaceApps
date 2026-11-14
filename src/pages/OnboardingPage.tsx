@@ -18,7 +18,7 @@ import { useNovaServices } from '@/pages/context/index.ts'
 
 export function OnboardingPage() {
   const navigate = useNavigate()
-  const { services } = useNovaServices()
+  const { services, isLive } = useNovaServices()
 
   useEffect(() => {
     document.title = 'Explorer Setup · NovaExplorer'
@@ -154,7 +154,9 @@ export function OnboardingPage() {
         <StatusBanner
           variant="info"
           title="Guest Explorer Mode"
-          message="Your callsign, avatar, and completed discoveries are stored in memory for this session. Anonymous guest sessions cannot be recovered if browser data is cleared. You can upgrade to a permanent account at any time from the sign-in portal."
+          message={isLive
+            ? 'Guest mission progress and discoveries are saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is not copied to a registered account.'
+            : 'Development mock visit. Your guest profile, progress, and discoveries stay in memory and reset on refresh.'}
         />
       ) : null}
 

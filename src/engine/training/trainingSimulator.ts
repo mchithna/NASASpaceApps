@@ -11,6 +11,8 @@ import type { EngineScene, MissionModule } from '@/engine/scenes.ts'
 export const trainingSimulatorLabel =
   'Training simulator. Not a production mission and not NASA chapter content.'
 
+export const trainingScenarioId = 'training-simulator' as const
+
 const timelinePrompt: EventOrderPrompt = {
   type: 'event-order',
   instruction: 'Put the practice steps in order. This is not a NASA timeline.',
