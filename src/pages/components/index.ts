@@ -23,3 +23,11 @@ export {
   type AvatarOption,
   isPredefinedAvatarId,
 } from '@/pages/components/avatarOptions.ts'
+export {
+  ActiveMissionSpotlight,
+  type ActiveMissionSpotlightProps,
+} from '@/pages/components/ActiveMissionSpotlight.tsx'
+export {
+  MissionDashboardCard,
+  type MissionDashboardCardProps,
+} from '@/pages/components/MissionDashboardCard.tsx'

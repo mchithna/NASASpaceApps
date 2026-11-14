@@ -1,9 +1,10 @@
 import { Link } from 'react-router'
 import { Badge } from '@/components/ui/Badge.tsx'
-import { Card } from '@/components/ui/Card.tsx'
 import { listMissions } from '@/missions/registry.ts'
 import {
+  ActiveMissionSpotlight,
   MissionControlHero,
+  MissionDashboardCard,
   PageShell,
   PersonaSwitcher,
   StatCard,
@@ -28,10 +29,18 @@ export function DashboardPage() {
 
   const missions = listMissions()
 
-  const completedCount =
-    progress?.missions.filter((m) => m.status === 'completed').length ?? 0
-  const inProgressCount =
-    progress?.missions.filter((m) => m.status === 'in_progress').length ?? 0
+  // Telemetry counts
+  const completedMissions =
+    progress?.missions.filter((m) => m.status === 'completed') ?? []
+  const inProgressMissionProgress = progress?.missions.find(
+    (m) => m.status === 'in_progress',
+  )
+  const inProgressMission = inProgressMissionProgress
+    ? missions.find((m) => m.id === inProgressMissionProgress.missionId)
+    : undefined
+
+  const completedCount = completedMissions.length
+  const inProgressCount = inProgressMissionProgress ? 1 : 0
 
   return (
     <PageShell
@@ -43,7 +52,8 @@ export function DashboardPage() {
       onRetry={() => void refresh()}
       actions={<PersonaSwitcher />}
     >
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
+        {/* Signed Out Warning */}
         {isSignedOut ? (
           <StatusBanner
             variant="warning"
@@ -51,8 +61,8 @@ export function DashboardPage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are currently exploring without an active session. Telemetry
-                  and achievements will not be tracked until you authenticate.
+                  You are currently viewing Mission Control without an active
+                  session. Progress and achievements will not be recorded.
                 </p>
                 <div className="flex gap-3">
                   <Link
@@ -73,6 +83,7 @@ export function DashboardPage() {
           />
         ) : null}
 
+        {/* Guest Session Advisory */}
         {isGuest ? (
           <StatusBanner
             variant="info"
@@ -81,6 +92,7 @@ export function DashboardPage() {
           />
         ) : null}
 
+        {/* Explorer Hero Banner */}
         {profile ? (
           <MissionControlHero
             profile={profile}
@@ -89,10 +101,17 @@ export function DashboardPage() {
           />
         ) : null}
 
+        {/* Telemetry Metrics Row */}
         <section aria-labelledby="telemetry-heading" className="flex flex-col gap-3">
-          <h2 id="telemetry-heading" className="text-xl font-heading text-foreground">
-            Mission Telemetry
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 id="telemetry-heading" className="text-xl font-heading text-foreground">
+              Mission Telemetry
+            </h2>
+            <span className="text-xs text-muted">
+              Live mock services telemetry
+            </span>
+          </div>
+
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatCard
               label="Academy Rank"
@@ -119,8 +138,10 @@ export function DashboardPage() {
               value={`${completedCount} / ${missions.length}`}
               detail={
                 inProgressCount > 0
-                  ? `${inProgressCount} mission currently active`
-                  : 'Ready for new launch'
+                  ? '1 mission in progress'
+                  : completedCount === missions.length
+                    ? 'All five missions finished!'
+                    : 'Ready for new launch'
               }
             />
             <StatCard
@@ -132,72 +153,48 @@ export function DashboardPage() {
           </div>
         </section>
 
+        {/* Active In-Progress Mission Spotlight */}
+        {inProgressMission && inProgressMissionProgress ? (
+          <section aria-labelledby="active-mission-heading" className="flex flex-col gap-3">
+            <h2 id="active-mission-heading" className="text-xl font-heading text-foreground">
+              Continue Active Mission
+            </h2>
+            <ActiveMissionSpotlight
+              mission={inProgressMission}
+              progress={inProgressMissionProgress}
+            />
+          </section>
+        ) : null}
+
+        {/* Stories & Spacecraft Grid */}
         <section aria-labelledby="stories-heading" className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 id="stories-heading" className="text-xl font-heading text-foreground">
-              Stories
-            </h2>
-            <p className="max-w-[65ch] text-sm text-secondary">
+            <div className="flex items-center justify-between">
+              <h2 id="stories-heading" className="text-xl font-heading text-foreground">
+                Stories
+              </h2>
+              <span className="text-xs text-muted">
+                {missions.length} NASA Spacecraft Dossiers
+              </span>
+            </div>
+            <p className="max-w-[70ch] text-sm text-secondary">
               Select an abandoned NASA spacecraft to investigate its historical
               journey, artifacts, and final transmissions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {missions.map((mission) => {
               const missionProgress = progress?.missions.find(
                 (m) => m.missionId === mission.id,
               )
-              const status = missionProgress?.status ?? 'not_started'
 
               return (
-                <Card
+                <MissionDashboardCard
                   key={mission.id}
-                  variant="interactive"
-                  className="flex flex-col justify-between"
-                >
-                  <div className="flex flex-col gap-3 p-5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-                        {mission.destination}
-                      </span>
-                      {status === 'completed' ? (
-                        <Badge variant="success">Completed</Badge>
-                      ) : status === 'in_progress' ? (
-                        <Badge variant="science">In Progress</Badge>
-                      ) : (
-                        <Badge variant="neutral">Not Started</Badge>
-                      )}
-                    </div>
-
-                    <div>
-                      <h3 className="font-heading text-lg font-semibold text-foreground">
-                        <Link
-                          to={`/missions/${mission.id}`}
-                          className="hover:text-science focus-visible:outline-focus"
-                        >
-                          {mission.displayName}
-                        </Link>
-                      </h3>
-                      <p className="text-xs font-medium text-science">
-                        {mission.chapterTitle}
-                      </p>
-                    </div>
-
-                    <p className="line-clamp-3 text-xs text-secondary">
-                      {mission.description}
-                    </p>
-                  </div>
-
-                  <div className="border-t border-border bg-surface/50 px-5 py-3">
-                    <Link
-                      to={`/missions/${mission.id}`}
-                      className="inline-flex text-xs font-medium text-science hover:underline"
-                    >
-                      Inspect mission files &rarr;
-                    </Link>
-                  </div>
-                </Card>
+                  mission={mission}
+                  progress={missionProgress}
+                />
               )
             })}
           </div>

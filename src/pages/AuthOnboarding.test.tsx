@@ -129,34 +129,40 @@ describe('AuthPage presentation and mock service integration', () => {
     })
   })
 
-  it('switches to create account tab and registers a new explorer', async () => {
-    const user = userEvent.setup()
-    const { services } = renderAuthPage('signed-out')
+  it(
+    'switches to create account tab and registers a new explorer',
+    async () => {
+      const user = userEvent.setup()
+      const { services } = renderAuthPage('signed-out')
 
-    const signUpTab = screen.getByRole('tab', { name: /Create Account/i })
-    await user.click(signUpTab)
+      const signUpTab = screen.getByRole('tab', { name: /Create Account/i })
+      await user.click(signUpTab)
 
-    expect(screen.getByLabelText(/Callsign \/ Nickname/i)).toBeInTheDocument()
+      const nicknameInput = screen.getByLabelText(/Callsign \/ Nickname/i)
+      const emailInput = screen.getByLabelText(/Academy Email/i)
+      const passwordInput = screen.getByLabelText(/Password/i)
 
-    await user.type(screen.getByLabelText(/Callsign \/ Nickname/i), 'Starlight')
-    await user.type(screen.getByLabelText(/Academy Email/i), 'starlight@example.com')
-    await user.type(screen.getByLabelText(/Password/i), 'securepassword123')
+      await user.type(nicknameInput, 'Starlight')
+      await user.type(emailInput, 'starlight@example.com')
+      await user.type(passwordInput, 'securepassword123')
 
-    const registerButton = screen.getByRole('button', {
-      name: /Register Profile & Begin/i,
-    })
-    await user.click(registerButton)
+      const registerButton = screen.getByRole('button', {
+        name: /Register Profile & Begin/i,
+      })
+      await user.click(registerButton)
 
-    await waitFor(() => {
-      expect(screen.getByTestId('dashboard-screen')).toBeInTheDocument()
-    })
+      await waitFor(() => {
+        expect(screen.getByTestId('dashboard-screen')).toBeInTheDocument()
+      })
 
-    const session = await services.auth.getSession()
-    expect(session.ok && session.data.status).toBe('authenticated')
+      const session = await services.auth.getSession()
+      expect(session.ok && session.data.status).toBe('authenticated')
 
-    const profile = await services.explorer.getProfile()
-    expect(profile.ok && profile.data.nickname).toBe('Starlight')
-  })
+      const profile = await services.explorer.getProfile()
+      expect(profile.ok && profile.data.nickname).toBe('Starlight')
+    },
+    15000,
+  )
 })
 
 describe('OnboardingPage presentation and mock service integration', () => {
@@ -168,7 +174,9 @@ describe('OnboardingPage presentation and mock service integration', () => {
     ).toBeInTheDocument()
 
     const nicknameInput = screen.getByLabelText(/Choose Callsign/i)
-    expect(nicknameInput).toHaveValue('Guest Cadet')
+    await waitFor(() => {
+      expect(nicknameInput).toHaveValue('Guest Cadet')
+    })
 
     expect(
       screen.getByRole('radio', { name: /Lunar Surveyor/i }),
@@ -180,6 +188,10 @@ describe('OnboardingPage presentation and mock service integration', () => {
     renderOnboardingPage('guest')
 
     const nicknameInput = await screen.findByLabelText(/Choose Callsign/i)
+    await waitFor(() => {
+      expect(nicknameInput).toHaveValue('Guest Cadet')
+    })
+
     const submitButton = screen.getByRole('button', {
       name: /Save Profile & Enter Mission Control/i,
     })

@@ -255,7 +255,7 @@ describe('DashboardPage presentation against mock services', () => {
 
     // Progress badges match seeded mock data
     expect(screen.getByText('Completed')).toBeInTheDocument() // Ingenuity
-    expect(screen.getByText('In Progress')).toBeInTheDocument() // Surveyor 3
+    expect(screen.getAllByText('In Progress').length).toBeGreaterThanOrEqual(1) // Surveyor 3
   })
 
   it('switches personas via the PersonaSwitcher', async () => {
