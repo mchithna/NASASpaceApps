@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import { PlaceholderPage } from '@/components/layout/PlaceholderPage.tsx'
 import { textLinkClass } from '@/components/layout/layoutClasses.ts'
-import { missions } from '@/lib/missions.ts'
+import { listMissions } from '@/missions/registry.ts'
 
 export function DashboardPage() {
   return (
@@ -15,10 +15,10 @@ export function DashboardPage() {
           Each link opens a placeholder. The chapters are not written yet.
         </p>
         <ul className="flex flex-col gap-2">
-          {missions.map((mission) => (
+          {listMissions().map((mission) => (
             <li key={mission.id}>
               <Link className={textLinkClass} to={`/missions/${mission.id}`}>
-                {mission.title}
+                {mission.displayName}
               </Link>
             </li>
           ))}

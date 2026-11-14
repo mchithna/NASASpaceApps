@@ -22,7 +22,11 @@ The team will build and test a shared platform and a reusable mission engine fir
 
 ## Status
 
-Phase 1, Steps 1, 2, and 3 are complete. The Vite + React + TypeScript application has shared folders, centralized routing, three layouts, placeholder pages, design tokens, and shared UI components. A development-only component preview is at `/dev/components` while `npm run dev` is running. Product features are not implemented yet.
+Phase 1, Steps 1 through 4 are complete. The Vite + React + TypeScript application has shared folders, centralized routing, three layouts, placeholder pages, design tokens, shared UI components, and a registry of the five missions. A development-only component preview is at `/dev/components` while `npm run dev` is running. Mission gameplay is not implemented yet.
+
+## Mission assets
+
+Each mission cover is `public/assets/missions/<mission-id>/cover.svg`. The current files are generated placeholders, not NASA photographs. Later files in that folder use lowercase kebab-case names, for example `surface-view.jpg`. Keep credits in the mission's `mission.ts`. Do not add NASA logos, flags, or mission insignia.
 
 ## Getting started
 
@@ -35,7 +39,7 @@ npm run dev
 
 Copy `.env.example` to `.env.local` when Supabase configuration is added. Do not commit `.env` or `.env.local`.
 
-Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, and `npm run format`.
+Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run format`.
 
 ## Project documents
 

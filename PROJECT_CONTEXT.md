@@ -17,7 +17,7 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** Phase 1, Steps 1, 2, and 3 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, placeholder pages, design tokens, and shared UI components are in place. Mission, feature, and engine folders exist for later work and do not contain chapter content, authentication, Supabase access, profiles, XP, or achievement logic.
+**Confirmed status:** Phase 1, Steps 1 through 4 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, placeholder pages, design tokens, shared UI components, and the five-mission registry are in place. Feature and engine folders exist for later work and do not contain authentication, Supabase access, profiles, XP, or achievement logic. Mission folders contain metadata only. They do not contain scenes, activities, or chapter prose.
 
 The next implementation task, when it is explicitly requested, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
 
@@ -80,7 +80,7 @@ Public challenge page (confirm details there before content work and before subm
 
 **Confirmed.** The platform will contain these five missions, and no others, unless the team explicitly changes the set. Mission identifiers below are the agreed folder and route keys. Do not rename them without explicit approval.
 
-Content for every mission is **unwritten**. The notes below identify the hardware so the team shares one subject. They are not chapter copy. Dates, measurements, quotations, image choices, and dataset citations will be taken from NASA sources when a chapter is authored.
+Content scenes and activities for every mission are **unwritten**. The notes below identify the hardware so the team shares one subject. They are not chapter copy. Dates, measurements, quotations, image choices, and dataset citations belong in the mission package and must come from NASA sources. Short descriptions already stored in each `mission.ts` are introductions, not chapters.
 
 | Mission ID | Mission | Story setting | Identifying role |
 | --- | --- | --- | --- |
@@ -89,6 +89,16 @@ Content for every mission is **unwritten**. The notes below identify the hardwar
 | `ingenuity` | Ingenuity | Mars | NASA's Mars helicopter, carried with the Perseverance mission. It flew on Mars and remains there after the flight campaign ended. |
 | `insight` | InSight | Mars | NASA Mars lander that studied the planet's interior. The lander remains on Mars after the mission ended. |
 | `pioneer-10` | Pioneer 10 | Deep space | NASA probe that flew past Jupiter and continued outward. Contact later ended. This is the deep-space story in the set. |
+
+**Confirmed story titles**, stored in each mission package:
+
+| Mission ID | Story title |
+| --- | --- |
+| `surveyor-3` | The Robot They Came Back For |
+| `opportunity` | The Explorer That Wouldn't Stop |
+| `ingenuity` | Five Flights Became Seventy-Two |
+| `insight` | The Machine That Listened to Mars |
+| `pioneer-10` | The Messenger That Never Came Home |
 
 Each chapter is a standalone story. Players may complete the five missions in any order. A shared epilogue or cross-mission conclusion is **not** decided.
 
@@ -126,7 +136,7 @@ Each chapter is a standalone story. Players may complete the five missions in an
 
 ### Confirmed planned stack
 
-React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide React, ESLint, and Prettier were added in Phase 1, Step 1 because that prompt requested them. Supabase, Vitest, React Testing Library, and Playwright are not installed.
+React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide React, ESLint, and Prettier were added in Phase 1, Step 1 because that prompt requested them. Vitest was added in Phase 1, Step 4 for registry tests. React Testing Library, Playwright, and Supabase are not installed.
 
 | Concern | Choice |
 | --- | --- |
@@ -197,7 +207,7 @@ NASA logos, flags, and mission insignia are not a design resource for original o
 
 **Confirmed strategy.** Build a shared platform and a reusable mission engine. Test that foundation. Only then assign chapters. After the engine is in place, a developer should be able to implement one mission without modifying shared platform code.
 
-**Proposed source layout**, created in Phase 1, Step 2 and extended in Step 3. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. Shared design-system components live in `src/components/ui/`. `src/features/`, `src/engine/`, and `src/missions/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter content until the phase that owns that work is requested.
+**Proposed source layout**, created in Phase 1, Steps 2 through 4. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. Shared design-system components live in `src/components/ui/`. Mission metadata lives in `src/missions/<id>/mission.ts`, and `src/missions/registry.ts` imports those five packages. `src/features/` and `src/engine/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter scenes until the phase that owns that work is requested.
 
 ```text
 src/
@@ -206,8 +216,8 @@ src/
   pages/          # one placeholder screen per route
   features/       # later auth, profiles, progress, achievements
   engine/         # later mission player
-  missions/       # later chapter content, one folder per mission id
-  lib/            # shared route metadata, including the five mission ids
+  missions/       # one package per mission id, plus the registry
+  lib/            # shared helpers
   hooks/
   styles/
 ```
@@ -221,7 +231,7 @@ src/
 | `src/components/` | Shared visual components | Data fetching for a single mission |
 | `src/features/` | Auth, profile, XP, ranks, achievements, journal | Chapter prose |
 | `src/engine/` | Loading a mission module, playing beats, reporting completion | Supabase table design |
-| `src/missions/<id>/` | That mission's content, activities, and local components | Edits to the shell, design system, auth, or another mission |
+| `src/missions/<id>/` | That mission's metadata, and later its content, activities, and local components | Edits to the shell, design system, auth, registry list, or another mission |
 
 **Proposed engine contract:**
 
@@ -230,7 +240,7 @@ src/
 - Platform features turn those outcomes into XP, rank, achievements, and journal entries.
 - Mission code does not talk to Supabase directly.
 
-The contract will be specified in Phase 4. The mission folders exist so later chapters have a place to land. They do not contain chapter content yet.
+The contract will be specified in Phase 4. Each mission folder now exports metadata from `mission.ts`. It does not contain scenes or activities yet.
 
 ## Roadmap
 
@@ -238,7 +248,7 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
-| 1 | Project Setup & Foundation | Started. Steps 1, 2, and 3 are complete: the app is initialized, the shared structure and routes are in place, and the design system has tokens and shared components. The test toolchain is not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
+| 1 | Project Setup & Foundation | Started. Steps 1 through 4 are complete: the app, routes, design system, and mission registry are in place. Vitest covers the registry. React Testing Library and Playwright are not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
 | 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
 | 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
 | 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
@@ -278,9 +288,26 @@ Included in this step:
 - `AppHeader`, `SidebarNav`, and `MobileNav` in `src/components/layout/`
 - A development-only component preview at `/dev/components`
 
-Not part of this step: the final landing page, Mission Control dashboard, mission gameplay, authentication, a database, NASA mission content, theme switching, and the test toolchain.
+Not part of this step: the final landing page, Mission Control dashboard, mission gameplay, authentication, a database, NASA mission content, and theme switching.
 
-The planned test toolchain is not started. Wait for a prompt before adding it. Component tests were not added because Vitest and React Testing Library are not installed.
+Component tests were not part of this step.
+
+### Phase 1, Step 4
+
+**Complete.** The five mission packages and the shared registry are in place.
+
+Included in this step:
+
+- `MissionDefinition` and related types in `src/missions/types.ts`
+- One package per mission under `src/missions/<id>/`, with `index.ts`, `mission.ts`, and a README
+- `src/missions/registry.ts`, which imports the five packages and looks them up by id
+- Placeholder covers in `public/assets/missions/<id>/cover.svg`
+- Mission overview and play routes read the registry
+- Vitest tests for the registry
+
+Not part of this step: story scenes, activities, gameplay, XP, achievements, authentication, Supabase, and NASA photographs.
+
+A mission developer changes that mission's `mission.ts`. The registry already imports the package, so the developer does not add the mission to a metadata list. The five ids stay fixed.
 
 ## Collaboration
 

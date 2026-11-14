@@ -1,39 +1,22 @@
 import { Link } from 'react-router'
-import { PlaceholderPage } from '@/components/layout/PlaceholderPage.tsx'
+import { MissionFacts } from '@/components/layout/MissionFacts.tsx'
 import { textLinkClass } from '@/components/layout/layoutClasses.ts'
 import { useMissionParam } from '@/hooks/useMissionParam.ts'
-import { readableMissionId } from '@/lib/missions.ts'
+import { NotFoundPage } from '@/pages/NotFoundPage.tsx'
 
 export function MissionOverviewPage() {
   const route = useMissionParam()
 
-  if (route.status === 'unknown') {
-    return (
-      <PlaceholderPage
-        title="Mission not available"
-        description={unknownMissionDescription(route.missionId)}
-      />
-    )
+  if (route.status === 'not-found') {
+    return <NotFoundPage />
   }
 
   return (
-    <PlaceholderPage
-      title={route.mission.title}
-      description={`${route.mission.title} will have an overview here before the story begins. The chapter is not written yet.`}
-    >
+    <div className="flex flex-col gap-6">
+      <MissionFacts mission={route.mission} />
       <Link className={textLinkClass} to={`/missions/${route.mission.id}/play`}>
-        Open the play placeholder
+        Open the play screen
       </Link>
-    </PlaceholderPage>
+    </div>
   )
-}
-
-function unknownMissionDescription(missionId: string | null): string {
-  const readableId = readableMissionId(missionId)
-
-  if (!readableId) {
-    return 'This mission address is not recognized. Nothing here can be played yet.'
-  }
-
-  return `No NovaExplorer story uses the id "${readableId}". Nothing here can be played yet.`
 }

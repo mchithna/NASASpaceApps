@@ -139,10 +139,10 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, and this file.
 
-Phase 1, Steps 1, 2, and 3 are complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, and strict TypeScript checking are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development.
+Phase 1, Steps 1 through 4 are complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, and strict TypeScript checking are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development. Mission metadata lives in `src/missions/<id>/mission.ts`. `src/missions/registry.ts` imports the five packages. Vitest runs the registry tests.
 
-Authentication, Supabase, explorer profiles, XP, mission chapters, the mission engine, Vitest, React Testing Library, and Playwright are not implemented. Reserved folders under `src/features/`, `src/engine/`, and `src/missions/` are empty.
+Authentication, Supabase, explorer profiles, XP, mission chapters, the mission engine, React Testing Library, and Playwright are not implemented. Reserved folders under `src/features/` and `src/engine/` are empty.
 
-The next implementation task, when a prompt requests it, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
+The next implementation task, when a prompt requests it, is the rest of the planned test toolchain: React Testing Library and Playwright.
 
 Update this status when a requested step is finished. Do not mark incomplete work as completed.
