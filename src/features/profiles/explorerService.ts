@@ -101,8 +101,14 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
         }>
       >(`profiles?id=eq.${encodeURIComponent(explorerId)}&select=*`)
 
-      if (error || !data || data.length === 0) {
-        // Recover / auto-initialize if row was missing
+      if (error) {
+        return serviceError(
+          'unavailable',
+          error.message || 'The explorer profile could not be loaded.',
+        )
+      }
+
+      if (!data || data.length === 0) {
         const at = clock()
         const defaultProfile: ExplorerProfile = {
           explorerId,
@@ -115,7 +121,7 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
           updatedAt: at,
         }
 
-        await client.query('profiles', {
+        const inserted = await client.query('profiles', {
           method: 'POST',
           body: {
             id: explorerId,
@@ -125,6 +131,13 @@ export function createExplorerService(options: ExplorerServiceOptions): Explorer
             total_xp: 0,
           },
         })
+
+        if (inserted.error) {
+          return serviceError(
+            'unavailable',
+            inserted.error.message || 'The explorer profile could not be created.',
+          )
+        }
 
         return serviceOk(defaultProfile)
       }

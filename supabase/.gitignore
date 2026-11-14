@@ -1,0 +1,4 @@
+# Supabase CLI local state. Never commit project links or access tokens.
+.branches
+.temp
+.env

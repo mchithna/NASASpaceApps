@@ -111,7 +111,10 @@ CREATE POLICY "journal_entries_insert_own" ON public.journal_entries
 
 -- Trigger to prevent direct client modification of total_xp on profiles
 CREATE OR REPLACE FUNCTION public.check_profile_update()
-RETURNS trigger AS $$
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
 BEGIN
   -- If total_xp was modified and the context is not security definer RPC
   IF NEW.total_xp IS DISTINCT FROM OLD.total_xp AND current_setting('nova.trusted_context', true) IS DISTINCT FROM 'true' THEN

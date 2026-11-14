@@ -58,7 +58,8 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
   const client = options.client ?? getSupabaseClient()
   const listeners = new Set<AuthListener>()
 
-  let session: AuthSession = options.initialSession ?? { status: 'signed-out' }
+  let session: AuthSession =
+    options.initialSession ?? sessionFromUser(client.getSession()?.user ?? null)
 
   // Sync with Supabase client auth events
   client.onAuthStateChange((_event, supabaseSession) => {
@@ -82,13 +83,15 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
 
   return {
     async getSession(): Promise<ServiceResult<AuthSession>> {
+      if (client.isConfigured && client.getSession()) {
+        const fresh = await client.ensureFreshSession()
+        session = sessionFromUser(fresh?.user ?? null)
+      }
       return serviceOk({ ...session })
     },
 
     async startGuestSession(): Promise<ServiceResult<AuthSession>> {
-      const { data, error } = await client.signInAnonymously()
-      if (error || !data?.user) {
-        // Fallback for offline / demo environments without network
+      if (!client.isConfigured) {
         const guestId = `guest-${crypto.randomUUID()}`
         session = {
           status: 'guest',
@@ -99,6 +102,14 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
         }
         notifyListeners()
         return serviceOk({ ...session })
+      }
+
+      const { data, error } = await client.signInAnonymously()
+      if (error || !data?.user) {
+        return serviceError(
+          'unavailable',
+          error?.message || 'Guest sign-in is unavailable right now.',
+        )
       }
 
       session = {
@@ -123,7 +134,14 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
         password: credentials.password,
       })
 
-      if (error || !data?.user) {
+      if (error || !data?.user || !data.session) {
+        const message = error?.message ?? ''
+        if (
+          !client.isConfigured ||
+          /network|not configured|unavailable/i.test(message)
+        ) {
+          return serviceError('unavailable', 'Sign-in is unavailable right now.')
+        }
         return serviceError(
           'invalid-input',
           'Those sign-in details do not match.',
@@ -177,7 +195,17 @@ export function createAuthService(options: AuthServiceOptions = {}): AuthService
         if (msg.includes('already registered') || msg.includes('conflict')) {
           return serviceError('conflict', 'An explorer already uses that email.')
         }
+        if (/network|not configured|unavailable/i.test(msg)) {
+          return serviceError('unavailable', 'Registration is unavailable right now.')
+        }
         return serviceError('invalid-input', error?.message || 'Unable to register account.')
+      }
+
+      if (!data.session) {
+        return serviceError(
+          'unavailable',
+          'Confirm the email address before signing in. Email confirmation is still required for this project.',
+        )
       }
 
       // Initialize profile row in database if client is configured

@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createAuthService } from '@/features/auth/authService.ts'
+import { SupabaseClient } from '@/features/auth/supabaseClient.ts'
 import { createProgressService } from './progressService.ts'
 
 describe('ProgressService Implementation Tests', () => {
@@ -176,5 +177,50 @@ describe('ProgressService Implementation Tests', () => {
     const progB = await progress.getMissionProgress('ingenuity')
     expect(progB.ok && progB.data.status).toBe('not_started')
     expect(progB.ok && progB.data.currentCheckpointId).toBeNull()
+  })
+
+  it('reports a registered checkpoint failure instead of pretending it was saved', async () => {
+    const client = new SupabaseClient({
+      supabaseUrl: 'https://test.supabase.co',
+      supabaseAnonKey: 'eyJ.test-key',
+    })
+    vi.spyOn(client, 'signInWithPassword').mockResolvedValue({
+      data: {
+        user: { id: '11111111-1111-4111-8111-111111111111' },
+        session: {
+          access_token: 'token',
+          token_type: 'bearer',
+          refresh_token: 'refresh',
+          user: { id: '11111111-1111-4111-8111-111111111111' },
+        },
+      },
+      error: null,
+    })
+
+    const auth = createAuthService({ client })
+    const signedIn = await auth.signIn({
+      email: 'nova@example.com',
+      password: 'password123',
+    })
+    expect(signedIn.ok).toBe(true)
+
+    const query = vi.spyOn(client, 'query')
+    query.mockResolvedValueOnce({ data: [], error: null })
+    query.mockResolvedValueOnce({
+      data: null,
+      error: { message: 'permission denied for table mission_progress' },
+    })
+
+    const progress = createProgressService({ auth, client })
+    const failed = await progress.saveCheckpoint({
+      missionId: 'surveyor-3',
+      checkpointId: 'opening',
+    })
+
+    expect(failed.ok).toBe(false)
+    if (!failed.ok) {
+      expect(failed.error.code).toBe('unavailable')
+    }
+    expect(String(query.mock.calls[1]?.[0])).toContain('on_conflict=user_id,mission_id')
   })
 })
