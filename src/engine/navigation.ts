@@ -55,8 +55,23 @@ export type NavigationAction =
   | { type: 'start' }
   | { type: 'next' }
   | { type: 'previous' }
+  | { type: 'restart' }
   | { type: 'go-to'; sceneId: string }
   | { type: 'complete'; activityComplete?: boolean }
+
+export type SceneNavigationState = {
+  sceneIndex: number | null
+  sceneCount: number
+  progressValue: number
+  progressMax: number
+  /** Visible text such as "2 of 5". */
+  progressLabel: string
+  canGoBack: boolean
+  canGoNext: boolean
+  /** A reading scene at the frontier can be marked done. Activities cannot. */
+  canContinue: boolean
+  canRestart: boolean
+}
 
 export function createInitialPosition(module: MissionModule): EnginePosition {
   return {
@@ -129,9 +144,63 @@ export function reduceNavigation(
       return moveScene(module, position, 1)
     case 'previous':
       return moveScene(module, position, -1)
+    case 'restart':
+      return restartMission(module, position)
     case 'go-to':
       return goToScene(module, position, action.sceneId)
   }
+}
+
+export function sceneNavigationState(
+  module: MissionModule,
+  position: EnginePosition,
+): SceneNavigationState {
+  const sceneCount = module.scenes.length
+  const index = sceneIndex(module, position.sceneId ?? '')
+  const started = position.status !== 'not_started' && index >= 0
+  const scene = index >= 0 ? module.scenes[index] : undefined
+  const currentComplete =
+    scene !== undefined && position.completedSceneIds.includes(scene.id)
+  const atLast = index === sceneCount - 1
+  const replay = position.status === 'completed'
+  const frontier = frontierIndex(module, position.completedSceneIds)
+
+  return {
+    sceneIndex: started ? index : null,
+    sceneCount,
+    progressValue: started ? index + 1 : 0,
+    progressMax: sceneCount,
+    progressLabel: started ? `${index + 1} of ${sceneCount}` : `0 of ${sceneCount}`,
+    canGoBack: started && index > 0,
+    canGoNext: started && !atLast && (replay || currentComplete),
+    canContinue:
+      position.status === 'in_progress' &&
+      scene !== undefined &&
+      !currentComplete &&
+      index === frontier &&
+      scene.kind !== 'activity',
+    canRestart: started && index > 0,
+  }
+}
+
+function restartMission(
+  module: MissionModule,
+  position: EnginePosition,
+): EngineResult<NavigationSuccess> {
+  if (position.status === 'not_started' || position.sceneId === null) {
+    return failure('not-started', null, 'Start the mission to continue.')
+  }
+
+  const first = module.scenes[0]
+  if (!first) {
+    return failure('empty-sequence', null, 'A mission needs at least one scene.')
+  }
+
+  if (position.sceneId === first.id) {
+    return success(position, [])
+  }
+
+  return visitScene(module, position, 0)
 }
 
 function startMission(
@@ -172,23 +241,25 @@ function completeScene(
     return current
   }
 
-  if (position.completedSceneIds.includes(current.scene.id)) {
+  const { scene, index } = current.value
+
+  if (position.completedSceneIds.includes(scene.id)) {
     return success(position, [])
   }
 
   const frontier = frontierIndex(module, position.completedSceneIds)
-  if (current.index !== frontier) {
+  if (index !== frontier) {
     return failure(
       'out-of-order',
-      current.scene.id,
+      scene.id,
       'Finish the earlier scenes first.',
     )
   }
 
-  if (current.scene.kind === 'activity' && !activityComplete) {
+  if (scene.kind === 'activity' && !activityComplete) {
     return failure(
       'activity-incomplete',
-      current.scene.id,
+      scene.id,
       'Finish this activity before you continue.',
     )
   }
@@ -196,19 +267,19 @@ function completeScene(
   const completedSceneIds = orderedCompleted(
     module,
     position.completedSceneIds,
-    current.scene.id,
+    scene.id,
   )
 
-  if (current.scene.kind === 'ending') {
+  if (scene.kind === 'ending') {
     return success(
       {
         missionId: module.mission.id,
         status: 'completed',
-        sceneId: current.scene.id,
+        sceneId: scene.id,
         completedSceneIds,
       },
       [
-        saveCheckpoint(module, current.scene.id, current.scene.id),
+        saveCheckpoint(module, scene.id, scene.id),
         {
           type: 'complete-mission',
           event: {
@@ -220,11 +291,11 @@ function completeScene(
     )
   }
 
-  const nextScene = module.scenes[current.index + 1]
+  const nextScene = module.scenes[index + 1]
   if (!nextScene) {
     return failure(
       'missing-ending',
-      current.scene.id,
+      scene.id,
       'The mission needs an ending scene.',
     )
   }
@@ -232,40 +303,37 @@ function completeScene(
   const effects: EngineEffect[] = []
   let activityCompletion: ActivityCompletionEvent | null = null
 
-  if (
-    current.scene.kind === 'story' &&
-    isFirstKind(module, 'story', current.scene.id)
-  ) {
-    effects.push(grantMilestone(module, 'introduction', current.scene.id))
+  if (scene.kind === 'story' && isFirstKind(module, 'story', scene.id)) {
+    effects.push(grantMilestone(module, 'introduction', scene.id))
   }
 
-  if (current.scene.kind === 'activity') {
+  if (scene.kind === 'activity') {
     activityCompletion = {
       missionId: module.mission.id,
-      checkpointId: current.scene.id,
-      activityId: current.scene.activityId,
+      checkpointId: scene.id,
+      activityId: scene.activityId,
     }
 
-    if (isFirstKind(module, 'activity', current.scene.id)) {
-      effects.push(grantMilestone(module, 'activity', current.scene.id))
+    if (isFirstKind(module, 'activity', scene.id)) {
+      effects.push(grantMilestone(module, 'activity', scene.id))
     }
   }
 
-  if (current.scene.kind === 'discovery') {
-    if (isFirstKind(module, 'discovery', current.scene.id)) {
-      effects.push(grantMilestone(module, 'discovery', current.scene.id))
+  if (scene.kind === 'discovery') {
+    if (isFirstKind(module, 'discovery', scene.id)) {
+      effects.push(grantMilestone(module, 'discovery', scene.id))
     }
 
     effects.push({
       type: 'unlock-discovery',
       request: {
         missionId: module.mission.id,
-        discoveryId: current.scene.discoveryId,
+        discoveryId: scene.discoveryId,
       },
     })
   }
 
-  effects.push(saveCheckpoint(module, nextScene.id, current.scene.id))
+  effects.push(saveCheckpoint(module, nextScene.id, scene.id))
 
   return success(
     {
@@ -289,22 +357,20 @@ function moveScene(
     return current
   }
 
-  const target = current.index + delta
+  const { scene, index } = current.value
+  const target = index + delta
   if (target < 0) {
-    return failure('at-start', current.scene.id, 'You are on the first scene.')
+    return failure('at-start', scene.id, 'You are on the first scene.')
   }
 
   if (target >= module.scenes.length) {
-    return failure('at-end', current.scene.id, 'You are on the last scene.')
+    return failure('at-end', scene.id, 'You are on the last scene.')
   }
 
-  if (
-    delta > 0 &&
-    !position.completedSceneIds.includes(current.scene.id)
-  ) {
+  if (delta > 0 && !position.completedSceneIds.includes(scene.id)) {
     return failure(
       'scene-incomplete',
-      current.scene.id,
+      scene.id,
       'Finish this scene before you move on.',
     )
   }

@@ -2,7 +2,7 @@
 
 Phase 4A design for the shared mission player. This note is engine-owned. It does not change `src/contracts/`, the mission registry, or the app shell.
 
-The player is headless. It does not render academy pages, and it is not mounted in the router. Phase 4B does that wiring.
+The player renders its own frame and is not mounted in the router. Phase 4B places it at `/missions/:missionId/play`. When no runtime is passed, effects stay in a training adapter for that visit.
 
 ## Contracts this engine consumes
 
@@ -152,32 +152,37 @@ Import the component from `@/engine/MissionPlayer.tsx`. Utilities are exported f
 ```ts
 type MissionPlayerProps = {
   module: MissionModule
-  services: Pick<NovaServices, 'progress' | 'rewards'>
-  progress: MissionRuntimeState | null
-  sceneRenderers: SceneRendererRegistry
-  activities: ActivityRegistry
+  runtime?: MissionRuntimeAdapter
+  services?: Pick<NovaServices, 'progress' | 'rewards'>
+  progress?: MissionRuntimeState | null
+  sceneRenderers?: SceneRendererRegistry
+  activities?: ActivityRegistry
+  onExit?: () => void
   onRuntimeChange?: (state: MissionRuntimeState) => void
   onActivityComplete?: (event: ActivityCompletionEvent) => void
-  children: (view: MissionPlayerView) => ReactNode
 }
 ```
 
-`progress` null means the visit has not started. The player does not load progress itself.
+`progress` null or omitted means the visit has not started. The player does not load progress itself.
 
-`children` receives the view. The host renders the controls. For story, evidence, discovery, and ending, the host calls `actions.complete()`. For an activity, the registered component calls `onComplete`. `actions.complete()` without `activityComplete: true` is rejected for an activity scene.
+The frame shows the chapter title, the current scene heading, scene progress, Back, Next, Continue, Start or Start again, and Exit when `onExit` is set. Exit does not change the route.
 
-`view.phase` is `invalid`, `ready`, `saving`, or `error`.
+`sceneNavigationState` decides which controls are available:
 
-- `invalid` means the sequence, the activity registration, or the saved checkpoints cannot be played. Show `view.issues[].message`. Do not show `sceneId`. A saved id may be unexpected.
-- `ready` before start has no current scene. Offer a start control.
-- `saving` means a write is in flight. The player ignores new actions until it finishes.
-- `error` is an action that was not allowed, or a failed write. `errorMessage` is safe to show.
+- Back is disabled on the first scene.
+- Next is disabled on the last scene, and whenever the current scene is not complete during an in-progress visit. A completed replay can move through every scene.
+- Continue marks the frontier reading scene done. It stays disabled on an activity until that activity calls `onComplete`.
+- Start again returns to the first scene. It does not open a locked scene. A completed replay writes nothing.
 
-`view.replay` is true when the mission is already complete. `view.citation` is the source block for the current scene. `view.sceneNode` is the host renderer output, including the activity node for an activity scene.
+There is no scene list that a learner can use to jump ahead. `go-to` still rejects an unknown id and a scene beyond the frontier.
 
-`onRuntimeChange` runs after a successful local change. `onActivityComplete` runs only after the activity's writes succeed.
+The frame uses `Button`, `Card`, `ProgressBar`, `PageHeader`, `LoadingState`, and `ErrorState`. Saving shows "Saving your place". An invalid module or an unknown saved scene shows the issue message and no Next control. Do not show a raw scene id.
 
-Scene renderers are a total map of the five kinds. The host owns the markup. The renderer should show the scene text, the citation label, and any source title, URL, and credit. It should not draw academy chrome or award XP.
+`runtime.apply` receives the effect list. `services` is used only when `runtime` is omitted. When both are omitted, `createTrainingRuntime()` keeps the effects in memory. Phase 4B should pass the shared services.
+
+`onRuntimeChange` runs after a successful change. `onActivityComplete` runs only after the activity's writes succeed.
+
+Scene renderers are optional. The training renderers show the fixture text and the narration label is always visible in the Sources section. A host renderer should keep that label as text.
 
 ## Phase 4B seams
 
@@ -186,7 +191,7 @@ Do this on the integration branch, not on the engine branch.
 1. Provide one `NovaServices` object through the app provider. Do not import `createMockServices` from `AppProviders` or the production router.
 2. On the play route, `lookupMission`, then load that mission's scene module from its own folder. Pass `{ mission, scenes }` into `MissionPlayer`.
 3. Call `progress.getMissionProgress` and pass `runtimeStateFromProgress` as `progress`. Pass `null` only for a visit that has no saved row.
-4. Pass the same service object as `services`. The player will call the four methods above.
+4. Pass `runtime` or the same service object as `services`. The player calls `runtime.apply` or the four service methods above. Do not import `createMockServices` from `AppProviders` or the production router.
 5. Supply scene renderers and the mission's activity registrations. Keep them out of `src/components/ui/`.
 6. On `conflict` or `unavailable`, reload `getMissionProgress` before treating the visit as stuck. A lost response after `completeMission` can make the next `saveCheckpoint` return `conflict`, because a completed mission rejects checkpoint writes.
 7. Do not register the structural fixture as a sixth mission.

@@ -41,11 +41,13 @@ export {
   reduceNavigation,
   resumePosition,
   runtimeStateFromPosition,
+  sceneNavigationState,
   type EngineEffect,
   type EngineMilestoneId,
   type EnginePosition,
   type NavigationAction,
   type NavigationSuccess,
+  type SceneNavigationState,
 } from '@/engine/navigation.ts'
 
 export {
@@ -76,8 +78,12 @@ export {
 } from '@/engine/fixture.ts'
 
 export {
+  createTrainingRuntime,
+  type MissionRuntimeAdapter,
+} from '@/engine/trainingRuntime.ts'
+
+export {
   MissionPlayer,
   type MissionPlayerPhase,
   type MissionPlayerProps,
-  type MissionPlayerView,
 } from '@/engine/MissionPlayer.tsx'

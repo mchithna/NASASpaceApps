@@ -8,6 +8,7 @@ import {
   createInitialPosition,
   reduceNavigation,
   resumePosition,
+  sceneNavigationState,
   type EnginePosition,
   type NavigationAction,
   type NavigationSuccess,
@@ -218,6 +219,45 @@ describe('mission navigation', () => {
       expect(result.issues.map((issue) => issue.code)).toContain(
         'duplicate-scene-id',
       )
+    }
+  })
+
+  it('restarts at the first scene and does not open a locked scene', () => {
+    const module = createStructuralFixture()
+    const started = expectNavigation(module, createInitialPosition(module), {
+      type: 'start',
+    })
+    const moved = expectNavigation(module, started.position, {
+      type: 'complete',
+    })
+
+    expect(moved.position.sceneId).toBe('fixture-evidence')
+    const restarted = expectNavigation(module, moved.position, {
+      type: 'restart',
+    })
+    expect(restarted.position.sceneId).toBe('fixture-opening')
+    expect(restarted.effects).toEqual([
+      expect.objectContaining({
+        type: 'save-checkpoint',
+        input: { missionId: 'surveyor-3', checkpointId: 'fixture-opening' },
+      }),
+    ])
+
+    const state = sceneNavigationState(module, restarted.position)
+    expect(state).toMatchObject({
+      progressLabel: '1 of 5',
+      canGoBack: false,
+      canGoNext: true,
+      canRestart: false,
+    })
+
+    const skipped = reduceNavigation(module, restarted.position, {
+      type: 'go-to',
+      sceneId: 'fixture-ending',
+    })
+    expect(skipped.ok).toBe(false)
+    if (!skipped.ok) {
+      expect(skipped.issues[0]?.code).toBe('locked')
     }
   })
 })
