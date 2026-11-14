@@ -22,7 +22,7 @@ The team will build and test a shared platform and a reusable mission engine fir
 
 ## Status
 
-Phase 1, Step 1 is complete. The Vite + React + TypeScript application is initialized in this repository, with a placeholder home screen. Product features are not implemented yet.
+Phase 1, Steps 1 and 2 are complete. The Vite + React + TypeScript application has shared folders, centralized routing, three layouts, and a placeholder page for every route. Product features are not implemented yet.
 
 ## Getting started
 

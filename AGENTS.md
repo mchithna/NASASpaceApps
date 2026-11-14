@@ -139,10 +139,10 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, and this file.
 
-Phase 1, Step 1 is complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, Lucide React, ESLint, Prettier, and strict TypeScript checking are configured. The interface is a placeholder home screen.
+Phase 1, Steps 1 and 2 are complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, and strict TypeScript checking are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`.
 
-Authentication, Supabase, explorer profiles, XP, missions, Vitest, React Testing Library, Playwright, shared feature folders, and the application shell are not implemented.
+Authentication, Supabase, explorer profiles, XP, mission chapters, the mission engine, Vitest, React Testing Library, and Playwright are not implemented. Reserved folders under `src/features/`, `src/engine/`, and `src/missions/` are empty.
 
-The next implementation task, when a prompt requests it, is the remainder of Phase 1: the planned test toolchain, shared source folders, and a minimal shell.
+The next implementation task, when a prompt requests it, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
 
 Update this status when a requested step is finished. Do not mark incomplete work as completed.

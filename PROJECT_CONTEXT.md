@@ -2,7 +2,7 @@
 
 This document is the shared description of NovaExplorer for teammates and coding agents. Read it before implementing a development step.
 
-It records intent and planning. It does not record a built application.
+It records intent, planning, and the state of the application. Proposed details are not permission to build them.
 
 ## How to read this document
 
@@ -17,9 +17,9 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** Phase 1, Step 1 is complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`, with Tailwind CSS v4, React Router, ESLint, Prettier, and a placeholder home screen. Lucide React is installed and not used on that screen. No Supabase client, authentication, explorer profile, XP, achievement, journal, or mission feature is implemented.
+**Confirmed status:** Phase 1, Steps 1 and 2 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, and placeholder pages are in place. Mission, feature, and engine folders exist for later work and do not contain chapter content, authentication, Supabase access, profiles, XP, or achievement logic.
 
-The next implementation task, when it is explicitly requested, is the remainder of Phase 1: the planned test toolchain, shared source folders, and a minimal shell.
+The next implementation task, when it is explicitly requested, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
 
 ## Confirmed decisions
 
@@ -172,20 +172,19 @@ NASA logos, flags, and mission insignia are not a design resource for original o
 
 **Confirmed strategy.** Build a shared platform and a reusable mission engine. Test that foundation. Only then assign chapters. After the engine is in place, a developer should be able to implement one mission without modifying shared platform code.
 
-**Proposed source layout**, to be created when the relevant steps ask for it:
+**Proposed source layout**, created in Phase 1, Step 2. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. `src/features/`, `src/engine/`, and `src/missions/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter content until the phase that owns that work is requested.
 
 ```text
 src/
-  app/            # shell, routes, providers
-  components/     # shared interface components
-  features/       # auth, profile, journal, achievements, progress
-  engine/         # reusable mission player and chapter contract
-  missions/
-    surveyor-3/
-    opportunity/
-    ingenuity/
-    insight/
-    pioneer-10/
+  app/            # shell, router, providers
+  components/     # shared layout, and later ui and gamification
+  pages/          # one placeholder screen per route
+  features/       # later auth, profiles, progress, achievements
+  engine/         # later mission player
+  missions/       # later chapter content, one folder per mission id
+  lib/            # shared route metadata, including the five mission ids
+  hooks/
+  styles/
 ```
 
 **Proposed boundary:**
@@ -193,6 +192,7 @@ src/
 | Location | Owns | Does not own |
 | --- | --- | --- |
 | `src/app/` | Application shell, routing, global providers | Mission copy or mission-only activities |
+| `src/pages/` | Route screens | Feature logic, chapter content, or Supabase |
 | `src/components/` | Shared visual components | Data fetching for a single mission |
 | `src/features/` | Auth, profile, XP, ranks, achievements, journal | Chapter prose |
 | `src/engine/` | Loading a mission module, playing beats, reporting completion | Supabase table design |
@@ -205,7 +205,7 @@ src/
 - Platform features turn those outcomes into XP, rank, achievements, and journal entries.
 - Mission code does not talk to Supabase directly.
 
-The contract will be specified in Phase 4. Until then, do not add a mission folder in order to "prepare" for later work.
+The contract will be specified in Phase 4. The mission folders exist so later chapters have a place to land. They do not contain chapter content yet.
 
 ## Roadmap
 
@@ -213,7 +213,7 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
-| 1 | Project Setup & Foundation | Started. Step 1, application initialization, is complete. The test toolchain, shared folders, and application shell are not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
+| 1 | Project Setup & Foundation | Started. Steps 1 and 2 are complete: the app is initialized, and the shared structure, router, layouts, and placeholder pages are in place. The test toolchain is not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
 | 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
 | 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
 | 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
@@ -228,7 +228,21 @@ The initialization prompt included Tailwind CSS v4, React Router, Lucide React, 
 
 Not part of this step: authentication, profiles, XP, achievements, missions, Vitest, React Testing Library, Playwright, shared feature folders, design tokens, and the application shell.
 
-The remainder of Phase 1 is not started. Wait for a prompt before adding it.
+### Phase 1, Step 2
+
+**Complete.** The application has a scalable folder structure and working routes.
+
+Included in this step:
+
+- Central React Router configuration for the public pages, explorer pages, mission pages, and the not-found page
+- `PublicLayout`, `AppLayout`, and `MissionLayout`
+- Placeholder pages for every route
+- The `@/` import alias
+- Empty reserved folders for features, the mission engine, and the five mission chapters
+
+Not part of this step: authentication, Supabase, explorer data, XP, achievement rules, mission chapters, the mission engine, and the final visual design.
+
+The planned test toolchain is not started. Wait for a prompt before adding it.
 
 ## Collaboration
 
@@ -292,7 +306,7 @@ The remainder of Phase 1 is not started. Wait for a prompt before adding it.
 | `PROJECT_CONTEXT.md` | This document |
 | `AGENTS.md` | Persistent instructions for coding agents |
 
-The repository also contains the Vite application scaffold (`package.json`, `index.html`, `src/`, and the TypeScript, Tailwind, ESLint, and Prettier configuration). No mission, profile, or Supabase client code exists yet.
+The repository also contains the Vite application. `src/app/` holds the shell and router, `src/pages/` holds placeholder screens, and `src/components/layout/` holds the three shared layouts. Feature, engine, and mission folders are reserved and have no behavior yet.
 
 ## Maintaining this document
 
