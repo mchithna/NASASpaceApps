@@ -31,3 +31,7 @@ export {
   MissionDashboardCard,
   type MissionDashboardCardProps,
 } from '@/pages/components/MissionDashboardCard.tsx'
+export {
+  ProfileEditForm,
+  type ProfileEditFormProps,
+} from '@/pages/components/ProfileEditForm.tsx'

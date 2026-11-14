@@ -239,7 +239,7 @@ export function JournalPage() {
                   {/* Top metadata */}
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3">
                     <div className="flex items-center gap-2">
-                      <Badge variant="accent">
+                      <Badge variant="science">
                         {mission?.displayName ?? entry.missionId}
                       </Badge>
                       {mission?.destination ? (

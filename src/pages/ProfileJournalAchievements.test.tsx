@@ -66,10 +66,10 @@ describe('ProfilePage presentation and interactions', () => {
     renderProfilePage('registered')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Explorer Profile' })).toBeInTheDocument()
-    expect(screen.getByText('Nova Cadet')).toBeInTheDocument()
+    expect(await screen.findByText('Nova Cadet')).toBeInTheDocument()
     expect(screen.getAllByText('Lunar Explorer').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('160 XP')).toBeInTheDocument()
-    expect(screen.getByText('60 / 100 XP to Mars Surveyor')).toBeInTheDocument()
+    expect(screen.getByText('60 / 100 XP to Planetary Explorer')).toBeInTheDocument()
     expect(screen.getByText('1 / 5')).toBeInTheDocument()
   })
 
@@ -78,17 +78,16 @@ describe('ProfilePage presentation and interactions', () => {
     const { services } = renderProfilePage('registered')
 
     await screen.findByRole('heading', { level: 1, name: 'Explorer Profile' })
-
     const input = screen.getByLabelText(/callsign/i)
-    expect(input).toHaveValue('Nova Cadet')
+    await waitFor(() => expect(input).toHaveValue('Nova Cadet'))
 
     await user.clear(input)
     await user.type(input, 'AstroPioneer')
 
-    const roverRadio = screen.getByLabelText(/Martian Rover/i)
+    const roverRadio = screen.getByRole('radio', { name: /Mars Rover Pilot/i })
     await user.click(roverRadio)
 
-    const saveButton = screen.getByRole('button', { name: /save profile updates/i })
+    const saveButton = screen.getByRole('button', { name: /save changes/i })
     await user.click(saveButton)
 
     await waitFor(() => {
@@ -99,7 +98,7 @@ describe('ProfilePage presentation and interactions', () => {
     const profileRes = await services.explorer.getProfile()
     if (profileRes.ok && profileRes.data) {
       expect(profileRes.data.nickname).toBe('AstroPioneer')
-      expect(profileRes.data.avatarId).toBe('rover-1')
+      expect(profileRes.data.avatarId).toBe('cadet-2')
     }
   })
 
@@ -108,14 +107,15 @@ describe('ProfilePage presentation and interactions', () => {
     renderProfilePage('registered')
 
     await screen.findByRole('heading', { level: 1, name: 'Explorer Profile' })
-
     const input = screen.getByLabelText(/callsign/i)
+    await waitFor(() => expect(input).toHaveValue('Nova Cadet'))
+
     await user.clear(input)
-    await user.type(input, 'x') // too short (< 3 chars)
+    await user.type(input, 'x') // too short (< 2 chars)
 
-    expect(screen.getByText(/Callsign must be 3 to 20 characters/i)).toBeInTheDocument()
+    expect(screen.getByText(/Use a nickname between 2 and 20 characters/i)).toBeInTheDocument()
 
-    const saveButton = screen.getByRole('button', { name: /save profile updates/i })
+    const saveButton = screen.getByRole('button', { name: /save changes/i })
     expect(saveButton).toBeDisabled()
   })
 
@@ -131,7 +131,7 @@ describe('ProfilePage presentation and interactions', () => {
     renderProfilePage('signed-out')
 
     expect(await screen.findByText('Signed Out')).toBeInTheDocument()
-    expect(screen.getByText(/You are exploring without an active profile/i)).toBeInTheDocument()
+    expect(screen.getByText(/You are currently exploring without an active identity/i)).toBeInTheDocument()
   })
 })
 
@@ -178,14 +178,9 @@ describe('JournalPage presentation and filtering', () => {
 
     // NASA source citations
     expect(screen.getByText('Official NASA Sources & Archival Records')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Mars Helicopter Tech Demo/i })).toHaveAttribute(
-      'target',
-      '_blank',
-    )
-    expect(screen.getByRole('link', { name: /Mars Helicopter Tech Demo/i })).toHaveAttribute(
-      'rel',
-      'noreferrer noopener',
-    )
+    const nasaLink = screen.getByRole('link', { name: /Ingenuity Mars Helicopter/i })
+    expect(nasaLink).toHaveAttribute('target', '_blank')
+    expect(nasaLink).toHaveAttribute('rel', 'noreferrer noopener')
   })
 
   it('filters discoveries by mission and search input', async () => {
