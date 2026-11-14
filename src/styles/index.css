@@ -1,13 +1,73 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-background: #0b1020;
+  --color-surface: #151e32;
+  --color-elevated: #1d2940;
+  --color-accent: #7c6cff;
+  --color-science: #53cbff;
+  --color-reward: #f7c66a;
+  --color-foreground: #f4f7ff;
+  --color-secondary: #b8c8dd;
+  --color-muted: #8c9bb3;
+  --color-border: #2b3850;
+  --color-success: #4fd1a5;
+  --color-danger: #f87171;
+  --color-on-bright: #0b1020;
+  --color-focus: #53cbff;
+
+  --font-sans: Inter, ui-sans-serif, 'Segoe UI', sans-serif;
+  --font-heading: 'Space Grotesk', Inter, ui-sans-serif, 'Segoe UI', sans-serif;
+
+  --radius-control: 0.75rem;
+  --radius-surface: 1rem;
+  --spacing-page: 2.5rem;
+
+  --shadow-surface: 0 12px 32px rgb(0 0 0 / 0.32);
+  --shadow-elevated: 0 20px 48px rgb(0 0 0 / 0.42);
+
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
 html {
   color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background-color: #020617;
-  color: #f1f5f9;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-synthesis-weight: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.dialog-surface {
+  width: min(32rem, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-elevated);
+}
+
+.dialog-surface::backdrop {
+  background: color-mix(in srgb, var(--color-background) 28%, black);
 }
 
 @media (forced-colors: active) {

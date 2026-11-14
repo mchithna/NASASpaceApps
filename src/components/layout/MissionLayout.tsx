@@ -17,9 +17,9 @@ export function MissionLayout() {
   return (
     <LayoutFrame
       header={
-        <header className="border-b border-slate-800">
+        <header className="border-b border-border bg-surface">
           <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:px-6">
-            <p className="text-sm font-medium tracking-wide text-slate-300">
+            <p className="text-sm font-medium tracking-wide text-muted">
               {mission ? mission.title : 'Mission'}
             </p>
             <TextNav label="Mission" items={missionItems} />

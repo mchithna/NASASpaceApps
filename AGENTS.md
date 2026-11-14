@@ -139,7 +139,7 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, and this file.
 
-Phase 1, Steps 1 and 2 are complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, and strict TypeScript checking are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`.
+Phase 1, Steps 1, 2, and 3 are complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, and strict TypeScript checking are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development.
 
 Authentication, Supabase, explorer profiles, XP, mission chapters, the mission engine, Vitest, React Testing Library, and Playwright are not implemented. Reserved folders under `src/features/`, `src/engine/`, and `src/missions/` are empty.
 

@@ -12,7 +12,7 @@ export function LayoutFrame({ header }: LayoutFrameProps) {
   const mainRef = useRouteFocus()
 
   return (
-    <div className="flex min-h-svh flex-col bg-slate-950 text-slate-100">
+    <div className="flex min-h-svh flex-col bg-background text-foreground">
       <SkipLink />
       {header}
       <main

@@ -10,7 +10,7 @@ export function NotFoundPage() {
   const mainRef = useRouteFocus()
 
   return (
-    <div className="flex min-h-svh flex-col bg-slate-950 text-slate-100">
+    <div className="flex min-h-svh flex-col bg-background text-foreground">
       <main
         id="main-content"
         ref={mainRef}

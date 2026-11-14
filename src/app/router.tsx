@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, type RouteObject } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout.tsx'
 import { MissionLayout } from '@/components/layout/MissionLayout.tsx'
 import { PublicLayout } from '@/components/layout/PublicLayout.tsx'
@@ -12,6 +12,19 @@ import { MissionPlayerPage } from '@/pages/MissionPlayerPage.tsx'
 import { NotFoundPage } from '@/pages/NotFoundPage.tsx'
 import { OnboardingPage } from '@/pages/OnboardingPage.tsx'
 import { ProfilePage } from '@/pages/ProfilePage.tsx'
+
+const devRoutes: RouteObject[] = import.meta.env.DEV
+  ? [
+      {
+        path: '/dev/components',
+        lazy: async () => {
+          const { ComponentShowcasePage } =
+            await import('@/pages/ComponentShowcasePage.tsx')
+          return { Component: ComponentShowcasePage }
+        },
+      },
+    ]
+  : []
 
 export const router = createBrowserRouter([
   {
@@ -39,5 +52,6 @@ export const router = createBrowserRouter([
       { path: 'play', element: <MissionPlayerPage /> },
     ],
   },
+  ...devRoutes,
   { path: '*', element: <NotFoundPage /> },
 ])

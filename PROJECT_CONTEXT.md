@@ -17,7 +17,7 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** Phase 1, Steps 1 and 2 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, and placeholder pages are in place. Mission, feature, and engine folders exist for later work and do not contain chapter content, authentication, Supabase access, profiles, XP, or achievement logic.
+**Confirmed status:** Phase 1, Steps 1, 2, and 3 are complete. The repository root is a Vite + React + TypeScript application named `novaexplorer`. Routing, three shared layouts, placeholder pages, design tokens, and shared UI components are in place. Mission, feature, and engine folders exist for later work and do not contain chapter content, authentication, Supabase access, profiles, XP, or achievement logic.
 
 The next implementation task, when it is explicitly requested, is the planned test toolchain: Vitest, React Testing Library, and Playwright.
 
@@ -140,7 +140,7 @@ React, TypeScript, Vite, Tailwind CSS v4, and React Router are installed. Lucide
 
 **Proposed Supabase scope:** Supabase Auth for explorer sign-in, and Supabase PostgreSQL for profiles, XP, ranks, achievements, journal entries, and per-mission progress. Row Level Security is expected when tables are designed in Phase 2. The schema does not exist yet.
 
-Lucide React is installed for later interface work. It is not used on the placeholder screen.
+Lucide React is used by the shared components for icons such as loading, warnings, and navigation. Placeholder pages do not add their own icons.
 
 Environment variables and Supabase project keys are not created. When they are added, secret keys stay out of the client bundle and out of Git.
 
@@ -156,15 +156,40 @@ Environment variables and Supabase project keys are not created. When they are a
 - Interactive controls must look and behave differently from decorative art.
 - Avoid excessive neon, visual noise, and animation that competes with the story.
 
-**Proposed and not yet chosen:** color values, font families, spacing numbers, radius, and shadow. Adopt them in the step that builds the design system, and check text contrast for body copy and controls before treating tokens as final.
+**Confirmed tokens** live in `src/styles/index.css` as Tailwind CSS v4 `@theme` values and CSS custom properties. The dark theme is the only theme. There is no theme switch.
 
-**Proposed visual split:**
+| Role | Token | Value |
+| --- | --- | --- |
+| Background | `--color-background` | `#0B1020` |
+| Surface | `--color-surface` | `#151E32` |
+| Elevated surface | `--color-elevated` | `#1D2940` |
+| Primary accent | `--color-accent` | `#7C6CFF` |
+| Science accent | `--color-science` | `#53CBFF` |
+| Rewards / XP | `--color-reward` | `#F7C66A` |
+| Primary text | `--color-foreground` | `#F4F7FF` |
+| Secondary text | `--color-secondary` | `#B8C8DD` |
+| Muted text | `--color-muted` | `#8C9BB3` |
+| Border | `--color-border` | `#2B3850` |
+| Success | `--color-success` | `#4FD1A5` |
+| Error | `--color-danger` | `#F87171` |
+| Text on bright fills | `--color-on-bright` | `#0B1020` |
+| Focus ring | `--color-focus` | `#53CBFF` |
+
+`--color-on-bright` and `--color-focus` reuse the background and science values for a different job. Bright fills (accent, science, reward, success, and error) use dark text because light text on those fills does not meet WCAG 2.2 AA. Do not set small accent-colored text on a surface. The specified border is faint against the background, so cards also use shadow.
+
+Space Grotesk is the heading font. Inter is the font for body text, labels, buttons, and navigation. Both fall back to `ui-sans-serif`, Segoe UI, and `sans-serif`. Spacing, radius, shadow, and the default 150ms transition are theme tokens. Motion uses `motion-safe` utilities so `prefers-reduced-motion` removes the animation.
+
+**Confirmed visual split:**
 
 - Mission-control surfaces use quiet dark panels for story, sources, and activity content.
-- Academy progression (XP, rank, achievements, journal) uses one warm accent so progress reads as the game layer.
-- A second, cooler accent is reserved for interactive control states. It stays rare so the interface does not glow uniformly.
+- Academy progression uses the reward token. The warning badge uses the same gold as a border and icon, with light text on an elevated surface, so warning and reward stay distinct.
+- The science accent is for focus rings and science badges. It stays rare so the interface does not glow uniformly.
 
-**Proposed shared components**, to be created only when a step asks for them: button, text field, panel, mission card, progress display, rank badge, achievement item, journal entry, empty state, loading state, and error state.
+**Confirmed shared components** in `src/components/ui/`: `Button`, `Card`, `Badge`, `ProgressBar`, `Dialog`, `PageHeader`, `LoadingState`, `EmptyState`, `ErrorState`, and `SectionContainer`. `src/components/layout/` also has `AppHeader`, `SidebarNav`, and `MobileNav`. Import them from their files, for example `@/components/ui/Button.tsx`. Use token utilities such as `bg-surface` and `text-secondary` instead of hardcoded colors.
+
+A development-only preview is at `/dev/components`. The route is registered only when `import.meta.env.DEV` is true, it is not linked from the app navigation, and the production build omits the page. In production that address falls through to the not-found page.
+
+**Still proposed**, and not built: text field, mission card, rank badge, achievement item, and journal entry.
 
 NASA logos, flags, and mission insignia are not a design resource for original or AI-generated art. Unaltered NASA photographs may be used later with credit, subject to NASA media guidance and the challenge rules.
 
@@ -172,12 +197,12 @@ NASA logos, flags, and mission insignia are not a design resource for original o
 
 **Confirmed strategy.** Build a shared platform and a reusable mission engine. Test that foundation. Only then assign chapters. After the engine is in place, a developer should be able to implement one mission without modifying shared platform code.
 
-**Proposed source layout**, created in Phase 1, Step 2. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. `src/features/`, `src/engine/`, and `src/missions/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter content until the phase that owns that work is requested.
+**Proposed source layout**, created in Phase 1, Step 2 and extended in Step 3. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. Shared design-system components live in `src/components/ui/`. `src/features/`, `src/engine/`, and `src/missions/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter content until the phase that owns that work is requested.
 
 ```text
 src/
   app/            # shell, router, providers
-  components/     # shared layout, and later ui and gamification
+  components/     # shared ui and layout; gamification is reserved
   pages/          # one placeholder screen per route
   features/       # later auth, profiles, progress, achievements
   engine/         # later mission player
@@ -213,7 +238,7 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
-| 1 | Project Setup & Foundation | Started. Steps 1 and 2 are complete: the app is initialized, and the shared structure, router, layouts, and placeholder pages are in place. The test toolchain is not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
+| 1 | Project Setup & Foundation | Started. Steps 1, 2, and 3 are complete: the app is initialized, the shared structure and routes are in place, and the design system has tokens and shared components. The test toolchain is not started. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
 | 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
 | 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
 | 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
@@ -242,7 +267,20 @@ Included in this step:
 
 Not part of this step: authentication, Supabase, explorer data, XP, achievement rules, mission chapters, the mission engine, and the final visual design.
 
-The planned test toolchain is not started. Wait for a prompt before adding it.
+### Phase 1, Step 3
+
+**Complete.** The shared design system and reusable interface components are in place.
+
+Included in this step:
+
+- Tailwind CSS v4 theme tokens and CSS custom properties in `src/styles/index.css`
+- Shared components in `src/components/ui/`
+- `AppHeader`, `SidebarNav`, and `MobileNav` in `src/components/layout/`
+- A development-only component preview at `/dev/components`
+
+Not part of this step: the final landing page, Mission Control dashboard, mission gameplay, authentication, a database, NASA mission content, theme switching, and the test toolchain.
+
+The planned test toolchain is not started. Wait for a prompt before adding it. Component tests were not added because Vitest and React Testing Library are not installed.
 
 ## Collaboration
 

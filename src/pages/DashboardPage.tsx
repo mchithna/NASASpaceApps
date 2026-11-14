@@ -10,8 +10,8 @@ export function DashboardPage() {
       description="This page will become the home base for choosing a story and coming back to it later. Progress tracking is not available yet."
     >
       <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-semibold text-slate-100">Stories</h2>
-        <p className="max-w-2xl text-slate-200">
+        <h2 className="text-xl text-foreground">Stories</h2>
+        <p className="max-w-[65ch] text-secondary">
           Each link opens a placeholder. The chapters are not written yet.
         </p>
         <ul className="flex flex-col gap-2">
