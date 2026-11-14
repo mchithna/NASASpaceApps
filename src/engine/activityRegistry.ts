@@ -13,6 +13,7 @@ import {
 } from '@/engine/issues.ts'
 import {
   type ActivityConfig,
+  type ActivityScene,
   type EngineScene,
 } from '@/engine/scenes.ts'
 
@@ -22,6 +23,8 @@ export type ActivityRenderProps = {
   activityId: string
   activityType: string
   config: ActivityConfig
+  /** Present for reusable activities. Custom activities may ignore it. */
+  prompt?: ActivityScene['prompt']
   completed: boolean
   replay: boolean
   onComplete: () => void
@@ -30,6 +33,10 @@ export type ActivityRenderProps = {
 export type ActivityRegistration = {
   activityType: string
   render: (props: ActivityRenderProps) => ReactNode
+  /** Set for reusable activities. Custom registrations can omit it. */
+  validatePrompt?: (
+    scene: Pick<ActivityScene, 'id' | 'prompt'>,
+  ) => readonly EngineIssue[]
 }
 
 export type ActivityRegistry = {
@@ -108,11 +115,16 @@ export function validateActivityBindings(
   const reported = new Set<string>()
 
   for (const scene of scenes) {
-    if (scene.kind !== 'activity' || reported.has(scene.activityType)) {
+    if (scene.kind !== 'activity') {
       continue
     }
 
-    if (!registry.lookup(scene.activityType)) {
+    const registration = registry.lookup(scene.activityType)
+    if (!registration) {
+      if (reported.has(scene.activityType)) {
+        continue
+      }
+
       reported.add(scene.activityType)
       issues.push(
         engineIssue(
@@ -121,7 +133,10 @@ export function validateActivityBindings(
           'This activity type is not registered.',
         ),
       )
+      continue
     }
+
+    issues.push(...(registration.validatePrompt?.(scene) ?? []))
   }
 
   return issues

@@ -63,7 +63,11 @@ export function TypedSceneView({
     case 'evidence':
       return <EvidenceSceneView scene={scene} citation={citation} />
     case 'activity':
-      return activity ?? <UnknownSceneFallback />
+      return (
+        <div key={scene.id} className="flex flex-col gap-3">
+          {activity ?? <UnknownSceneFallback />}
+        </div>
+      )
     case 'discovery':
       return (
         <DiscoverySceneView

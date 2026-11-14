@@ -4,7 +4,7 @@
  * choose a route or talk to auth.
  */
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ActivityCompletionEvent } from '@/contracts/missions.ts'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
 import { Button } from '@/components/ui/Button.tsx'
@@ -39,6 +39,7 @@ import {
   type CitationView,
   type SceneRendererRegistry,
 } from '@/engine/sceneRenderers.ts'
+import { builtinActivityRegistrations } from '@/engine/activities/builtinActivities.tsx'
 import { TypedSceneView } from '@/engine/scenes/TypedSceneView.tsx'
 import type { EndingSceneAction } from '@/engine/scenes/EndingSceneView.tsx'
 import { safeExternalUrl } from '@/engine/scenes/urls.ts'
@@ -74,6 +75,7 @@ export type MissionPlayerProps = {
 }
 
 const trainingActivities = createActivityRegistry([
+  ...builtinActivityRegistrations,
   defineActivity('fixture-check', function TrainingActivity(props: ActivityRenderProps) {
     return (
       <Button
@@ -128,10 +130,11 @@ function MissionPlayerSession({
   const [saving, setSaving] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const adapter = runtime ?? servicesToRuntime(services)
+  const activityCompletionScene = useRef<string | null>(null)
 
-  function run(action: NavigationAction): void {
+  function run(action: NavigationAction): boolean {
     if (!position || !playable || saving) {
-      return
+      return false
     }
 
     const result = reduceNavigation(module, position, action)
@@ -139,7 +142,7 @@ function MissionPlayerSession({
       setErrorMessage(
         result.issues[0]?.message ?? 'That action is not available.',
       )
-      return
+      return false
     }
 
     const next = result.value
@@ -148,7 +151,7 @@ function MissionPlayerSession({
     if (next.effects.length === 0) {
       setPosition(next.position)
       onRuntimeChange?.(runtimeStateFromPosition(next.position))
-      return
+      return true
     }
 
     setSaving(true)
@@ -159,6 +162,9 @@ function MissionPlayerSession({
         setSaving(false)
 
         if (!applied.ok) {
+          if (action.type === 'complete' && action.activityComplete) {
+            activityCompletionScene.current = null
+          }
           setErrorMessage(applied.error.message)
           return
         }
@@ -171,8 +177,24 @@ function MissionPlayerSession({
       })
       .catch(() => {
         setSaving(false)
+        if (action.type === 'complete' && action.activityComplete) {
+          activityCompletionScene.current = null
+        }
         setErrorMessage('The mission could not be saved. Try again.')
       })
+
+    return true
+  }
+
+  function completeCurrentActivity(sceneId: string): void {
+    if (activityCompletionScene.current === sceneId) {
+      return
+    }
+
+    activityCompletionScene.current = sceneId
+    if (!run({ type: 'complete', activityComplete: true })) {
+      activityCompletionScene.current = null
+    }
   }
 
   const scene =
@@ -191,9 +213,10 @@ function MissionPlayerSession({
           activityId: scene.activityId,
           activityType: scene.activityType,
           config: scene.config,
+          prompt: scene.prompt,
           completed: position?.completedSceneIds.includes(scene.id) ?? false,
           replay,
-          onComplete: () => run({ type: 'complete', activityComplete: true }),
+          onComplete: () => completeCurrentActivity(scene.id),
         }) ?? null)
       : null
   const sceneNode =

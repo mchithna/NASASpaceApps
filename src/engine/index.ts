@@ -83,6 +83,19 @@ export {
   type ActivityRenderProps,
 } from '@/engine/activityRegistry.ts'
 
+export { builtinActivityRegistrations } from '@/engine/activities/builtinActivities.tsx'
+
+export type {
+  ActivityPrompt,
+  ActivityStep,
+  EvidenceCard,
+  EvidenceMatchPrompt,
+  EvidenceMeaning,
+  EventOrderPrompt,
+  PredictionChoice,
+  PredictionPrompt,
+} from '@/engine/activities/prompts.ts'
+
 export {
   citationViewFor,
   renderScene,

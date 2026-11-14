@@ -3,6 +3,7 @@
  * Scene ids are checkpoint ids. This file does not redefine `MissionDefinition`.
  */
 
+import type { ActivityPrompt } from '@/engine/activities/prompts.ts'
 import type { MissionDefinition } from '@/missions/types.ts'
 
 export const sceneKinds = [
@@ -81,6 +82,11 @@ export type ActivityScene = SceneBase & {
   /** Open type key. The activity registry maps it to a mission component. */
   activityType: string
   config: ActivityConfig
+  /**
+   * Structured content for a reusable activity.
+   * Custom activities can omit this and use `config`.
+   */
+  prompt?: ActivityPrompt
 }
 
 export type DiscoveryScene = SceneBase & {

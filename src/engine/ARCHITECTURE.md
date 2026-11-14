@@ -47,6 +47,8 @@ Scene kinds are a closed set: `story`, `evidence`, `activity`, `discovery`, `end
 
 Activity types are open. A mission registers a typed component with `defineActivity`. The engine checks that config values are strings, finite numbers, booleans, or null. It does not check that they match the mission's config type. The mission component and the scene author must use the same shape.
 
+Reusable activities are registered as `event-order`, `evidence-match`, and `prediction-choice`. Their content is `scene.prompt`, not a nested `config` object. `validateActivityBindings` checks that content. A wrong answer can be tried again. A correct answer calls `onComplete` once for that visit. The activity does not grant XP. The player also ignores a second `onComplete` for the same scene. Spread `builtinActivityRegistrations` when a mission supplies its own registry and still wants the reusable activities.
+
 A scene id is the checkpoint id. Ids use `isStableKey`: lowercase kebab-case, 1 to 64 characters. Examples: `fixture-opening`, `field-work`. Do not prefix the mission id. The progress row is already for one mission.
 
 `narration` is `academy`, `factual`, or `mixed`.
