@@ -206,11 +206,14 @@ Do this on the integration branch, not on the engine branch.
 4. Pass `runtime` from `createServiceRuntime(services)`, or pass the same service object as `services`. Do not import `createMockServices` from `AppProviders` or the production router. Do not add a client XP field. `completeMission` remains the only completion transaction.
 5. Supply scene renderers and the mission's activity registrations. Keep them out of `src/components/ui/`.
 6. On `conflict` or `unavailable`, reload `getMissionProgress` before treating the visit as stuck. A lost response after `completeMission` can make the next `saveCheckpoint` return `conflict`, because a completed mission rejects checkpoint writes.
-7. Do not register the structural fixture as a sixth mission.
+7. Do not register the structural fixture or the training simulator as a sixth mission.
+8. Optional dev preview: render `TrainingSimulatorPreview` from `@/engine/training/TrainingSimulatorPreview.tsx` on a development-only route. This branch does not add that route.
 
 ## Fixture
 
 `createStructuralFixture` looks up `surveyor-3` in the real registry and attaches five structural scenes. The copy is `structuralFixtureNotice`. It is not chapter copy and not a NASA measurement. The evidence scene points at that mission's existing source id so citation checks have a real record to resolve. Do not show the fixture to learners.
+
+`createTrainingSimulator` is a longer practice visit in `src/engine/training/`. It also uses the Surveyor 3 metadata object and does not add a mission id. Scene copy is labeled as a training simulator. The timeline uses the shared `event-order` activity. The custom slot is `training-slot`, registered with `defineActivity` and passed in the `activities` prop. `TrainingSimulatorPreview` mounts that visit with a guest mock. It is not on the router.
 
 ## Limits
 

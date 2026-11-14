@@ -120,6 +120,19 @@ export {
 } from '@/engine/trainingRuntime.ts'
 
 export {
+  createTrainingActivities,
+  trainingSlotActivity,
+  type TrainingSlotConfig,
+} from '@/engine/training/trainingSlotActivity.tsx'
+
+export {
+  createTrainingSimulator,
+  trainingSimulatorLabel,
+} from '@/engine/training/trainingSimulator.ts'
+
+export { TrainingSimulatorPreview } from '@/engine/training/TrainingSimulatorPreview.tsx'
+
+export {
   MissionPlayer,
   type MissionPlayerPhase,
   type MissionPlayerProps,
