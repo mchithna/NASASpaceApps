@@ -4,6 +4,8 @@
  */
 
 import { type ReactNode } from 'react'
+import type { DiscoveryUnlockRequest } from '@/contracts/rewards.ts'
+import type { EndingSceneAction } from '@/engine/scenes/EndingSceneView.tsx'
 import type { MissionDefinition, MissionSource } from '@/missions/types.ts'
 import type { EnginePosition } from '@/engine/navigation.ts'
 import {
@@ -28,6 +30,12 @@ export type SceneRenderContext<TScene extends EngineScene = EngineScene> = {
   replay: boolean
   /** Rendered activity, or null when this scene is not an activity. */
   activity: ReactNode | null
+  /**
+   * Optional. Discovery and ending views call these.
+   * They do not grant XP or write a checkpoint.
+   */
+  onDiscoveryRequest?: (request: DiscoveryUnlockRequest) => void
+  onEnding?: (action: EndingSceneAction) => void
 }
 
 export type SceneRendererRegistry = {

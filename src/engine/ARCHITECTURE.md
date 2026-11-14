@@ -66,6 +66,12 @@ A scene id is the checkpoint id. Ids use `isStableKey`: lowercase kebab-case, 1 
 
 The label is how a reader tells academy narration from a NASA source. Color is not enough. The engine does not fetch citation URLs.
 
+A scene may also set `framing` to `factual`, `hypothetical`, or `simulation`. The renderer shows that word and a sentence. Academy, hypothetical, and simulation text is not presented as a NASA quotation. A `factual` label still does not call the scene body a quotation.
+
+`media` is optional. `null` shows an empty picture state. A picture loads only when `alt` is present and `src` is a site path or an `http`/`https` address with no username or password. Source links use the same address check. The URL must already be on the mission definition. Unknown source ids and blocked addresses do not become links.
+
+Discovery and ending views call `onDiscoveryRequest` and `onEnding`. Those callbacks carry ids only. The views do not call rewards, XP, or Supabase. Continue remains the control that asks the runtime to save.
+
 ### Sequence rules
 
 A module is one ordered list. Phase 4A does not branch.
@@ -182,7 +188,7 @@ The frame uses `Button`, `Card`, `ProgressBar`, `PageHeader`, `LoadingState`, an
 
 `onRuntimeChange` runs after a successful change. `onActivityComplete` runs only after the activity's writes succeed.
 
-Scene renderers are optional. The training renderers show the fixture text and the narration label is always visible in the Sources section. A host renderer should keep that label as text.
+Scene renderers are optional. The default views live in `src/engine/scenes/` and show the scene text, the narration label, and source links that pass the address check. A host that passes `sceneRenderers` still gets a Sources section, and blocked addresses are shown as text. A host renderer should keep the narration label as text. An unknown scene kind shows an error instead of a blank scene.
 
 ## Phase 4B seams
 

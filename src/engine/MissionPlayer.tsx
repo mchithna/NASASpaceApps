@@ -14,6 +14,7 @@ import { LoadingState } from '@/components/ui/LoadingState.tsx'
 import { PageHeader } from '@/components/ui/PageHeader.tsx'
 import { ProgressBar } from '@/components/ui/ProgressBar.tsx'
 import { textLinkClass } from '@/components/layout/layoutClasses.ts'
+import type { DiscoveryUnlockRequest } from '@/contracts/rewards.ts'
 import {
   createActivityRegistry,
   defineActivity,
@@ -31,14 +32,16 @@ import {
   type EnginePosition,
   type NavigationAction,
 } from '@/engine/navigation.ts'
-import type { EngineScene, MissionModule } from '@/engine/scenes.ts'
+import type { MissionModule } from '@/engine/scenes.ts'
 import {
   citationViewFor,
   renderScene,
   type CitationView,
-  type SceneRenderContext,
   type SceneRendererRegistry,
 } from '@/engine/sceneRenderers.ts'
+import { TypedSceneView } from '@/engine/scenes/TypedSceneView.tsx'
+import type { EndingSceneAction } from '@/engine/scenes/EndingSceneView.tsx'
+import { safeExternalUrl } from '@/engine/scenes/urls.ts'
 import {
   createTrainingRuntime,
   type MissionRuntimeAdapter,
@@ -64,6 +67,10 @@ export type MissionPlayerProps = {
   onExit?: () => void
   onRuntimeChange?: (state: MissionRuntimeState) => void
   onActivityComplete?: (event: ActivityCompletionEvent) => void
+  /** Discovery scenes report this. The player does not grant XP from it. */
+  onDiscoveryRequest?: (request: DiscoveryUnlockRequest) => void
+  /** Ending scenes report this. The player does not grant XP from it. */
+  onEnding?: (action: EndingSceneAction) => void
 }
 
 const trainingActivities = createActivityRegistry([
@@ -101,9 +108,12 @@ function MissionPlayerSession({
   onExit,
   onRuntimeChange,
   onActivityComplete,
+  onDiscoveryRequest,
+  onEnding,
 }: MissionPlayerProps) {
   const activityRegistry = activities ?? defaultActivities()
-  const renderers = sceneRenderers ?? trainingSceneRenderers
+  const usingDefaultRenderers = sceneRenderers === undefined
+  const renderers = sceneRenderers ?? defaultSceneRenderers
   const opened = openModule(module, progress)
   const bindingIssues = opened.ok
     ? validateActivityBindings(module.scenes, activityRegistry)
@@ -195,6 +205,8 @@ function MissionPlayerSession({
           position,
           replay,
           activity: activityNode,
+          onDiscoveryRequest,
+          onEnding,
         })
       : null
   const phase: MissionPlayerPhase = !playable
@@ -251,7 +263,9 @@ function MissionPlayerSession({
               max={navigation.progressMax}
               valueLabel={navigation.progressLabel}
             />
-            {citation ? <SourceList citation={citation} /> : null}
+            {citation && !usingDefaultRenderers ? (
+              <SourceList citation={citation} />
+            ) : null}
           </CardBody>
           <CardFooter>
             <Button
@@ -313,46 +327,72 @@ function SourceList({ citation }: { citation: CitationView }) {
         </p>
       ) : (
         <ul className="flex flex-col gap-1">
-          {citation.sources.map((source) => (
-            <li key={source.id}>
-              <a
-                className={textLinkClass}
-                href={source.url}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {source.title}
-              </a>
-              {source.credit ? (
-                <span className="text-sm text-muted"> {source.credit}</span>
-              ) : null}
-            </li>
-          ))}
+          {citation.sources.map((source) => {
+            const href = safeExternalUrl(source.url)
+            return (
+              <li key={source.id}>
+                {href ? (
+                  <a
+                    className={textLinkClass}
+                    href={href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {source.title}
+                  </a>
+                ) : (
+                  <span className="text-sm text-foreground">{source.title}</span>
+                )}
+                {source.credit ? (
+                  <span className="text-sm text-muted"> {source.credit}</span>
+                ) : null}
+              </li>
+            )
+          })}
         </ul>
       )}
     </div>
   )
 }
 
-const trainingSceneRenderers: SceneRendererRegistry = {
-  story: (context) => <SceneText context={context} />,
-  evidence: (context) => <SceneText context={context} />,
+const defaultSceneRenderers: SceneRendererRegistry = {
+  story: (context) => (
+    <TypedSceneView
+      missionId={context.mission.id}
+      scene={context.scene}
+      citation={context.citation}
+      onUnlockRequest={context.onDiscoveryRequest}
+      onEnding={context.onEnding}
+    />
+  ),
+  evidence: (context) => (
+    <TypedSceneView
+      missionId={context.mission.id}
+      scene={context.scene}
+      citation={context.citation}
+      onUnlockRequest={context.onDiscoveryRequest}
+      onEnding={context.onEnding}
+    />
+  ),
   activity: (context) => context.activity,
   discovery: (context) => (
-    <p className="max-w-[65ch] text-secondary">
-      {context.scene.title} is saved with the training visit. It is not a NASA
-      finding.
-    </p>
+    <TypedSceneView
+      missionId={context.mission.id}
+      scene={context.scene}
+      citation={context.citation}
+      onUnlockRequest={context.onDiscoveryRequest}
+      onEnding={context.onEnding}
+    />
   ),
-  ending: (context) => <SceneText context={context} />,
-}
-
-function SceneText({
-  context,
-}: {
-  context: SceneRenderContext<Extract<EngineScene, { body: string }>>
-}) {
-  return <p className="max-w-[65ch] text-pretty text-secondary">{context.scene.body}</p>
+  ending: (context) => (
+    <TypedSceneView
+      missionId={context.mission.id}
+      scene={context.scene}
+      citation={context.citation}
+      onUnlockRequest={context.onDiscoveryRequest}
+      onEnding={context.onEnding}
+    />
+  ),
 }
 
 function defaultActivities(): ActivityRegistry {

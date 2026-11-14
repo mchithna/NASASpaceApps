@@ -26,6 +26,27 @@ export const narrationLabels = {
   mixed: 'Academy narration and NASA source',
 } as const satisfies Record<NarrationKind, string>
 
+/**
+ * Extra reading label for a scene. This is not a NASA quotation mark.
+ * `factual` still needs a source link from the mission definition.
+ */
+export const sceneFramings = ['factual', 'hypothetical', 'simulation'] as const
+
+export type SceneFraming = (typeof sceneFramings)[number]
+
+export const sceneFramingLabels = {
+  factual: 'Factual',
+  hypothetical: 'Hypothetical',
+  simulation: 'Simulation',
+} as const satisfies Record<SceneFraming, string>
+
+/** Optional picture. `src` is shown only after it passes the address check. */
+export type SceneMedia = {
+  src: string
+  alt: string
+  credit?: string
+}
+
 export type ActivityConfigValue = string | number | boolean | null
 
 /** Plain settings for a mission-specific activity. Nested objects are not supported. */
@@ -37,6 +58,11 @@ type SceneBase = {
   narration: NarrationKind
   /** Ids from `MissionDefinition.sources`. Not free-form URLs. */
   sourceIds: readonly string[]
+  /** Short direction for this scene. Omit it when the scene has none. */
+  instruction?: string
+  /** `null` means the scene expected a picture and does not have one. */
+  media?: SceneMedia | null
+  framing?: SceneFraming
 }
 
 export type StoryScene = SceneBase & {
@@ -60,6 +86,8 @@ export type ActivityScene = SceneBase & {
 export type DiscoveryScene = SceneBase & {
   kind: 'discovery'
   discoveryId: string
+  /** Training or mission explanation. Omit it when the scene has none. */
+  body?: string
 }
 
 export type EndingScene = SceneBase & {
@@ -89,4 +117,8 @@ export function isSceneKind(value: string): value is SceneKind {
 
 export function isNarrationKind(value: string): value is NarrationKind {
   return (narrationKinds as readonly string[]).includes(value)
+}
+
+export function isSceneFraming(value: string): value is SceneFraming {
+  return (sceneFramings as readonly string[]).includes(value)
 }

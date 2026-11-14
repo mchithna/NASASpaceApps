@@ -13,9 +13,12 @@ export {
 
 export {
   isNarrationKind,
+  isSceneFraming,
   isSceneKind,
   narrationKinds,
   narrationLabels,
+  sceneFramingLabels,
+  sceneFramings,
   sceneKinds,
   type ActivityConfig,
   type ActivityConfigValue,
@@ -26,9 +29,25 @@ export {
   type EvidenceScene,
   type MissionModule,
   type NarrationKind,
+  type SceneFraming,
   type SceneKind,
+  type SceneMedia,
   type StoryScene,
 } from '@/engine/scenes.ts'
+
+export {
+  DiscoverySceneView,
+  EndingSceneView,
+  EvidenceSceneView,
+  SceneAttribution,
+  SceneMediaView,
+  StorySceneView,
+  TypedSceneView,
+  safeExternalUrl,
+  safeMediaSrc,
+  type EndingSceneAction,
+  type TypedSceneHandlers,
+} from '@/engine/scenes/index.ts'
 
 export {
   validateResume,

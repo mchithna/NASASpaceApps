@@ -234,4 +234,35 @@ describe('MissionPlayer frame', () => {
     expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
   })
+
+  it('sends the ending callback without writing progress', async () => {
+    const user = userEvent.setup()
+    const fixture = createStructuralFixture()
+    const runtime = runtimeSpy()
+    const onEnding = vi.fn()
+
+    render(
+      <MissionPlayer
+        module={fixture}
+        runtime={runtime}
+        onEnding={onEnding}
+        progress={{
+          missionId: 'surveyor-3',
+          status: 'in_progress',
+          currentCheckpointId: 'fixture-ending',
+          completedCheckpointIds: fixture.scenes
+            .filter((scene) => scene.kind !== 'ending')
+            .map((scene) => scene.id),
+        }}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Finish this scene' }))
+
+    expect(onEnding).toHaveBeenCalledWith({
+      missionId: 'surveyor-3',
+      sceneId: 'fixture-ending',
+    })
+    expect(runtime.apply).not.toHaveBeenCalled()
+  })
 })
