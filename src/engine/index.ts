@@ -75,6 +75,11 @@ export {
 } from '@/engine/checkpointAdapter.ts'
 
 export {
+  createServiceRuntime,
+  type ServiceRuntime,
+} from '@/engine/serviceRuntime.ts'
+
+export {
   createActivityRegistry,
   defineActivity,
   validateActivityBindings,

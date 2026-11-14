@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useKeyedState<T>(
   identity: string,
@@ -31,14 +31,17 @@ export function useActivityAttempt(
   succeed: (onComplete: () => void) => void
 } {
   const sent = useRef(false)
-  const identityRef = useRef(identity)
+  const [tracked, setTracked] = useState(identity)
   const [phase, setPhase] = useState<AttemptPhase>(locked ? 'correct' : 'idle')
 
-  if (identityRef.current !== identity) {
-    identityRef.current = identity
-    sent.current = false
+  if (tracked !== identity) {
+    setTracked(identity)
     setPhase(locked ? 'correct' : 'idle')
   }
+
+  useEffect(() => {
+    sent.current = false
+  }, [identity])
 
   function miss(): void {
     if (locked || phase === 'correct') {

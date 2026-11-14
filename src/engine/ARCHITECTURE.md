@@ -186,7 +186,11 @@ There is no scene list that a learner can use to jump ahead. `go-to` still rejec
 
 The frame uses `Button`, `Card`, `ProgressBar`, `PageHeader`, `LoadingState`, and `ErrorState`. Saving shows "Saving your place". An invalid module or an unknown saved scene shows the issue message and no Next control. Do not show a raw scene id.
 
-`runtime.apply` receives the effect list. `services` is used only when `runtime` is omitted. When both are omitted, `createTrainingRuntime()` keeps the effects in memory. Phase 4B should pass the shared services.
+`runtime.apply` receives the effect list. `services` is used only when `runtime` is omitted. The player builds one `createServiceRuntime(services)` for that visit. When both are omitted, `createTrainingRuntime()` keeps the effects in memory. Phase 4B passes either a real `NovaServices` object or a runtime with the same `apply` method. It does not add service methods.
+
+`createServiceRuntime` records each confirmed write. A second call with the same checkpoint, milestone, discovery, or mission completion does not call the service again. A failed write stays unconfirmed, so the same action can be retried. Two overlapping calls for the same pending writes share one request. The scene heading and the "Your place is saved" notice change only after that request succeeds. A failure stays on the current scene and shows the service message.
+
+`loadProgress` reads `progress.getMissionProgress` from the same service instance. The Phase 1.5 mock keeps that state in memory. A new `createMockServices()` call is empty. A browser reload is not persistent until Phase 4B supplies a real service.
 
 `onRuntimeChange` runs after a successful change. `onActivityComplete` runs only after the activity's writes succeed.
 
@@ -199,7 +203,7 @@ Do this on the integration branch, not on the engine branch.
 1. Provide one `NovaServices` object through the app provider. Do not import `createMockServices` from `AppProviders` or the production router.
 2. On the play route, `lookupMission`, then load that mission's scene module from its own folder. Pass `{ mission, scenes }` into `MissionPlayer`.
 3. Call `progress.getMissionProgress` and pass `runtimeStateFromProgress` as `progress`. Pass `null` only for a visit that has no saved row.
-4. Pass `runtime` or the same service object as `services`. The player calls `runtime.apply` or the four service methods above. Do not import `createMockServices` from `AppProviders` or the production router.
+4. Pass `runtime` from `createServiceRuntime(services)`, or pass the same service object as `services`. Do not import `createMockServices` from `AppProviders` or the production router. Do not add a client XP field. `completeMission` remains the only completion transaction.
 5. Supply scene renderers and the mission's activity registrations. Keep them out of `src/components/ui/`.
 6. On `conflict` or `unavailable`, reload `getMissionProgress` before treating the visit as stuck. A lost response after `completeMission` can make the next `saveCheckpoint` return `conflict`, because a completed mission rejects checkpoint writes.
 7. Do not register the structural fixture as a sixth mission.

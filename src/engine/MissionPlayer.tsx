@@ -4,7 +4,7 @@
  * choose a route or talk to auth.
  */
 
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import type { ActivityCompletionEvent } from '@/contracts/missions.ts'
 import type { MissionRuntimeState } from '@/contracts/missions.ts'
 import { Button } from '@/components/ui/Button.tsx'
@@ -22,7 +22,8 @@ import {
   type ActivityRegistry,
   type ActivityRenderProps,
 } from '@/engine/activityRegistry.ts'
-import { applyEffects, type EngineServices } from '@/engine/checkpointAdapter.ts'
+import type { EngineServices } from '@/engine/checkpointAdapter.ts'
+import { createServiceRuntime } from '@/engine/serviceRuntime.ts'
 import type { EngineIssue } from '@/engine/issues.ts'
 import {
   openModule,
@@ -129,8 +130,12 @@ function MissionPlayerSession({
   )
   const [saving, setSaving] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const adapter = runtime ?? servicesToRuntime(services)
-  const activityCompletionScene = useRef<string | null>(null)
+  const [savedNotice, setSavedNotice] = useState(false)
+  const [fallbackRuntime] = useState(() =>
+    services ? createServiceRuntime(services) : createTrainingRuntime(),
+  )
+  const adapter = runtime ?? fallbackRuntime
+  const [activityGuard] = useState(createActivityCompletionGuard)
 
   function run(action: NavigationAction): boolean {
     if (!position || !playable || saving) {
@@ -147,6 +152,7 @@ function MissionPlayerSession({
 
     const next = result.value
     setErrorMessage(null)
+    setSavedNotice(false)
 
     if (next.effects.length === 0) {
       setPosition(next.position)
@@ -163,13 +169,14 @@ function MissionPlayerSession({
 
         if (!applied.ok) {
           if (action.type === 'complete' && action.activityComplete) {
-            activityCompletionScene.current = null
+            activityGuard.release()
           }
           setErrorMessage(applied.error.message)
           return
         }
 
         setPosition(next.position)
+        setSavedNotice(true)
         onRuntimeChange?.(runtimeStateFromPosition(next.position))
         if (next.activityCompletion) {
           onActivityComplete?.(next.activityCompletion)
@@ -178,7 +185,7 @@ function MissionPlayerSession({
       .catch(() => {
         setSaving(false)
         if (action.type === 'complete' && action.activityComplete) {
-          activityCompletionScene.current = null
+          activityGuard.release()
         }
         setErrorMessage('The mission could not be saved. Try again.')
       })
@@ -187,13 +194,12 @@ function MissionPlayerSession({
   }
 
   function completeCurrentActivity(sceneId: string): void {
-    if (activityCompletionScene.current === sceneId) {
+    if (!activityGuard.claim(sceneId)) {
       return
     }
 
-    activityCompletionScene.current = sceneId
     if (!run({ type: 'complete', activityComplete: true })) {
-      activityCompletionScene.current = null
+      activityGuard.release()
     }
   }
 
@@ -273,6 +279,11 @@ function MissionPlayerSession({
             ) : null}
             {phase === 'error' && errorMessage ? (
               <ErrorState title="Try that again" message={errorMessage} />
+            ) : null}
+            {phase === 'ready' && savedNotice ? (
+              <p role="status" className="text-sm text-secondary">
+                Your place is saved.
+              </p>
             ) : null}
             {sceneNode}
             {!scene ? (
@@ -426,14 +437,23 @@ function defaultActivities(): ActivityRegistry {
   return trainingActivities.value
 }
 
-function servicesToRuntime(services: EngineServices | undefined): MissionRuntimeAdapter {
-  if (!services) {
-    return createTrainingRuntime()
-  }
+function createActivityCompletionGuard(): {
+  claim: (sceneId: string) => boolean
+  release: () => void
+} {
+  let sceneId: string | null = null
 
   return {
-    apply(effects) {
-      return applyEffects(services, effects)
+    claim(next) {
+      if (sceneId === next) {
+        return false
+      }
+
+      sceneId = next
+      return true
+    },
+    release() {
+      sceneId = null
     },
   }
 }
