@@ -62,6 +62,19 @@ Do not change these identifiers without explicit approval. Do not add a sixth mi
 
 Proposed engine rule, to honor once the engine exists: mission modules emit progress outcomes, and platform features persist profiles, XP, ranks, achievements, and journal entries. Mission code does not access Supabase on its own.
 
+## Parallel workstreams
+
+Phase 1.5 added shared contracts in `src/contracts/` and unwired mock services in `src/mocks/`. Ownership, the service boundary, and the Git workflow are in `docs/PARALLEL_DEVELOPMENT.md`.
+
+- Builder A (Phase 2, player systems) owns `src/features/` implementations and future Supabase access. That builder implements the shared service interfaces.
+- Builder B (Phase 3, platform UI) owns `src/pages/` and presentation composition. It consumes the contracts and mock adapters.
+- Builder C (Phase 4A, mission engine) owns `src/engine/`. It uses the Phase 1 mission metadata and the progress and reward contracts. It does not use Supabase.
+- Phase 4B wires the real services, UI, and engine together. It is not part of the three feature branches.
+
+Do not rewrite `src/contracts/`, the mission registry, the central router, global providers, shared UI primitives, design tokens, `package.json`, the lockfile, or these project documents on a feature branch. Ask the integration owner to apply that change.
+
+Do not register `createMockServices()` in `AppProviders` or the production router. Phase 4B chooses the implementation once.
+
 ## Accessibility
 
 The audience is school-age learners, approximately ages 10–17. Interface work must be usable with a keyboard, on a phone, and with reduced motion.
@@ -137,12 +150,14 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
-Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, and this file.
+Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, `docs/PARALLEL_DEVELOPMENT.md`, and this file.
 
 Phase 1 is complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, Vitest, and React Testing Library are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development. Mission metadata lives in `src/missions/<id>/mission.ts`. `src/missions/registry.ts` imports the five packages.
 
-Authentication, Supabase, explorer profiles, XP, mission chapters, the mission engine, and Playwright are not implemented. Reserved folders under `src/features/` and `src/engine/` are empty.
+Phase 1.5 is complete. Shared player, progress, reward, and service contracts live in `src/contracts/`. `rankForXp` derives the six confirmed ranks. `src/mocks/` provides isolated, deterministic `NovaServices` for local development and tests. Those mocks are not wired into the application shell. Rank thresholds, the four mission milestones, and parallel ownership are documented in `docs/PARALLEL_DEVELOPMENT.md`.
 
-The next implementation task, when a prompt requests it, is Phase 2: authentication and explorer profiles.
+Authentication, Supabase, explorer-profile persistence, production XP, mission chapters, the mission engine, and Playwright are not implemented. Reserved folders under `src/features/` and `src/engine/` are empty. Pages are still placeholders.
+
+The next implementation task, when a prompt requests it, is one named workstream: Phase 2 (Builder A, player systems), Phase 3 (Builder B, platform UI), or Phase 4A (Builder C, mission engine). Phase 4B waits until those three are ready to integrate. Do not start a workstream the current prompt did not name.
 
 Update this status when a requested step is finished. Do not mark incomplete work as completed.

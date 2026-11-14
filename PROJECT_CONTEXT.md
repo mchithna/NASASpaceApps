@@ -17,9 +17,13 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
-**Confirmed status:** Phase 1 is complete. Steps 1 through 5 are in place: the Vite + React + TypeScript application, routing, layouts, design system, five-mission registry, Vitest, and React Testing Library. Feature and engine folders are reserved. They do not contain authentication, Supabase access, profiles, XP, achievement logic, scenes, or activities. Playwright is not installed.
+**Confirmed status:** Phase 1 is complete. Steps 1 through 5 are in place: the Vite + React + TypeScript application, routing, layouts, design system, five-mission registry, Vitest, and React Testing Library.
 
-The next implementation task, when it is explicitly requested, is Phase 2: authentication and explorer profiles.
+Phase 1.5 is complete. Shared contracts live in `src/contracts/`. Deterministic mock services live in `src/mocks/` and are not connected to the shell. Ownership and the Git workflow are in `docs/PARALLEL_DEVELOPMENT.md`.
+
+Feature and engine folders are still reserved. They do not contain authentication, Supabase access, saved profiles, production XP, scenes, or activities. Pages are still placeholders. Playwright is not installed.
+
+The next implementation task, when a prompt explicitly requests it, is one of the parallel workstreams: Phase 2 (player systems), Phase 3 (platform UI), or Phase 4A (mission engine). Phase 4B integrates them later. Do not start a workstream the current prompt did not name.
 
 ## Confirmed decisions
 
@@ -36,7 +40,10 @@ The next implementation task, when it is explicitly requested, is Phase 2: authe
 | Planned stack | React, TypeScript, Vite, Tailwind CSS v4, React Router, Supabase, Vitest, React Testing Library, Playwright |
 | Interface concept | Cinematic Mission Control + Gamified Space Academy |
 | Build strategy | Complete and test the shared platform and reusable mission engine first, then assign one independent mission chapter to each of five developers |
-| Roadmap | Six phases, listed in [Roadmap](#roadmap) |
+| Parallel work | After Phase 1.5, Builders A, B, and C may work on Phases 2, 3, and 4A at the same time. Phase 4B integrates them. See `docs/PARALLEL_DEVELOPMENT.md`. |
+| Ranks | Six ranks, derived from XP: Space Cadet (0), Lunar Explorer (100), Planetary Explorer (200), Mission Specialist (300), Deep Space Explorer (400), Legacy Guardian (500) |
+| Mission XP | Each mission awards up to 100 XP in four milestones: introduction 20, activity 40, discovery 25, legacy 15 |
+| Roadmap | Phases listed in [Roadmap](#roadmap), including the Phase 1.5 split of later work |
 
 ## Vision
 
@@ -122,14 +129,13 @@ Each chapter is a standalone story. Players may complete the five missions in an
 - The journal separates sourced NASA findings from fictional academy narration and from the player's own notes.
 - Mission activities report completion to the platform. The platform awards XP, updates rank, unlocks achievements, and appends journal entries.
 - Activities can include reading beats, questions, and labeled simulations. The activity mix for each mission is an open question for Phase 5.
-- Rank names, XP thresholds, and the achievement list are open questions. Do not invent a canon ladder in code comments or placeholder copy unless the active step asks for placeholders and labels them as placeholders.
+- Rank names and XP thresholds are confirmed in Phase 1.5. `rankForXp` in `src/contracts/explorer.ts` is the formula. The five story achievement ids match the placeholder ids already stored on each mission. Further academy achievements are not defined yet.
 
 **Open questions:**
 
-- Authentication method (email and password, magic link, or a specific OAuth provider).
-- Which profile fields are public, private, or optional.
-- Whether progress is stored only for signed-in explorers, or whether a local guest session exists before sign-in.
-- Exact journal entry schema.
+- Authentication method (email and password, magic link, or a specific OAuth provider). The service interface accepts email and password inputs so a provider can be chosen in Phase 2.
+- Which profile fields are public, private, or optional. The contract stores nickname, avatar id, XP, and rank. It does not store a password or access token.
+- Whether guest progress is kept after the explorer signs in. The contract supports a guest session. The mock does not merge guest XP into the registered profile.
 - Which official challenge dataset each mission will cite.
 
 ## Technology
@@ -207,13 +213,15 @@ NASA logos, flags, and mission insignia are not a design resource for original o
 
 **Confirmed strategy.** Build a shared platform and a reusable mission engine. Test that foundation. Only then assign chapters. After the engine is in place, a developer should be able to implement one mission without modifying shared platform code.
 
-**Proposed source layout**, created in Phase 1, Steps 2 through 4. Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. Shared design-system components live in `src/components/ui/`. Mission metadata lives in `src/missions/<id>/mission.ts`, and `src/missions/registry.ts` imports those five packages. `src/features/` and `src/engine/` are reserved and currently empty. Do not add authentication, gamification, engine behavior, or chapter scenes until the phase that owns that work is requested.
+**Confirmed source layout.** Route screens live in `src/pages/`. Shared layout components live in `src/components/layout/`. Shared design-system components live in `src/components/ui/`. Mission metadata lives in `src/missions/<id>/mission.ts`, and `src/missions/registry.ts` imports those five packages. Phase 1.5 added `src/contracts/` and `src/mocks/`. `src/features/` and `src/engine/` are reserved for Builders A and C and are still empty.
 
 ```text
 src/
   app/            # shell, router, providers
   components/     # shared ui and layout; gamification is reserved
   pages/          # one placeholder screen per route
+  contracts/      # shared player, progress, reward, and service types
+  mocks/          # unwired in-memory NovaServices for parallel development
   features/       # later auth, profiles, progress, achievements
   engine/         # later mission player
   missions/       # one package per mission id, plus the registry
@@ -222,25 +230,27 @@ src/
   styles/
 ```
 
-**Proposed boundary:**
+**Ownership:**
 
 | Location | Owns | Does not own |
 | --- | --- | --- |
 | `src/app/` | Application shell, routing, global providers | Mission copy or mission-only activities |
-| `src/pages/` | Route screens | Feature logic, chapter content, or Supabase |
+| `src/pages/` | Route screens. Builder B owns the presentation. | Feature logic, chapter content, or Supabase |
 | `src/components/` | Shared visual components | Data fetching for a single mission |
-| `src/features/` | Auth, profile, XP, ranks, achievements, journal | Chapter prose |
-| `src/engine/` | Loading a mission module, playing beats, reporting completion | Supabase table design |
+| `src/contracts/` | Shared serializable models and service interfaces. Integration owner. | Supabase clients, page layout, or scene rendering |
+| `src/mocks/` | In-memory services for Builders B and C and for tests | Production persistence. Not wired into the shell. |
+| `src/features/` | Auth, profile, XP, ranks, achievements, journal. Builder A. | Chapter prose and page design |
+| `src/engine/` | Loading a mission module, playing beats, reporting completion. Builder C. | Supabase table design |
 | `src/missions/<id>/` | That mission's metadata, and later its content, activities, and local components | Edits to the shell, design system, auth, registry list, or another mission |
 
 **Proposed engine contract:**
 
 - A mission module exports a typed definition: `id`, title, summary, beats or activities, and source citations.
-- The engine renders the definition and emits outcomes such as "beat completed" or "activity scored."
+- The engine renders the definition and emits outcomes such as a finished activity or a finished milestone. Those outcomes do not include an XP amount.
 - Platform features turn those outcomes into XP, rank, achievements, and journal entries.
 - Mission code does not talk to Supabase directly.
 
-The contract will be specified in Phase 4. Each mission folder now exports metadata from `mission.ts`. It does not contain scenes or activities yet.
+Phase 1.5 specifies the service and engine-event contracts in `src/contracts/`. Each mission folder still exports metadata from `mission.ts`. It does not contain scenes or activities yet. The engine implementation is Phase 4A. Connecting it to real services is Phase 4B.
 
 ## Roadmap
 
@@ -249,9 +259,11 @@ Phases are **confirmed**. Work inside a phase is **not started** unless this tab
 | Phase | Name | Status | Proposed focus |
 | --- | --- | --- | --- |
 | 1 | Project Setup & Foundation | Complete. The app, routes, design system, mission registry, and foundation tests are in place. Playwright is not part of this phase. | Initialize the app, then add the planned toolchain, shared folders, and a minimal shell only as later prompts request them. |
-| 2 | Authentication & Explorer Profiles | Not started | Supabase auth, profile data, and session handling. |
-| 3 | Main Platform Interface | Not started | Academy navigation, mission select, profile, journal, and progress screens on the shared design system. |
-| 4 | Reusable Mission Engine | Not started | Typed mission contract, player, and progress events. Test the engine with a fixture mission before real chapters. |
+| 1.5 | Parallel Development Preparation | Complete. Contracts, mock services, rank rules, and ownership docs are in place. Phases 2, 3, and 4A are not started. | Let three builders work against one service boundary. |
+| 2 | Player Systems | Not started. Builder A, branch `feature/player-system`. | Supabase auth, guest sessions, profiles, XP, progress, achievements, and journal persistence. Implements the shared service interfaces. |
+| 3 | Main Platform UI | Not started. Builder B, branch `feature/platform-ui`. | Landing page, Mission Control, auth and onboarding UI, profile, achievements, journal, and mission overview. Consumes contracts and mocks. |
+| 4A | Independent Mission Engine | Not started. Builder C, branch `feature/mission-engine`. | Shared mission player, scenes, activities, and mock checkpoint and reward calls. No Supabase. |
+| 4B | Service, UI, and Engine Integration | Not started. Begins after Phases 2, 3, and 4A merge. | Wire real services through the app provider and router. |
 | 5 | Five Independent Mission Chapters | Not started | One developer per mission, working only inside that mission folder. |
 | 6 | Integration, Testing & Polish | Not started | Assemble the five chapters, full-journey tests, accessibility pass, scientific review, and submission polish. |
 
@@ -322,13 +334,27 @@ Included in this step:
 
 Not part of this step: Playwright, authentication, profiles, XP, gameplay, and the mission engine.
 
+### Phase 1.5 — Parallel development preparation
+
+**Complete.** The repository can host three independent workstreams without a second mission id or a second XP formula.
+
+Included in this step:
+
+- Serializable auth, profile, progress, reward, and engine-event contracts in `src/contracts/`
+- `NovaServices`, the four async service interfaces
+- `rankForXp` and the four milestone amounts, with boundary tests
+- Isolated mock services in `src/mocks/`, including a guest explorer, a registered explorer, five progress records, and idempotent rewards
+- Ownership, integration boundaries, and manual Git commands in `docs/PARALLEL_DEVELOPMENT.md`
+
+Not part of this step: Supabase, database migrations, final pages, mission gameplay, cinematic animation, chapter copy, and production XP persistence. The mocks are not registered in the app shell.
+
 ## Collaboration
 
 **Confirmed.** Five developers. Shared platform work and the mission engine come first and are tested before chapter assignment. Each developer then owns one mission chapter.
 
 **Proposed working agreement:**
 
-1. Phases 1–4 are shared-platform work. Changes to the shell, design system, auth, profiles, and engine are reviewed before anyone starts a chapter.
+1. Phases 1 through 4A are shared-platform work, split across Builders A, B, and C after Phase 1.5. Phase 4B integrates the services, UI, and engine. Changes to the shell, design system, contracts, auth, profiles, and engine are reviewed before anyone starts a chapter.
 2. Chapter work starts only after the engine contract is stable enough to add a mission without editing shared code.
 3. Each developer owns one directory under `src/missions/`. Assignments are not made yet.
 4. During Phase 5, shared files stay unchanged except for a coordinated fix to the engine contract. The same fix must keep all five chapters compatible.
@@ -343,11 +369,14 @@ Not part of this step: Playwright, authentication, profiles, XP, gameplay, and t
 | `insight` | InSight | Unassigned |
 | `pioneer-10` | Pioneer 10 | Unassigned |
 
+**Confirmed parallel workflow.** Three builders may work after the Phase 1.5 baseline. The branches are `develop`, `feature/player-system`, `feature/platform-ui`, and `feature/mission-engine`. They must all start from the same Phase 1.5 commit. Details, protected files, and the commands to create those branches are in `docs/PARALLEL_DEVELOPMENT.md`.
+
 **Proposed Git workflow**, once feature work begins:
 
 - Keep `main` in a working state.
-- Use a branch and a pull request for shared-platform work.
-- Use a branch named `mission/<mission-id>` for chapter work.
+- Use `develop` as the integration branch for Phases 2, 3, and 4A.
+- Use a pull request into `develop` for each workstream. Contract changes are separate pull requests reviewed by the integration owner.
+- Use a branch named `mission/<mission-id>` for chapter work in Phase 5.
 - Do not commit secrets, `.env` files, or Supabase service-role keys.
 - Do not force-push, rewrite shared history, or change remotes unless the team explicitly asks.
 
@@ -383,8 +412,9 @@ Not part of this step: Playwright, authentication, profiles, XP, gameplay, and t
 | `README.md` | Short introduction for people |
 | `PROJECT_CONTEXT.md` | This document |
 | `AGENTS.md` | Persistent instructions for coding agents |
+| `docs/PARALLEL_DEVELOPMENT.md` | Builder ownership, service boundaries, and the Git workflow |
 
-The repository also contains the Vite application. `src/app/` holds the shell and router, `src/pages/` holds placeholder screens, and `src/components/layout/` holds the three shared layouts. Feature, engine, and mission folders are reserved and have no behavior yet.
+The repository also contains the Vite application. `src/app/` holds the shell and router, `src/pages/` holds placeholder screens, and `src/components/layout/` holds the three shared layouts. `src/contracts/` and `src/mocks/` hold the Phase 1.5 boundary. Feature and engine folders are reserved and have no behavior yet.
 
 ## Maintaining this document
 
