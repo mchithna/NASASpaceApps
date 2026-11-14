@@ -14,3 +14,12 @@ export {
   MissionCardPreview,
   type MissionCardPreviewProps,
 } from '@/pages/components/MissionCardPreview.tsx'
+export {
+  AvatarSelector,
+  type AvatarSelectorProps,
+} from '@/pages/components/AvatarSelector.tsx'
+export {
+  avatarOptions,
+  type AvatarOption,
+  isPredefinedAvatarId,
+} from '@/pages/components/avatarOptions.ts'
