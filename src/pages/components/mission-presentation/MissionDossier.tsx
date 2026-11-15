@@ -53,160 +53,184 @@ export function MissionDossier({ mission }: MissionDossierProps) {
 
   return (
     <div className={styles.dossierContainer}>
-      {/* Cinematic Hero Dossier Card */}
+      {/* Cinematic Hero Dossier Card with Layered Depth */}
       <article className={styles.heroCard}>
-        <div className={styles.heroContent}>
-          {/* Badges / Classification Row */}
-          <div className={styles.badgeRow}>
-            <span className={styles.eyebrow}>
-              <Sparkles size={14} aria-hidden="true" />
-              NASA Spacecraft Dossier
-            </span>
-            <span className={`${styles.badge} ${styles.destinationBadge}`}>
-              <DestinationIcon size={13} aria-hidden="true" />
-              {mission.destination}
-            </span>
-            <span className={styles.badge}>
-              <Compass size={13} aria-hidden="true" />
-              {mission.category.replace(/-/g, ' ')}
-            </span>
-            {isCompleted ? (
-              <span className={`${styles.badge} ${styles.statusBadgeCompleted}`}>
-                Completed
+        <div className={styles.dossierGrid}>
+          {/* Metadata & Narrative Column */}
+          <div className={styles.dossierMetaColumn}>
+            {/* Badges / Classification Row */}
+            <div className={styles.badgeRow}>
+              <span className={styles.eyebrow}>
+                <Sparkles size={14} aria-hidden="true" />
+                NASA Spacecraft Dossier
               </span>
-            ) : isInProgress ? (
-              <span className={styles.badge}>In Progress</span>
-            ) : (
-              <span className={`${styles.badge} ${styles.statusBadge}`}>
-                Planned Chapter
-              </span>
-            )}
-          </div>
-
-          {/* Heading and Chapter Title */}
-          <div className={styles.titleGroup}>
-            <h1 className={styles.heading}>{mission.displayName}</h1>
-            <p className={styles.chapterTitle}>{mission.chapterTitle}</p>
-          </div>
-
-          <p className={styles.description}>{mission.description}</p>
-
-          {/* Mission Progress Loading / Error States */}
-          {isLoading ? (
-            <p role="status" className={styles.statusMessage}>
-              Loading your progress
-            </p>
-          ) : null}
-          {error ? (
-            <p role="alert" className={styles.errorMessage}>
-              {error.message}
-            </p>
-          ) : null}
-
-          {/* Spacecraft Visual Display */}
-          <div className={styles.artworkSection}>
-            {imgFailed ? (
-              <div className="flex flex-col items-center justify-center py-20 text-muted">
-                <DestinationIcon size={48} aria-hidden="true" />
-                <span className="mt-3 text-sm">Spacecraft visual preview</span>
-              </div>
-            ) : (
-              <img
-                src={`/assets/common/landing/${mission.id}-480.webp`}
-                srcSet={`/assets/common/landing/${mission.id}-480.webp ${imageWidths[0]}w, /assets/common/landing/${mission.id}-960.webp ${imageWidths[1]}w`}
-                sizes="(min-width: 1024px) 800px, 100vw"
-                width={imageWidths[0]}
-                height="320"
-                alt={media?.alt ?? `${mission.displayName} spacecraft`}
-                className={styles.artworkImg}
-                loading="eager"
-                onError={() => setImgFailed(true)}
-              />
-            )}
-            <div className={styles.artworkVignette} aria-hidden="true" />
-
-            {/* Credited Source Bar */}
-            <div className={styles.creditBar}>
-              <span className={styles.creditItem}>
-                <span className="font-semibold text-secondary">Credit:</span>{' '}
-                {media?.credit ?? 'NASA'}
-                {media?.kind ? (
-                  <span className="text-xs text-muted">({media.kind})</span>
-                ) : null}
-              </span>
-              {media?.source ? (
-                <a
-                  href={media.source}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.creditLink}
-                >
-                  NASA Archive <ExternalLink size={12} aria-hidden="true" />
-                </a>
-              ) : null}
-            </div>
-          </div>
-
-          {/* Metadata Cards */}
-          <div className={styles.metaGrid}>
-            <div className={styles.metaCard}>
-              <span className={styles.metaLabel}>Destination</span>
-              <p className={styles.metaValue}>
-                <span className="font-medium text-foreground">Destination: </span>
+              <span className={`${styles.badge} ${styles.destinationBadge}`}>
+                <DestinationIcon size={13} aria-hidden="true" />
                 {mission.destination}
-              </p>
+              </span>
+              <span className={styles.badge}>
+                <Compass size={13} aria-hidden="true" />
+                {mission.category.replace(/-/g, ' ')}
+              </span>
+              {isCompleted ? (
+                <span className={`${styles.badge} ${styles.statusBadgeCompleted}`}>
+                  Completed
+                </span>
+              ) : isInProgress ? (
+                <span className={styles.badge}>In Progress</span>
+              ) : (
+                <span className={`${styles.badge} ${styles.statusBadge}`}>
+                  Planned Chapter
+                </span>
+              )}
             </div>
-            <div className={styles.metaCard}>
-              <span className={styles.metaLabel}>Story Title</span>
-              <p className={styles.metaValue}>
-                <span className="font-medium text-foreground">Story title: </span>
-                {mission.chapterTitle}
-              </p>
+
+            {/* Heading and Chapter Title */}
+            <div className={styles.titleGroup}>
+              <h1 className={styles.heading}>{mission.displayName}</h1>
+              <p className={styles.chapterTitle}>{mission.chapterTitle}</p>
             </div>
-            <div className={styles.metaCard}>
-              <span className={styles.metaLabel}>Explorer Status</span>
-              <p className={styles.metaValue}>
-                {isCompleted
-                  ? 'Completed'
-                  : isInProgress
-                    ? 'In Progress'
-                    : 'Not Started'}
+
+            <p className={styles.description}>{mission.description}</p>
+
+            {/* Mission Progress Loading / Error States */}
+            {isLoading ? (
+              <p role="status" className={styles.statusMessage}>
+                Loading your progress
               </p>
+            ) : null}
+            {error ? (
+              <p role="alert" className={styles.errorMessage}>
+                {error.message}
+              </p>
+            ) : null}
+
+            {/* Key Telemetry Metadata Cards */}
+            <div className={styles.metaGrid}>
+              <div className={styles.metaCard}>
+                <span className={styles.metaLabel}>Destination</span>
+                <p className={styles.metaValue}>
+                  <span className="font-medium text-foreground">Destination: </span>
+                  {mission.destination}
+                </p>
+              </div>
+              <div className={styles.metaCard}>
+                <span className={styles.metaLabel}>Story Title</span>
+                <p className={styles.metaValue}>
+                  <span className="font-medium text-foreground">Story title: </span>
+                  {mission.chapterTitle}
+                </p>
+              </div>
+            </div>
+
+            {/* Chapter Readiness Notice */}
+            {mission.status === 'planned' ? (
+              <div className={styles.noticeBox}>
+                <Info size={18} className={styles.noticeIcon} aria-hidden="true" />
+                <div>
+                  <p className="font-semibold text-foreground">Chapter In Development</p>
+                  <p>Mission gameplay is not implemented yet.</p>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Action Row */}
+            <div className={styles.actionRow}>
+              <Link to={`/missions/${mission.id}/play`} className={styles.primaryCta}>
+                <span>{actionText}</span>
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
+              <Link to="/dashboard" className={styles.secondaryLink}>
+                Mission Control
+              </Link>
             </div>
           </div>
 
-          {/* Chapter Readiness Notice */}
-          {mission.status === 'planned' ? (
-            <div className={styles.noticeBox}>
-              <Info size={18} className={styles.noticeIcon} aria-hidden="true" />
-              <div>
-                <p className="font-semibold text-foreground">Chapter In Development</p>
-                <p>Mission gameplay is not implemented yet.</p>
+          {/* Visual Artwork Column with Perspective & Ambient Orbits */}
+          <div className={styles.dossierVisualColumn}>
+            {/* Subtle orbital path SVG */}
+            <svg
+              className={styles.orbitalSvg}
+              viewBox="0 0 500 400"
+              fill="none"
+              aria-hidden="true"
+            >
+              <ellipse
+                cx="250"
+                cy="200"
+                rx="230"
+                ry="120"
+                transform="rotate(-20 250 200)"
+                stroke="rgba(83, 203, 255, 0.25)"
+                strokeWidth="1.2"
+                strokeDasharray="16 8"
+              />
+              <ellipse
+                cx="250"
+                cy="200"
+                rx="180"
+                ry="90"
+                transform="rotate(-20 250 200)"
+                stroke="rgba(217, 252, 167, 0.15)"
+                strokeWidth="1"
+              />
+            </svg>
+
+            {/* Perspective Frame around Credited Artwork */}
+            <div className={styles.perspectiveFrame}>
+              {imgFailed ? (
+                <div className="flex flex-col items-center justify-center py-24 text-muted">
+                  <DestinationIcon size={48} aria-hidden="true" />
+                  <span className="mt-3 text-sm">{mission.displayName} Visual Preview</span>
+                </div>
+              ) : (
+                <img
+                  src={`/assets/common/landing/${mission.id}-480.webp`}
+                  srcSet={`/assets/common/landing/${mission.id}-480.webp ${imageWidths[0]}w, /assets/common/landing/${mission.id}-960.webp ${imageWidths[1]}w`}
+                  sizes="(min-width: 1024px) 480px, 100vw"
+                  width={imageWidths[0]}
+                  height="320"
+                  alt={media?.alt ?? `${mission.displayName} spacecraft`}
+                  className={styles.artworkImg}
+                  loading="eager"
+                  onError={() => setImgFailed(true)}
+                />
+              )}
+              <div className={styles.artworkVignette} aria-hidden="true" />
+
+              {/* Exact Credited Caption */}
+              <div className={styles.creditBar}>
+                <span className={styles.creditItem}>
+                  <span className="font-semibold text-secondary">Credit:</span>{' '}
+                  {media?.credit ?? 'NASA'}
+                  {media?.kind ? (
+                    <span className="text-xs text-muted">({media.kind})</span>
+                  ) : null}
+                </span>
+                {media?.source ? (
+                  <a
+                    href={media.source}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.creditLink}
+                  >
+                    NASA Archive <ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                ) : null}
               </div>
             </div>
-          ) : null}
-
-          {/* Compatibility Cover Image Element for Testing Infrastructure */}
-          <img
-            src={mission.coverImage}
-            alt="Placeholder cover. A NASA photograph is not shown yet."
-            className={styles.schematicCompatible}
-          />
-
-          {/* Action Row */}
-          <div className={styles.actionRow}>
-            <Link to={`/missions/${mission.id}/play`} className={styles.primaryCta}>
-              <span>{actionText}</span>
-              <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-            <Link to="/dashboard" className={styles.secondaryLink}>
-              Mission Control
-            </Link>
           </div>
         </div>
+
+        {/* Compatibility Cover Image Element for Testing Infrastructure */}
+        <img
+          src={mission.coverImage}
+          alt="Placeholder cover. A NASA photograph is not shown yet."
+          className={styles.schematicCompatible}
+        />
       </article>
 
-      {/* Verified NASA Sources */}
+      {/* Verified NASA Sources Section */}
       <section className={styles.sourcesSection} aria-labelledby="nasa-sources-heading">
         <h2 id="nasa-sources-heading" className={styles.sourcesHeading}>
           NASA source

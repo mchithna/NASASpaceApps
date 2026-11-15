@@ -7,6 +7,10 @@
   font-family: var(--font-sans);
 }
 
+/* =========================================
+   Dossier Layout & Cinematic Depth (Task C3)
+   ========================================= */
+
 .heroCard {
   position: relative;
   overflow: hidden;
@@ -14,31 +18,106 @@
   border: 1px solid var(--color-landing-border, #344354);
   background:
     radial-gradient(
-      circle at 80% 20%,
-      color-mix(in srgb, var(--color-science, #53cbff) 12%, transparent),
-      transparent 70%
+      ellipse at 90% 10%,
+      color-mix(in srgb, var(--color-science, #53cbff) 14%, transparent),
+      transparent 65%
     ),
     radial-gradient(
-      circle at 20% 80%,
+      circle at 10% 85%,
       color-mix(in srgb, var(--color-landing-lime, #d9fca7) 8%, transparent),
-      transparent 60%
+      transparent 55%
     ),
     var(--color-landing-surface, #0b1421);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
 }
 
-.heroContent {
+/* Ambient subtle background stars */
+.heroCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #ffffff33, rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 150px 80px, #ffffff44, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 320px 220px, #ffffff22, rgba(0, 0, 0, 0)),
+    radial-gradient(1.5px 1.5px at 450px 140px, #ffffff33, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 500px 500px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.dossierGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .dossierGrid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding: 1.25rem;
+  }
+}
+
+.dossierMetaColumn {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  gap: 1.25rem;
+}
+
+.dossierVisualColumn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Background orbital lines */
+.orbitalSvg {
+  position: absolute;
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* Restrained CSS perspective frame */
+.perspectiveFrame {
+  position: relative;
+  border-radius: calc(var(--radius-surface, 1rem) - 2px);
+  overflow: hidden;
+  border: 1px solid rgba(82, 103, 124, 0.45);
+  background: #050a12;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  transform: perspective(900px) rotateY(-2deg) rotateX(1deg);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .perspectiveFrame:hover {
+    transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-2px);
+    box-shadow: 0 20px 44px rgba(83, 203, 255, 0.15);
+  }
+}
+
+@media (max-width: 900px) {
+  .perspectiveFrame {
+    transform: none;
+  }
 }
 
 .badgeRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .badge {
@@ -76,7 +155,7 @@
 .titleGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .eyebrow {
@@ -92,7 +171,7 @@
 
 .heading {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 3.8vw, 3rem);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.03em;
@@ -109,26 +188,24 @@
 }
 
 .description {
-  max-width: 72ch;
-  font-size: 1rem;
+  max-width: 65ch;
+  font-size: 0.95rem;
   line-height: 1.65;
   color: var(--color-landing-muted, #aab7c8);
   margin: 0;
 }
 
-.artworkSection {
-  position: relative;
-  overflow: hidden;
-  border-radius: calc(var(--radius-surface, 1rem) - 4px);
-  border: 1px solid rgba(82, 103, 124, 0.4);
-  background: #050a12;
-}
-
 .artworkImg {
   width: 100%;
-  max-height: 480px;
+  max-height: 380px;
   object-fit: cover;
   display: block;
+}
+
+@media (max-width: 900px) {
+  .artworkImg {
+    max-height: 260px;
+  }
 }
 
 .artworkVignette {
@@ -136,8 +213,8 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(5, 10, 18, 0.95) 0%,
-    rgba(5, 10, 18, 0.3) 40%,
+    rgba(5, 10, 18, 0.9) 0%,
+    rgba(5, 10, 18, 0.2) 40%,
     transparent 100%
   );
   pointer-events: none;
@@ -148,18 +225,18 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1.25rem;
-  background: rgba(11, 20, 33, 0.9);
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: rgba(11, 20, 33, 0.95);
   border-top: 1px solid rgba(82, 103, 124, 0.3);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--color-landing-muted, #aab7c8);
 }
 
 .creditItem {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .creditLink {
@@ -183,22 +260,22 @@
 
 .metaGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
 }
 
 .metaCard {
-  padding: 1.25rem;
-  border-radius: var(--radius-surface, 1rem);
+  padding: 1rem 1.15rem;
+  border-radius: calc(var(--radius-surface, 1rem) - 4px);
   background: var(--color-landing-card, #101c2a);
   border: 1px solid var(--color-landing-border, #344354);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .metaLabel {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -207,7 +284,7 @@
 
 .metaValue {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-landing-text, #f5f7fb);
   margin: 0;
@@ -217,8 +294,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.5rem 0 0.5rem;
+  gap: 1.15rem;
+  padding-top: 0.5rem;
 }
 
 .primaryCta {
@@ -226,13 +303,13 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  min-height: 52px;
-  padding: 0.75rem 2rem;
+  min-height: 48px;
+  padding: 0.65rem 1.75rem;
   border-radius: 9999px;
   background: var(--color-landing-lime, #d9fca7);
   color: #050a12;
   font-family: var(--font-heading);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -255,13 +332,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  min-height: 44px;
-  padding: 0.5rem 1.25rem;
+  min-height: 42px;
+  padding: 0.5rem 1.15rem;
   border-radius: 9999px;
   border: 1px solid var(--color-landing-border, #344354);
   background: rgba(16, 28, 42, 0.6);
   color: var(--color-landing-muted, #aab7c8);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
   transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
@@ -281,13 +358,13 @@
 .noticeBox {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem;
-  border-radius: var(--radius-surface, 1rem);
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: calc(var(--radius-surface, 1rem) - 4px);
   background: rgba(83, 203, 255, 0.05);
   border: 1px solid rgba(83, 203, 255, 0.2);
   color: var(--color-landing-muted, #aab7c8);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.5;
 }
 
@@ -309,7 +386,7 @@
 
 .sourcesHeading {
   font-family: var(--font-heading);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-landing-text, #f5f7fb);
   display: flex;
@@ -324,14 +401,14 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .sourceItem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .sourceLink {
@@ -355,22 +432,22 @@
 
 .creditTag {
   color: var(--color-landing-muted, #aab7c8);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 .statusMessage {
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   border-radius: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   background: rgba(83, 203, 255, 0.08);
   border: 1px solid rgba(83, 203, 255, 0.2);
   color: var(--color-science, #53cbff);
 }
 
 .errorMessage {
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   border-radius: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   background: rgba(248, 113, 113, 0.1);
   border: 1px solid rgba(248, 113, 113, 0.3);
   color: var(--color-danger, #f87171);
@@ -387,7 +464,7 @@
 }
 
 /* =========================================
-   Player Route Styles (Task C2)
+   Player Route Styles (Task C4)
    ========================================= */
 
 .playerContainer {
@@ -403,7 +480,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid rgba(82, 103, 124, 0.25);
 }
 
@@ -412,7 +489,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
 }
 
 .playerCard {
@@ -426,7 +503,7 @@
     ),
     var(--color-landing-surface, #0b1421);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -519,12 +596,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .primaryCta,
-  .buttonLink {
+  .buttonLink,
+  .perspectiveFrame {
     transition: none;
     transform: none;
   }
   .primaryCta:hover,
-  .buttonLink:hover {
+  .buttonLink:hover,
+  .perspectiveFrame:hover {
     transform: none;
   }
   .secondaryLink {
