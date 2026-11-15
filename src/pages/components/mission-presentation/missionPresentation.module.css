@@ -1,0 +1,400 @@
+.dossierContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  color: var(--color-landing-text, #f5f7fb);
+  font-family: var(--font-sans);
+}
+
+.heroCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-surface, 1rem);
+  border: 1px solid var(--color-landing-border, #344354);
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in srgb, var(--color-science, #53cbff) 12%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 20% 80%,
+      color-mix(in srgb, var(--color-landing-lime, #d9fca7) 8%, transparent),
+      transparent 60%
+    ),
+    var(--color-landing-surface, #0b1421);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(83, 203, 255, 0.1);
+  border: 1px solid rgba(83, 203, 255, 0.3);
+  color: var(--color-science, #53cbff);
+}
+
+.destinationBadge {
+  background: rgba(217, 252, 167, 0.1);
+  border-color: rgba(217, 252, 167, 0.3);
+  color: var(--color-landing-lime, #d9fca7);
+}
+
+.statusBadge {
+  background: rgba(170, 183, 200, 0.1);
+  border-color: rgba(170, 183, 200, 0.25);
+  color: var(--color-landing-muted, #aab7c8);
+}
+
+.statusBadgeCompleted {
+  background: rgba(79, 209, 165, 0.15);
+  border-color: rgba(79, 209, 165, 0.4);
+  color: var(--color-success, #4fd1a5);
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-science, #53cbff);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--color-landing-text, #f5f7fb);
+  margin: 0;
+}
+
+.chapterTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--color-landing-lime, #d9fca7);
+  font-weight: 500;
+  margin: 0;
+}
+
+.description {
+  max-width: 72ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-landing-muted, #aab7c8);
+  margin: 0;
+}
+
+.artworkSection {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius-surface, 1rem) - 4px);
+  border: 1px solid rgba(82, 103, 124, 0.4);
+  background: #050a12;
+}
+
+.artworkImg {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  display: block;
+}
+
+.artworkVignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 10, 18, 0.95) 0%,
+    rgba(5, 10, 18, 0.3) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.creditBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(11, 20, 33, 0.9);
+  border-top: 1px solid rgba(82, 103, 124, 0.3);
+  font-size: 0.8rem;
+  color: var(--color-landing-muted, #aab7c8);
+}
+
+.creditItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.creditLink {
+  color: var(--color-science, #53cbff);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 150ms ease;
+}
+
+.creditLink:hover {
+  color: var(--color-landing-text, #f5f7fb);
+  text-decoration: underline;
+}
+
+.creditLink:focus-visible {
+  outline: 2px solid var(--color-focus, #53cbff);
+  outline-offset: 2px;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.metaCard {
+  padding: 1.25rem;
+  border-radius: var(--radius-surface, 1rem);
+  background: var(--color-landing-card, #101c2a);
+  border: 1px solid var(--color-landing-border, #344354);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-landing-muted, #aab7c8);
+}
+
+.metaValue {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-landing-text, #f5f7fb);
+  margin: 0;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.primaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  background: var(--color-landing-lime, #d9fca7);
+  color: #050a12;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(217, 252, 167, 0.3);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.primaryCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(217, 252, 167, 0.45);
+  background: #e5ffd0;
+}
+
+.primaryCta:focus-visible {
+  outline: 2px solid var(--color-focus, #53cbff);
+  outline-offset: 4px;
+}
+
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-landing-border, #344354);
+  background: rgba(16, 28, 42, 0.6);
+  color: var(--color-landing-muted, #aab7c8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.secondaryLink:hover {
+  color: var(--color-landing-text, #f5f7fb);
+  border-color: rgba(83, 203, 255, 0.5);
+  background: rgba(16, 28, 42, 0.9);
+}
+
+.secondaryLink:focus-visible {
+  outline: 2px solid var(--color-focus, #53cbff);
+  outline-offset: 3px;
+}
+
+.noticeBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-surface, 1rem);
+  background: rgba(83, 203, 255, 0.05);
+  border: 1px solid rgba(83, 203, 255, 0.2);
+  color: var(--color-landing-muted, #aab7c8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.noticeIcon {
+  color: var(--color-science, #53cbff);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.sourcesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-surface, 1rem);
+  background: var(--color-landing-card, #101c2a);
+  border: 1px solid var(--color-landing-border, #344354);
+}
+
+.sourcesHeading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-landing-text, #f5f7fb);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sourcesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sourceItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.sourceLink {
+  color: var(--color-science, #53cbff);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 150ms ease;
+}
+
+.sourceLink:hover {
+  color: var(--color-landing-text, #f5f7fb);
+  text-decoration: underline;
+}
+
+.sourceLink:focus-visible {
+  outline: 2px solid var(--color-focus, #53cbff);
+  outline-offset: 2px;
+}
+
+.creditTag {
+  color: var(--color-landing-muted, #aab7c8);
+  font-size: 0.8rem;
+}
+
+.statusMessage {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background: rgba(83, 203, 255, 0.08);
+  border: 1px solid rgba(83, 203, 255, 0.2);
+  color: var(--color-science, #53cbff);
+}
+
+.errorMessage {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--color-danger, #f87171);
+}
+
+/* Hidden but accessible schematic compatibility */
+.schematicCompatible {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryCta {
+    transition: none;
+    transform: none;
+  }
+  .primaryCta:hover {
+    transform: none;
+  }
+  .secondaryLink {
+    transition: none;
+  }
+}
