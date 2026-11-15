@@ -97,65 +97,13 @@
 
 .scene {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(32rem, 62%);
   z-index: 0;
   perspective: 900px;
   pointer-events: none;
-}
-
-.planet {
-  position: absolute;
-  top: 8%;
-  right: -6%;
-  width: min(22rem, 58%);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow:
-    0 0 70px rgb(83 203 255 / 0.18),
-    inset 0 0 30px rgb(0 0 0 / 0.25);
-}
-
-.planet img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.orbits {
-  position: absolute;
-  inset: 8% -8% auto auto;
-  width: min(28rem, 78%);
-  height: auto;
-  stroke: rgb(217 252 167 / 0.45);
-  stroke-width: 1;
-}
-
-.credit {
-  position: relative;
-  z-index: 1;
-  align-self: end;
-  justify-self: start;
-  max-width: 18rem;
-  margin: 0;
-  padding: 0.3rem 0.45rem;
-  border-radius: 0.45rem;
-  background: rgb(5 10 18 / 0.72);
-  color: var(--color-landing-muted);
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
-}
-
-.credit a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.credit a:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
 }
 
 .metrics {
@@ -220,29 +168,13 @@
 }
 
 @media (max-width: 639px) {
-  .planet {
+  .scene {
+    width: 100%;
     opacity: 0.45;
   }
 
   .copy {
     max-width: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
-  .orbits {
-    transform-origin: 62% 48%;
-    animation: drift 90s linear infinite;
-  }
-}
-
-@keyframes drift {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -285,6 +217,12 @@
 .media[data-mission='opportunity'] img,
 .spotlightMedia[data-mission='opportunity'] img {
   object-position: 50% 68%;
+}
+
+.media[data-mission='ingenuity'] img,
+.spotlightMedia[data-mission='ingenuity'] img {
+  object-position: 50% 62%;
+  transform: scale(1.06);
 }
 
 .scrim {

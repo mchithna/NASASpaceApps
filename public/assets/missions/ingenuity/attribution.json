@@ -1,0 +1,43 @@
+[
+  {
+    "file": "ingenuity-mars.webp",
+    "source": "https://www.jpl.nasa.gov/images/pia25968-perseverance-checks-out-ingenuity/",
+    "download": "https://images-assets.nasa.gov/image/PIA25968/PIA25968~large.jpg",
+    "credit": "NASA/JPL-Caltech/ASU/MSSS",
+    "description": "This view of NASA's Ingenuity Mars Helicopter was generated using data collected by the Mastcam-Z instrument aboard the agency's Perseverance Mars rover on Aug. 2, 2023, the 871st Martian day, or sol, of the mission. The image was taken a day before the rotorcraft's 54th flight, and about a week and a half after Flight 53, which was cut short by an unexpected landing.  Arizona State University leads the operations of the Mastcam-Z instrument, working in collaboration with Malin Space Science Systems in San Diego, on the design, fabrication, testing, and operation of the cameras, and in collaboration with the Niels Bohr Institute of the University of Copenhagen on the design, fabrication, and testing of the calibration targets.  A key objective for Perseverance's mission on Mars is astrobiology, including the search for signs of ancient microbial life. The rover will characterize the planet's geology and past climate, pave the way for human exploration of the Red Planet, and be the first mission to collect and cache Martian rock and regolith (broken rock and dust).  Subsequent NASA missions, in cooperation with ESA (European Space Agency), would send spacecraft to Mars to collect these sealed samples from the surface and return them to Earth for in-depth analysis.  The Mars 2020 Perseverance mission is part of NASA's Moon to Mars exploration approach, which includes Artemis missions to the Moon that will help prepare for human exploration of the Red Planet.  https://photojournal.jpl.nasa.gov/catalog/PIA25968",
+    "width": 1600,
+    "height": 433
+  },
+  {
+    "file": "damaged-rotor.webp",
+    "source": "https://www.jpl.nasa.gov/images/pia26243-ingenuity-spots-the-shadow-of-its-damaged-rotor-blade/",
+    "download": "https://images-assets.nasa.gov/image/PIA26243/PIA26243~large.jpg",
+    "credit": "NASA/JPL-Caltech",
+    "description": "After its 72nd flight on Jan. 18, 2024, NASA's Ingenuity Mars Helicopter captured this color image showing the shadow of a rotor blade damaged during a rough landing.  https://photojournal.jpl.nasa.gov/catalog/PIA26243",
+    "width": 1484,
+    "height": 1100
+  },
+  {
+    "file": "sand-ripples.webp",
+    "source": "https://www.jpl.nasa.gov/images/pia26242-ingenuitys-view-of-sand-ripples-during-flight-70/",
+    "download": "https://images-assets.nasa.gov/image/PIA26242/PIA26242~large.jpg",
+    "credit": "NASA/JPL-Caltech",
+    "description": "NASA's Ingenuity Mars Helicopter captured this view of sand ripples during its 70th flight, on Dec. 22, 2023. Taken from about 39 feet (12 meters) above the surface, the image shows the widest swath of sandy, relatively featureless terrain the helicopter had ever flown over.  Ingenuity navigates by tracking the relative motion of surface features it sees beneath it, using its black-and-white navigation camera. An algorithm used by the navigation system incorporates the relative motion of features such as rocks, boulders, and ridges into the helicopter's calculation of position, velocity, and attitude. The more featureless the terrain is, the harder it is for Ingenuity to successfully navigate across it.  During the descent phase of Flight 72, on Jan. 18, 2024, Ingenuity experienced an anomalous landing near the right side of this image. Subsequent imaging from the helicopter's onboard cameras indicated that one of the rotor blades was damaged during touchdown. The team believes that the relatively featureless terrain in this region, which the navigation system was not designed for, was likely the root cause of the anomalous landing.  https://photojournal.jpl.nasa.gov/catalog/PIA26242",
+    "width": 1484,
+    "height": 1100
+  },
+  {
+    "file": "components.webp",
+    "source": "https://www.jpl.nasa.gov/news/press_kits/ingenuity/landing/mission/spacecraft/",
+    "download": "https://www.jpl.nasa.gov/news/press_kits/ingenuity/assets/images/04_mission/04B_spacecraft/anatomy-of-mars-helicopter%402x.jpg",
+    "credit": "NASA/JPL-Caltech",
+    "description": "Technical anatomy illustration, not a surface photograph."
+  },
+  {
+    "file": "first-flight.webp",
+    "source": "https://www.jpl.nasa.gov/images/pia24584-ingenuitys-first-black-and-white-image-from-the-air/",
+    "download": "https://images-assets.nasa.gov/image/PIA24584/PIA24584~thumb.jpg",
+    "credit": "NASA/JPL-Caltech",
+    "description": "Navigation camera photograph of Ingenuity\u2019s shadow during its first flight, April 19, 2021."
+  }
+]

@@ -172,7 +172,7 @@ describe('JournalPage presentation and filtering', () => {
     expect(screen.getByText('Total Findings')).toBeInTheDocument()
 
     // Verify Ingenuity notes from registered mock seed
-    expect(screen.getByText('Placeholder: Ingenuity')).toBeInTheDocument()
+    expect(screen.getByText('The Final Flight of Ingenuity')).toBeInTheDocument()
     expect(screen.getByText('Simulation Note')).toBeInTheDocument()
     expect(screen.getByText(/Academy Simulation Note:/i)).toBeInTheDocument()
 
@@ -188,26 +188,26 @@ describe('JournalPage presentation and filtering', () => {
     renderJournalPage('registered')
 
     await screen.findByRole('heading', { level: 1, name: 'Discovery Journal' })
-    expect(screen.getByText('Placeholder: Ingenuity')).toBeInTheDocument()
+    expect(screen.getByText('The Final Flight of Ingenuity')).toBeInTheDocument()
 
     // Click on Surveyor 3 filter button (which has 0 entries in mock)
     const surveyorFilter = screen.getByRole('button', { name: /Surveyor 3 \(0\)/i })
     await user.click(surveyorFilter)
 
-    expect(screen.queryByText('Placeholder: Ingenuity')).not.toBeInTheDocument()
+    expect(screen.queryByText('The Final Flight of Ingenuity')).not.toBeInTheDocument()
     expect(screen.getByText('No matching records found')).toBeInTheDocument()
 
     // Reset filters
     const clearBtn = screen.getByRole('button', { name: /Clear filters and search/i })
     await user.click(clearBtn)
 
-    expect(screen.getByText('Placeholder: Ingenuity')).toBeInTheDocument()
+    expect(screen.getByText('The Final Flight of Ingenuity')).toBeInTheDocument()
 
     // Filter via search input
     const searchInput = screen.getByRole('searchbox', { name: /Search journal findings/i })
     await user.type(searchInput, 'HelicopterNonExistent')
 
-    expect(screen.queryByText('Placeholder: Ingenuity')).not.toBeInTheDocument()
+    expect(screen.queryByText('The Final Flight of Ingenuity')).not.toBeInTheDocument()
     expect(screen.getByText('No matching records found')).toBeInTheDocument()
   })
 

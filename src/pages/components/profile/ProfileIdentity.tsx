@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
 import { ProgressBar } from '@/components/ui/ProgressBar.tsx'
-import { marsImage } from '@/pages/components/profile/marsImage.ts'
+import { Spaceship3DIllustration } from '@/pages/components/Spaceship3DIllustration.tsx'
 import styles from '@/pages/components/profile/profile.module.css'
 
 type ProfileIdentityProps = {
@@ -81,18 +81,12 @@ export function ProfileIdentity({
         </div>
       </div>
 
-      <figure className={styles.art}>
-        <div className={styles.planet} aria-hidden="true">
-          <img src={marsImage.src} alt="" width="1000" height="1000" />
-        </div>
-        <svg className={styles.orbits} viewBox="0 0 420 420" fill="none" aria-hidden="true">
-          <ellipse cx="230" cy="180" rx="160" ry="54" transform="rotate(-20 230 180)" />
-          <ellipse cx="230" cy="180" rx="120" ry="86" transform="rotate(-20 230 180)" />
-        </svg>
-        <figcaption className={styles.credit}>
-          {marsImage.alt}. <a href={marsImage.source}>{marsImage.credit}</a>
-        </figcaption>
-      </figure>
+      <div className={styles.art} aria-hidden="true">
+        <Spaceship3DIllustration
+          variant="recon"
+          badgeLabel="Reconnaissance Craft · 3D Telemetry"
+        />
+      </div>
     </section>
   )
 }

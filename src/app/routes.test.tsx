@@ -79,7 +79,7 @@ describe('application routes', () => {
   })
 
   it('keeps the preparation notice for an unbuilt chapter', () => {
-    renderRoute('/missions/pioneer-10')
+    renderRoute('/missions/insight')
     expect(screen.getByText('Mission gameplay is not implemented yet.')).toBeInTheDocument()
     expect(screen.getByText('Planned Chapter')).toBeInTheDocument()
   })
