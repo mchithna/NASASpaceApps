@@ -150,6 +150,14 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Pioneer 10 now exports seven sourced scenes through the existing chapter loader,
+with spacecraft inspection, a sparse-belt journey, Jupiter instrument science,
+plaque decoding, a light-delay communication lab and legacy ordering. Fixed
+20/40/25/15 XP, existing `pioneer-10-story` and sourced `pioneer-10-notes` use the
+shared services. Trusted catalog migration `20261115143538` is local, not hosted;
+registered saves require deployment. See `src/missions/pioneer-10/README.md` for
+sources, validation and limits. No home page or other chapter source was changed.
+
 Ingenuity now exports seven sourced scenes through the existing chapter loader,
 with aircraft inspection, a qualitative flight lab, autonomous first-flight
 simulation, hypothetical scouting, Flight 72 evidence and a legacy timeline.

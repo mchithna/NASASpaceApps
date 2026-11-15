@@ -201,7 +201,11 @@ export const discoveryCatalog = [
   {
     discoveryId: 'pioneer-10-notes',
     missionId: 'pioneer-10',
-    title: 'Placeholder: Pioneer 10',
+    title: 'The Pioneer Plaque — A Message From Humanity',
+    summary:
+      'Pioneer 10 carries a physical plaque intended to identify humanity and its origin if found in the distant future. Hydrogen provides a shared physical reference; a pulsar map encodes the Sun’s location; human figures beside the spacecraft show appearance and scale; a solar-system diagram identifies Earth as the departure planet. The plaque is not a radio message, and no discovery or reply by another civilization is confirmed. NASA source: https://science.nasa.gov/resource/pioneer-plaque/',
+    contentStatus: 'sourced',
+    sourceUrl: 'https://science.nasa.gov/resource/pioneer-plaque/',
   },
 ] as const
 

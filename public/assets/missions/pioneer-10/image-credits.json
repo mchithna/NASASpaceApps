@@ -1,0 +1,68 @@
+[
+  {
+    "file": "spacecraft-diagram.webp",
+    "download": "https://www.nasa.gov/wp-content/uploads/2022/03/pioneer_10_launch_3_instruments_simple.jpg",
+    "source": "https://www.nasa.gov/history/50-years-ago-pioneer-10-launches-to-explore-jupiter/",
+    "credit": "NASA",
+    "description": "Scientific instrument diagram",
+    "width": 421,
+    "height": 393
+  },
+  {
+    "file": "jupiter-flyby-art.webp",
+    "download": "https://www.nasa.gov/wp-content/uploads/2022/03/pioneer_10_launch_6_jupiter_flyby_art.jpg",
+    "source": "https://www.nasa.gov/history/50-years-ago-pioneer-10-launches-to-explore-jupiter/",
+    "credit": "NASA/Rick Guidice",
+    "description": "Artist\u2019s illustration, not a photograph",
+    "width": 985,
+    "height": 623
+  },
+  {
+    "file": "jupiter-observations.webp",
+    "download": "https://www.nasa.gov/wp-content/uploads/2022/03/pioneer_10_launch_7_jupiter_europa_ganymede_composite.jpg",
+    "source": "https://www.nasa.gov/history/50-years-ago-pioneer-10-launches-to-explore-jupiter/",
+    "credit": "NASA",
+    "description": "Composite of Pioneer 10 images of Jupiter, Europa and Ganymede; not to scale",
+    "width": 917,
+    "height": 1036
+  },
+  {
+    "file": "deep-space-art.webp",
+    "download": "https://www.nasa.gov/wp-content/uploads/2022/03/pioneer_10_launch_8_artist_impression.jpg",
+    "source": "https://www.nasa.gov/history/50-years-ago-pioneer-10-launches-to-explore-jupiter/",
+    "credit": "NASA/Don Davis",
+    "description": "Pioneer 10 Leaving the Planets Behind; artwork, not a photograph",
+    "width": 985,
+    "height": 813
+  },
+  {
+    "file": "pioneer-plaque.webp",
+    "download": "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/p/i/o/pioneer_plaque_P10_Closeup.png?fit=clip&w=1600",
+    "source": "https://science.nasa.gov/resource/pioneer-plaque/",
+    "credit": "NASA Ames",
+    "description": "Authentic Pioneer plaque diagram",
+    "width": 1515,
+    "height": 1200
+  },
+  {
+    "file": "dsn-goldstone.webp",
+    "source": "https://www.jpl.nasa.gov/images/pia23214-nasas-deep-space-network-goldstone-complex/",
+    "download": "https://images-assets.nasa.gov/image/PIA23214/PIA23214~large.jpg",
+    "credit": "NASA/JPL-Caltech",
+    "description": "Antenna dishes at NASA's Deep Space Network complex in Goldstone, California, photographed on Feb. 11, 2020.  https://photojournal.jpl.nasa.gov/catalog/PIA23214"
+  },
+  {
+    "file": "jupiter-1973.webp",
+    "source": "https://science.nasa.gov/resource/pioneer-10-at-jupiter/",
+    "download": "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/6/668761main_ac73-9341-1.jpg?fit=clip&w=1400",
+    "credit": "NASA",
+    "description": "Pioneer 10 at Jupiter resource image"
+  },
+  {
+    "file": "earth.webp",
+    "source": "https://images.nasa.gov/details/as17-148-22727",
+    "download": "https://images-assets.nasa.gov/image/as17-148-22727/as17-148-22727~medium.jpg",
+    "credit": "NASA/Apollo 17 crew",
+    "description": "Apollo 17 photograph of Earth, December 1972; context image, not a Pioneer 10 photograph."
+  }
+]
