@@ -53,10 +53,14 @@ describe('mission registry', () => {
       expect(mission.destination.length).toBeGreaterThan(0)
       expect(mission.category.length).toBeGreaterThan(0)
       expect(mission.status).toBe(
-        mission.id === 'surveyor-3' ? 'available' : 'planned',
+        mission.id === 'surveyor-3' || mission.id === 'opportunity'
+          ? 'available'
+          : 'planned',
       )
       expect(mission.coverImage).toBe(
-        `/assets/missions/${mission.id}/cover.svg`,
+        mission.id === 'opportunity'
+          ? '/assets/missions/opportunity/victoria-crater.jpg'
+          : `/assets/missions/${mission.id}/cover.svg`,
       )
 
       for (const field of requiredText) {

@@ -25,6 +25,15 @@ async function checkScreen(page: Page, name: string) {
     ).toBeGreaterThan(0)
   }
   await page.evaluate(() => window.scrollTo(0, 0))
+  const hero = page.locator('.platform-hero')
+  if (await hero.count()) {
+    await expect(hero).toHaveJSProperty('scrollLeft', 0)
+    const heroBounds = await hero.boundingBox()
+    const headingBounds = await hero
+      .getByRole('heading', { level: 1 })
+      .boundingBox()
+    expect(headingBounds!.x).toBeGreaterThan(heroBounds!.x)
+  }
   await page.screenshot({
     path: test
       .info()

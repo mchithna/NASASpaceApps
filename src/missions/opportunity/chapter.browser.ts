@@ -6,10 +6,12 @@ test('Opportunity guest journey: play, refresh, retry, journal, achievement and 
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.route(/\/(auth|rest)\/v1\//, (route) => route.abort())
-  await page.goto('/auth')
+  await page.goto('/?acceptance=training')
   await page.getByRole('button', { name: 'Minimize dev banner' }).click()
+  await page.getByRole('link', { name: 'Begin Your Journey' }).click()
+  await page.getByLabel('Choose Callsign').fill('Martian Trailblazer Test')
   await page
-    .getByRole('button', { name: 'Enter Mission Control as Guest' })
+    .getByRole('button', { name: 'Save Profile & Enter Mission Control' })
     .click()
   await expect(page).toHaveURL(/\/dashboard$/)
   await page.goto('/missions/opportunity')
@@ -114,12 +116,15 @@ test('Opportunity guest journey: play, refresh, retry, journal, achievement and 
   await button('Begin Investigation').click()
   await button('Exit mission').click()
   await page.goto('/profile')
-  await expect(page.getByText('100', { exact: true }).first()).toBeVisible()
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
+  await expect(page.getByText('100 XP', { exact: true }).first()).toBeVisible()
   await page.goto('/journal')
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await expect(
     page.getByText('The Ancient Water of Mars', { exact: true }),
   ).toBeVisible()
   await page.goto('/achievements')
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await expect(
     page.getByText('Martian Trailblazer', { exact: true }),
   ).toBeVisible()

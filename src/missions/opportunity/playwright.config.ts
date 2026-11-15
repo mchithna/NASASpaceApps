@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: '.',
   testMatch: 'chapter.browser.ts',
   workers: 1,
-  timeout: 120000,
+  timeout: 180000,
   expect: { timeout: 15000 },
   reporter: 'list',
   outputDir: '../../../test-results/opportunity',

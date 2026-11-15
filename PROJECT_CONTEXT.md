@@ -17,6 +17,18 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Opportunity chapter:** seven sourced scenes now use the existing package loader,
+player and services. Activities cover rover equipment, ancient-water clues,
+Eagle/Endurance/Victoria/Endeavour exploration, mineral evidence, airborne dust
+and the final timeline. Fixed 20/40/25/15 rewards, Martian Trailblazer and sourced
+`opportunity-notes` use the existing platform boundary. The user authorized minimal
+coordinated ending-interaction/catalog changes. Hosted catalog migration
+`20261115083036` is applied; scene order, reward mapping and restricted catalog
+privileges were checked read-only without resetting player data. See
+`src/missions/opportunity/README.md` for sources, validation and limits. Registered
+hosted browser/JWT/concurrency acceptance remains open. The foundation is not
+frozen; older statements that Opportunity is unwritten are historical.
+
 **Platform visual refresh:** all learner-facing inner pages now share the home
 page's dark surfaces, lime actions, orbital details, credited NASA image system,
 floating navigation and reduced-motion-aware transitions. Dashboard, profile,

@@ -181,7 +181,11 @@ export function WaterDetective(props: ActivityRenderProps) {
         <p>Inspect both geological clues before drawing a conclusion.</p>
       )}
       {seen.length === 2 ? (
-        <p className={styles.detail}>Science check: these minerals and rock structures help reconstruct past water activity. Neither clue identifies living organisms. Combine both clues before making your conclusion.</p>
+        <p className={styles.detail}>
+          Science check: these minerals and rock structures help reconstruct
+          past water activity. Neither clue identifies living organisms. Combine
+          both clues before making your conclusion.
+        </p>
       ) : null}
       {seen.length === 2 ? (
         <PredictionChoiceActivity
@@ -239,7 +243,7 @@ export function MarsExpedition(props: ActivityRenderProps) {
           style={{ left: `${active * 25 + 6}%` }}
           aria-hidden="true"
         >
-          ◆
+          <RoverSketch />
         </span>
         {stops.map((item, i) => (
           <Button

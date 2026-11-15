@@ -150,6 +150,18 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Opportunity now exports seven authored scenes through the existing chapter loader,
+with rover hotspots, water clues, a four-crater expedition, evidence matching,
+a qualitative airborne-dust simulation and a final timeline. Milestones remain
+20/40/25/15 XP, with sourced `opportunity-notes` and Martian Trailblazer.
+The user authorized minimal coordinated ending-interaction, reward-catalog and
+trusted manifest changes. Hosted catalog version `20261115083036` is applied to
+`ptjvlycaiigigdrcybet`; seven scene rows and restricted catalog privileges were
+verified read-only. No player data was reset. See `src/missions/opportunity/README.md`
+for sources, validation and limits. Registered hosted browser/JWT/concurrency
+acceptance remains open; this does not freeze the foundation. Older statements
+that every chapter except Surveyor 3 is unbuilt are historical.
+
 The learner-facing platform now follows the home page's visual language: scoped
 dark/lime styling, floating navigation, credited NASA imagery, responsive page
 heroes, updated mission cards, profile/setup forms, journal and achievement

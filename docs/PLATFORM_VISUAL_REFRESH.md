@@ -60,7 +60,38 @@ those expectations, the affected integration file passed all 8 tests.
 The initial desktop browser flow passed. Phone/tablet image checks were corrected
 to scroll lazy-loaded imagery into view before asserting image loading. Visual
 review then corrected phone avatar wrapping, the character counter and image
-credit opacity. Final results are recorded below once remaining checks finish.
+credit opacity.
+
+Final checks performed:
+
+- `npm run typecheck`: passed.
+- `npm run build`: passed after the final presentation changes; existing
+  static/dynamic mission import and bundle-size warnings remain.
+- Changed-file ESLint and final `npm run lint`: passed. An earlier repository
+  run reported two fast-refresh errors in a concurrent Opportunity revision;
+  those errors are absent in the final run.
+- Single-worker component/integration/chapter checks: 24 passed, with one stale
+  Opportunity title expectation. After changing that assertion to use the shared
+  catalog, all 8 tests in the affected integration file passed. Image failure,
+  identity/form behavior, route/resume behavior and Surveyor activities are covered.
+  Earlier broad runs had worker/time-limit failures under concurrent development;
+  this is not a claim that the full repository suite passed.
+- Browser flow for the refreshed pages: passed at phone, tablet and desktop widths,
+  including setup, profile edits, journal/achievement empty states, mission
+  launch, unbuilt chapter messaging, navigation, images, overflow and motion.
+- Existing Surveyor 3 browser acceptance passed at phone, tablet and desktop widths,
+  including retries, resume, 100 XP and replay without duplicate rewards.
+- Auth registration and guest flows passed in those viewports; the initial auth
+  recovery case timed out during page navigation before assertions. All three
+  auth flows passed on desktop. A complete clean browser regression is not claimed.
+  The final three-viewport batch finished with 13 passed and the two navigation
+  timeouts above. Screenshot review then found programmatic image scrolling
+  could shift a clipped hero's contents; the hero now uses non-scrolling clipping
+  and the page-flow test explicitly checks heading position.
+  The corrected desktop page-flow test passed again after that clipping fix;
+  the subsequent production build also passed. Temporary local test/server
+  configuration files were removed after verification.
+- Staged and unstaged `git diff --check`: passed.
 
 Browser checks use the explicitly isolated development fixture, block Auth/Data
 API and external requests, and use local image assets. They do not contact hosted

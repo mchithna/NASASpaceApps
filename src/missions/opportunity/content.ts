@@ -20,22 +20,22 @@ export const equipment = [
     name: 'Microscopic Imager',
     detail:
       'Close-up black-and-white pictures revealed textures in rocks and soil.',
-    x: 25,
-    y: 65,
+    x: 18,
+    y: 55,
   },
   {
     name: 'Spectrometers',
     detail:
       'Instruments measured mineral and element composition, helping scientists interpret how rocks formed.',
-    x: 37,
+    x: 42,
     y: 58,
   },
   {
     name: 'Rock Abrasion Tool',
     detail:
       'A grinding wheel removed weathered surfaces to expose fresh rock for investigation.',
-    x: 20,
-    y: 76,
+    x: 12,
+    y: 84,
   },
   {
     name: 'Solar panels',
@@ -115,16 +115,3 @@ export const stops = [
       'Rocks near the rim preserved evidence of different watery environments. Next, compare gypsum veins and clay-bearing rocks.',
   },
 ] as const
-
-// Intended trusted journal content. Mission activities send only opportunity-notes.
-// The integration owner must publish this in the shared guest and database catalogs.
-export const discoveryPublication = {
-  discoveryId: 'opportunity-notes',
-  missionId: 'opportunity',
-  title: 'The Ancient Water of Mars',
-  summary:
-    'Hematite-rich spheres point to groundwater activity; gypsum veins record minerals deposited by water in fractures; clay-bearing rocks preserve evidence of a less acidic ancient watery environment. These findings concern past habitability, not proof of life.',
-  sourceUrl:
-    'https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/',
-  contentStatus: 'sourced',
-} as const
