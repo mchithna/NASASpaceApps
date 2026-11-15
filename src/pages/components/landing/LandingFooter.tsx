@@ -1,130 +1,99 @@
+import { Link } from 'react-router'
 import { ArrowUp, ExternalLink } from 'lucide-react'
 import { NovaLogo } from './NovaLogo.tsx'
-
+import { landingMedia } from './landingMedia.ts'
+import { listMissions } from '@/missions/registry.ts'
+import { scrollToLandingSection } from './landingNavigation.ts'
 export function LandingFooter() {
-  const scrollToTop = () => {
-    if (typeof window.scrollTo === 'function') {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }
-
-
   return (
-    <footer className="relative w-full border-t border-[#344354] bg-[#050A12] py-12 sm:py-16 text-[#AAB7C8]">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* Main 3-column Footer Grid */}
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 lg:gap-12 pb-12 border-b border-[#344354]/60">
-          
-          {/* Left Column: NovaExplorer brand & narrative */}
-          <div className="flex flex-col gap-4 md:col-span-5">
-            <div className="flex items-center gap-2.5">
-              <NovaLogo size={28} className="size-7" />
-              <span className="font-heading text-xl font-bold tracking-tight text-[#F5F7FB]">
-                Nova<span className="text-[#53CBFF]">Explorer</span>
-              </span>
-            </div>
-            
-            <p className="text-xs sm:text-sm leading-relaxed text-[#AAB7C8] max-w-md">
-              An educational space exploration platform bringing the stories and legacies of NASA
-              missions to a new generation of explorers.
+    <footer className="lp-footer" data-reveal>
+      <div className="lp-container">
+        <div className="lp-footer-grid">
+          <div>
+            <a
+              className="lp-brand"
+              href="#home"
+              onClick={scrollToLandingSection}
+            >
+              <NovaLogo />
+              <span>NovaExplorer</span>
+            </a>
+            <p>
+              An educational space exploration platform bringing the stories and
+              legacies of NASA missions to a new generation of explorers.
             </p>
-
-            <div className="flex items-center gap-2 pt-2 text-xs text-[#53CBFF]">
-              <span className="size-2 rounded-full bg-[#4FD1A5]" aria-hidden="true" />
-              <span>NASA Space Apps Challenge 2026 Global Project</span>
-            </div>
+            <Link to="/dashboard" className="lp-text-link">
+              Mission Control <ExternalLink size={14} aria-hidden="true" />
+            </Link>
           </div>
-
-          {/* Middle Column: Official NASA Resources & Media Credits */}
-          <div className="flex flex-col gap-3 md:col-span-4">
-            <h4 className="font-heading text-sm font-semibold uppercase tracking-wider text-[#F5F7FB]">
-              NASA Resources &amp; Data
-            </h4>
-            
-            <ul className="flex flex-col gap-2 text-xs sm:text-sm">
-              <li>
-                <a
-                  href="https://science.nasa.gov"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-[#53CBFF] transition-colors focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
-                >
-                  <span>NASA Science</span>
-                  <ExternalLink className="size-3 text-[#53CBFF]" aria-hidden="true" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.jpl.nasa.gov"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-[#53CBFF] transition-colors focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
-                >
-                  <span>NASA Jet Propulsion Laboratory</span>
-                  <ExternalLink className="size-3 text-[#53CBFF]" aria-hidden="true" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://images.nasa.gov"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-[#53CBFF] transition-colors focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
-                >
-                  <span>NASA Image and Video Library</span>
-                  <ExternalLink className="size-3 text-[#53CBFF]" aria-hidden="true" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://solarsystem.nasa.gov"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 hover:text-[#53CBFF] transition-colors focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
-                >
-                  <span>NASA Solar System Exploration</span>
-                  <ExternalLink className="size-3 text-[#53CBFF]" aria-hidden="true" />
-                </a>
-              </li>
-            </ul>
-
-            <p className="text-[11px] text-[#8C9BB3] pt-1">
-              Imagery credits: NASA, NASA/JPL-Caltech, NASA/JSC (Apollo 12), and NASA Ames Research Center.
+          <div>
+            <h2>NASA Resources</h2>
+            <a href="https://science.nasa.gov">
+              NASA Science <ExternalLink size={13} aria-hidden="true" />
+            </a>
+            <a href="https://www.jpl.nasa.gov">
+              NASA Jet Propulsion Laboratory{' '}
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+            <a href="https://science.nasa.gov/missions/">
+              Official NASA missions{' '}
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+          </div>
+          <div>
+            <p className="lp-eyebrow">NASA SPACE APPS CHALLENGE 2026</p>
+            <h2>Abandoned But Not Forgotten</h2>
+            <p>
+              NovaExplorer is an independent educational project and is not
+              officially endorsed by NASA.
             </p>
           </div>
-
-          {/* Right Column: Challenge Acknowledgement & Disclaimer */}
-          <div className="flex flex-col gap-3 md:col-span-3">
-            <h4 className="font-heading text-sm font-semibold uppercase tracking-wider text-[#F5F7FB]">
-              Challenge Acknowledgement
-            </h4>
-
-            <p className="text-xs leading-relaxed text-[#AAB7C8]">
-              NASA Space Apps Challenge 2026: <strong className="text-[#D9FCA7]">Abandoned But Not Forgotten</strong>.
-            </p>
-
-            <p className="text-xs leading-relaxed text-[#8C9BB3]">
-              NovaExplorer is an independent educational submission and is not officially endorsed by NASA.
-            </p>
-          </div>
-
         </div>
-
-        {/* Bottom Bar: Copyright & Back-to-top */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-xs text-[#8C9BB3]">
-          <p>&copy; 2026 NovaExplorer. Built for the NASA Space Apps Challenge.</p>
-
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#344354] bg-[#101C2A] px-3.5 py-1.5 text-xs text-[#AAB7C8] hover:text-[#F5F7FB] hover:border-[#53CBFF] transition-all focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
-          >
-            <span>Back to top</span>
-            <ArrowUp className="size-3 text-[#53CBFF]" aria-hidden="true" />
-          </button>
+        <details className="lp-credits" id="image-credits" tabIndex={-1}>
+          <summary>Image &amp; information credits</summary>
+          <p>
+            The hero is an illustrative CSS composition using a cropped detail
+            of a NASA Mars mosaic, with decorative stars, orbital curves,
+            lighting, and horizon. It is not a photograph of an observed scene.
+            No AI-generated imagery is used.
+          </p>
+          <ul>
+            <li>
+              <a href="https://science.nasa.gov/photojournal/valles-marineris-hemisphere/">
+                Mars: Valles Marineris Hemisphere (PIA00003)
+              </a>{' '}
+              — NASA/JPL/USGS. Mosaic of Viking Orbiter images.
+            </li>
+            {listMissions().map((mission) => {
+              const media = landingMedia[mission.id]
+              return (
+                <li key={mission.id}>
+                  <a href={media.source}>
+                    {mission.displayName}: {media.kind}
+                  </a>{' '}
+                  — {media.credit}.{' '}
+                  <a href={mission.sources[0]?.url}>Mission information</a>.
+                </li>
+              )
+            })}
+          </ul>
+          <p>
+            Images are locally resized and compressed; card images are cropped
+            for layout. NASA media is used for educational purposes with source
+            credits under{' '}
+            <a href="https://www.nasa.gov/nasa-brand-center/images-and-media/">
+              NASA media usage guidance
+            </a>
+            . Third-party rights, where noted by NASA, remain with their owners.
+            Artist concepts are illustrations, not spacecraft photographs.
+          </p>
+        </details>
+        <div className="lp-footer-bottom">
+          <span>© 2026 NovaExplorer · Keep curiosity alive.</span>
+          <a href="#home" onClick={scrollToLandingSection}>
+            Back to top <ArrowUp size={15} aria-hidden="true" />
+          </a>
         </div>
-
       </div>
     </footer>
   )

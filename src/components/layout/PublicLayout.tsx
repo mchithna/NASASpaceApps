@@ -13,9 +13,9 @@ const publicNavItems = [
 
 export function PublicLayout() {
   const location = useLocation()
-  const isLandingPage = location.pathname === '/'
+  const isFullWidthPage = location.pathname === '/' || location.pathname === '/auth'
 
-  if (isLandingPage) {
+  if (isFullWidthPage) {
     return (
       <div className="min-h-svh bg-landing-bg text-landing-text selection:bg-landing-lime selection:text-landing-bg">
         <SkipLink />

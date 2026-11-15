@@ -150,6 +150,12 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The `/auth` login and registration presentation has been redesigned with a responsive
+space-themed layout, credited NASA Mars imagery, reduced-motion-aware animations,
+keyboard tabs, password visibility controls, and compact avatar selection. Existing
+auth services and guest/account progress boundaries are preserved. This UI work
+does not close the hosted acceptance gates or freeze the foundation.
+
 Hosted database setup is now applied to `ptjvlycaiigigdrcybet`; connector access
 works. See `docs/SUPABASE_DATABASE_SETUP.md` for migration version mapping, live
 SQL checks, remaining Auth/advisor warnings and test limitations. This supersedes
