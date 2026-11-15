@@ -125,63 +125,11 @@
 
 .art {
   position: relative;
-  min-height: 9rem;
+  min-height: 15rem;
   margin: 0;
   overflow: hidden;
-}
-
-.planet {
-  position: absolute;
-  top: 10%;
-  right: -12%;
-  width: min(16rem, 80%);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow: 0 0 50px rgb(83 203 255 / 0.16);
-  opacity: 0.7;
-}
-
-.planet img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.orbits {
-  position: absolute;
-  top: 0;
-  right: -18%;
-  width: min(20rem, 100%);
-  stroke: rgb(217 252 167 / 0.4);
-  stroke-width: 1;
-}
-
-.credit {
-  position: absolute;
-  right: 1rem;
-  bottom: 0.75rem;
-  z-index: 1;
-  max-width: 14rem;
-  margin: 0;
-  padding: 0.25rem 0.4rem;
-  border-radius: 0.4rem;
-  background: rgb(5 10 18 / 0.72);
-  color: var(--color-landing-muted);
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
-}
-
-.credit a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.credit a:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
+  display: grid;
+  place-items: center;
 }
 
 .edit {
@@ -510,23 +458,8 @@
 }
 
 @media (prefers-reduced-motion: no-preference) and (pointer: fine) {
-  .orbits {
-    transform-origin: 70% 40%;
-    animation: drift 90s linear infinite;
-  }
-
   .identity {
     animation: rise 480ms ease;
-  }
-}
-
-@keyframes drift {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }
 

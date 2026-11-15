@@ -290,16 +290,7 @@
   right: 12%;
 }
 .platform-hero-orbit {
-  pointer-events: none;
-  position: absolute;
-  z-index: 1;
-  right: -9%;
-  top: 10%;
-  width: 55%;
-  height: 85%;
-  border: 1px solid #d9fca71a;
-  border-radius: 50%;
-  transform: rotate(-25deg);
+  display: none;
 }
 .nova-platform .nova-card {
   border-color: var(--color-border);

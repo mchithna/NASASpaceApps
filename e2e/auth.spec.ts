@@ -20,26 +20,17 @@ test('auth layout, keyboard tabs, password visibility and sign-in recovery', asy
   await expect(
     page.getByRole('heading', { name: 'Welcome back, explorer.' }),
   ).toBeVisible()
-  const image = page.getByRole('img', { name: /A mosaic of Mars/ })
-  await expect(image).toBeVisible()
-  expect(
-    await image.evaluate(
-      (element) => (element as HTMLImageElement).naturalWidth,
-    ),
-  ).toBeGreaterThan(0)
+  const moonModel = page.getByRole('img', {
+    name: /Interactive 3D illustrative model of the Moon/,
+  })
+  await expect(moonModel).toBeVisible()
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true)
   expect(
-    await page
-      .locator('figure')
-      .evaluate(
-        (figure) =>
-          getComputedStyle(figure.querySelector('img')!.parentElement!)
-            .animationName,
-      ),
+    await moonModel.evaluate((element) => getComputedStyle(element).animationName),
   ).toBe('none')
   await page.screenshot({ path: info.outputPath('signin.png'), fullPage: true })
   await page.getByRole('tab', { name: 'Sign In', exact: true }).focus()
