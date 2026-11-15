@@ -42,7 +42,7 @@ export function ProfileIdentity({
             <div className={styles.avatar}>
               <AvatarIcon className="size-7" aria-hidden="true" />
             </div>
-            <div>
+            <div className={styles.identityText}>
               <div className={styles.kicker}>
                 Active Callsign{' '}
                 {isGuest ? <Badge variant="warning">Guest</Badge> : <Badge variant="neutral">Verified</Badge>}

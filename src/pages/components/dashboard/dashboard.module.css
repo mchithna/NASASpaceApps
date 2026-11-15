@@ -1,9 +1,25 @@
 .stage {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
   color: var(--color-landing-text);
   font-family: var(--font-sans);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--color-landing-text);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sectionNote {
+  margin: 0;
+  color: var(--color-landing-muted);
+  font-size: 0.8rem;
 }
 
 .hero {
@@ -43,12 +59,14 @@
 
 .name {
   margin: 0;
+  max-width: 100%;
   color: var(--color-landing-text);
   font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 3.4rem);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.05;
+  overflow-wrap: anywhere;
 }
 
 .rank {
@@ -119,9 +137,14 @@
   z-index: 1;
   align-self: end;
   justify-self: start;
+  max-width: 18rem;
   margin: 0;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.45rem;
+  background: rgb(5 10 18 / 0.72);
   color: var(--color-landing-muted);
   font-size: 0.75rem;
+  overflow-wrap: anywhere;
 }
 
 .credit a {
@@ -169,8 +192,9 @@
   margin: 0;
   color: var(--color-landing-text);
   font-family: var(--font-heading);
-  font-size: 1.7rem;
-  line-height: 1.1;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .metricDetail {
@@ -224,19 +248,20 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   gap: 1.25rem;
 }
 
 .card {
   display: flex;
   min-width: 0;
+  height: 100%;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--color-landing-border);
   border-radius: 1.4rem;
   background: linear-gradient(160deg, var(--color-landing-elevated), var(--color-landing-surface));
-  box-shadow: 0 16px 32px rgb(0 0 0 / 0.28);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.24);
 }
 
 .media {
@@ -326,6 +351,7 @@
   font-family: var(--font-heading);
   font-size: 1.35rem;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .title a {
@@ -346,6 +372,7 @@
   color: var(--color-landing-muted);
   font-size: 0.9rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .progressNote {
@@ -358,6 +385,7 @@
   margin: 0;
   color: var(--color-landing-muted);
   font-size: 0.75rem;
+  overflow-wrap: anywhere;
 }
 
 .cardCredit a {
@@ -443,6 +471,7 @@
   font-family: var(--font-heading);
   font-size: clamp(1.7rem, 3vw, 2.4rem);
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .actions {
@@ -451,17 +480,18 @@
   gap: 0.75rem;
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
+@media (max-width: 639px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action {
+    width: 100%;
   }
 }
 
 @media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .spotlight {
     grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
     align-items: stretch;
@@ -479,11 +509,51 @@
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .media img {
+  .media img,
+  .spotlightMedia img {
     transition: transform 300ms ease;
   }
 
-  .card:hover .media img {
+  .card:hover {
+    border-color: rgb(217 252 167 / 0.45);
+    box-shadow: 0 16px 34px rgb(0 0 0 / 0.34);
+  }
+
+  .card:hover .media img,
+  .spotlight:hover .spotlightMedia img {
     transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage > *,
+  .grid > * {
+    animation: rise 480ms ease;
+  }
+
+  .grid > *:nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  .grid > *:nth-child(3) {
+    animation-delay: 80ms;
+  }
+
+  .grid > *:nth-child(4) {
+    animation-delay: 120ms;
+  }
+
+  .grid > *:nth-child(5) {
+    animation-delay: 160ms;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+  }
+
+  to {
+    transform: none;
   }
 }

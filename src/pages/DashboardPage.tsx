@@ -140,11 +140,11 @@ export function DashboardPage() {
         ) : null}
 
         <section aria-labelledby="telemetry-heading" className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h2 id="telemetry-heading" className="text-xl font-heading text-foreground">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <h2 id="telemetry-heading" className={styles.sectionTitle}>
               Mission Telemetry
             </h2>
-            <span className="text-xs text-muted">
+            <span className={styles.sectionNote}>
               {isLive ? 'Operational telemetry' : 'Live mock services telemetry'}
             </span>
           </div>
@@ -154,7 +154,7 @@ export function DashboardPage() {
         {/* Active In-Progress Mission Spotlight */}
         {inProgressMission && inProgressMissionProgress ? (
           <section aria-labelledby="active-mission-heading" className="flex flex-col gap-3">
-            <h2 id="active-mission-heading" className="text-xl font-heading text-foreground">
+            <h2 id="active-mission-heading" className={styles.sectionTitle}>
               Continue Active Mission
             </h2>
             <MissionSpotlight
@@ -167,15 +167,15 @@ export function DashboardPage() {
         {/* Stories & Spacecraft Grid */}
         <section id="stories" aria-labelledby="stories-heading" className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <h2 id="stories-heading" className="text-xl font-heading text-foreground">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <h2 id="stories-heading" className={styles.sectionTitle}>
                 Stories
               </h2>
-              <span className="text-xs text-muted">
+              <span className={styles.sectionNote}>
                 {missions.length} NASA Spacecraft Dossiers
               </span>
             </div>
-            <p className="max-w-[70ch] text-sm text-secondary">
+            <p className={`${styles.sectionNote} max-w-[70ch]`}>
               Select an abandoned NASA spacecraft to investigate its historical
               journey, artifacts, and final transmissions.
             </p>
