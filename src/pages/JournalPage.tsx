@@ -14,6 +14,7 @@ import { JournalArchiveHero } from './components/journal/JournalArchiveHero.tsx'
 import { JournalEntryCard } from './components/journal/JournalEntryCard.tsx'
 import { JournalFilterZeroState } from './components/journal/JournalFilterZeroState.tsx'
 import styles from './components/journal/journal.module.css'
+import { JournalAiSynthesis } from '@/ai/surfaces/JournalAiSynthesis.tsx'
 
 export function JournalPage() {
   const { journalEntries, session, isLoading, error, refresh } =
@@ -112,6 +113,8 @@ export function JournalPage() {
             journalEntries.filter((e) => e.missionId === mId).length
           }
         />
+
+        <JournalAiSynthesis entries={journalEntries} />
 
         {/* Empty State for Zero Total Discoveries */}
         {journalEntries.length === 0 && !isLoading ? (
