@@ -128,7 +128,7 @@ export function EventOrderActivity({
       ) : null}
       {attempt.phase === 'correct' ? (
         <p role="status" className="max-w-[65ch] text-secondary">
-          That order matches the training sequence. {orderPrompt.explanation}
+          That order is correct. {orderPrompt.explanation}
         </p>
       ) : null}
     </div>

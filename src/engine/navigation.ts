@@ -15,11 +15,15 @@ import type {
 import type { MissionCompletionEvent } from '@/contracts/missions.ts'
 import { engineIssue, type EngineResult } from '@/engine/issues.ts'
 import {
+  rewardScene,
+  sceneActivity,
   type EngineScene,
   type MissionModule,
-  type SceneKind,
 } from '@/engine/scenes.ts'
-import { validateResume, validateSceneSequence } from '@/engine/validateModule.ts'
+import {
+  validateResume,
+  validateSceneSequence,
+} from '@/engine/validateModule.ts'
 
 /** Milestones the engine may request. Legacy XP comes only from `completeMission`. */
 export type EngineMilestoneId = Exclude<MissionMilestoneId, 'legacy'>
@@ -170,7 +174,9 @@ export function sceneNavigationState(
     sceneCount,
     progressValue: started ? index + 1 : 0,
     progressMax: sceneCount,
-    progressLabel: started ? `${index + 1} of ${sceneCount}` : `0 of ${sceneCount}`,
+    progressLabel: started
+      ? `${index + 1} of ${sceneCount}`
+      : `0 of ${sceneCount}`,
     canGoBack: started && index > 0,
     canGoNext: started && !atLast && (replay || currentComplete),
     canContinue:
@@ -178,7 +184,7 @@ export function sceneNavigationState(
       scene !== undefined &&
       !currentComplete &&
       index === frontier &&
-      scene.kind !== 'activity',
+      sceneActivity(scene) === null,
     canRestart: started && index > 0,
   }
 }
@@ -193,7 +199,11 @@ function restartMission(
 
   const first = module.scenes[0]
   if (!first) {
-    return failure('empty-sequence', null, 'A mission needs at least one scene.')
+    return failure(
+      'empty-sequence',
+      null,
+      'A mission needs at least one scene.',
+    )
   }
 
   if (position.sceneId === first.id) {
@@ -213,7 +223,11 @@ function startMission(
 
   const first = module.scenes[0]
   if (!first) {
-    return failure('empty-sequence', null, 'A mission needs at least one scene.')
+    return failure(
+      'empty-sequence',
+      null,
+      'A mission needs at least one scene.',
+    )
   }
 
   return success(
@@ -249,14 +263,10 @@ function completeScene(
 
   const frontier = frontierIndex(module, position.completedSceneIds)
   if (index !== frontier) {
-    return failure(
-      'out-of-order',
-      scene.id,
-      'Finish the earlier scenes first.',
-    )
+    return failure('out-of-order', scene.id, 'Finish the earlier scenes first.')
   }
 
-  if (scene.kind === 'activity' && !activityComplete) {
+  if (sceneActivity(scene) && !activityComplete) {
     return failure(
       'activity-incomplete',
       scene.id,
@@ -303,27 +313,22 @@ function completeScene(
   const effects: EngineEffect[] = []
   let activityCompletion: ActivityCompletionEvent | null = null
 
-  if (scene.kind === 'story' && isFirstKind(module, 'story', scene.id)) {
-    effects.push(grantMilestone(module, 'introduction', scene.id))
-  }
-
-  if (scene.kind === 'activity') {
+  const activity = sceneActivity(scene)
+  if (activity) {
     activityCompletion = {
       missionId: module.mission.id,
       checkpointId: scene.id,
-      activityId: scene.activityId,
+      activityId: activity.activityId,
     }
+  }
 
-    if (isFirstKind(module, 'activity', scene.id)) {
-      effects.push(grantMilestone(module, 'activity', scene.id))
+  for (const milestone of ['introduction', 'activity', 'discovery'] as const) {
+    if (rewardScene(module, milestone)?.id === scene.id) {
+      effects.push(grantMilestone(module, milestone, scene.id))
     }
   }
 
   if (scene.kind === 'discovery') {
-    if (isFirstKind(module, 'discovery', scene.id)) {
-      effects.push(grantMilestone(module, 'discovery', scene.id))
-    }
-
     effects.push({
       type: 'unlock-discovery',
       request: {
@@ -503,14 +508,6 @@ function orderedCompleted(
   const done = new Set(completedSceneIds)
   done.add(sceneId)
   return module.scenes.map((scene) => scene.id).filter((id) => done.has(id))
-}
-
-function isFirstKind(
-  module: MissionModule,
-  kind: SceneKind,
-  sceneId: string,
-): boolean {
-  return module.scenes.find((scene) => scene.kind === kind)?.id === sceneId
 }
 
 function positionFromProgress(

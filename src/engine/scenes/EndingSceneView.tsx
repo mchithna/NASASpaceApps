@@ -40,24 +40,26 @@ export function EndingSceneView({
       requestedSourceCount={scene.sourceIds.length}
       framing={scene.framing}
       action={
-        <div className="flex flex-col items-start gap-2">
-          <Button
-            variant="secondary"
-            className="w-full sm:w-auto"
-            onClick={() => {
-              onEnding({ missionId, sceneId: scene.id })
-              setSent(true)
-            }}
-          >
-            Finish this scene
-          </Button>
-          {sent ? (
-            <p role="status" className="max-w-[65ch] text-sm text-secondary">
-              The finish request was sent for this visit. Points are not added
-              here.
-            </p>
-          ) : null}
-        </div>
+        scene.reward !== undefined ? undefined : (
+          <div className="flex flex-col items-start gap-2">
+            <Button
+              variant="secondary"
+              className="w-full sm:w-auto"
+              onClick={() => {
+                onEnding({ missionId, sceneId: scene.id })
+                setSent(true)
+              }}
+            >
+              Finish this scene
+            </Button>
+            {sent ? (
+              <p role="status" className="max-w-[65ch] text-sm text-secondary">
+                The finish request was sent for this visit. Points are not added
+                here.
+              </p>
+            ) : null}
+          </div>
+        )
       }
     />
   )

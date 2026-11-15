@@ -55,6 +55,38 @@ export function validateSceneSequence(
   }
 
   const first = heads[0]
+  const records = scenes.filter(isRecord)
+  if (records.some((scene) => scene.reward !== undefined)) {
+    for (const milestone of ['introduction', 'activity', 'discovery']) {
+      if (records.filter((scene) => scene.reward === milestone).length !== 1) {
+        issues.push(
+          engineIssue(
+            'malformed-scene',
+            null,
+            'Explicit rewards need exactly one checkpoint for each milestone.',
+          ),
+        )
+      }
+    }
+    for (const scene of records) {
+      if (
+        (scene.reward != null &&
+          !['introduction', 'activity', 'discovery'].includes(
+            String(scene.reward),
+          )) ||
+        (scene.reward != null && scene.kind === 'ending') ||
+        (scene.reward === 'discovery' && scene.kind !== 'discovery')
+      ) {
+        issues.push(
+          engineIssue(
+            'malformed-scene',
+            typeof scene.id === 'string' ? scene.id : null,
+            'This reward checkpoint is invalid.',
+          ),
+        )
+      }
+    }
+  }
   if (!first || first.kind !== 'story') {
     issues.push(
       engineIssue(
@@ -268,6 +300,23 @@ function inspectScene(
 
   if (kind === 'activity') {
     readActivity(scene, id, issues, seenActivityIds)
+  }
+  if (scene.interaction !== undefined) {
+    if (
+      kind === 'activity' ||
+      kind === 'ending' ||
+      !isRecord(scene.interaction)
+    ) {
+      issues.push(
+        engineIssue(
+          'malformed-scene',
+          id,
+          'This scene cannot contain that interaction.',
+        ),
+      )
+    } else {
+      readActivity(scene.interaction, id, issues, seenActivityIds)
+    }
   }
 
   if (kind === 'discovery') {

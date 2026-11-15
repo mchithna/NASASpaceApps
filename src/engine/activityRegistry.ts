@@ -12,6 +12,7 @@ import {
   type EngineResult,
 } from '@/engine/issues.ts'
 import {
+  sceneActivity,
   type ActivityConfig,
   type ActivityScene,
   type EngineScene,
@@ -114,8 +115,9 @@ export function validateActivityBindings(
   const issues: EngineIssue[] = []
   const reported = new Set<string>()
 
-  for (const scene of scenes) {
-    if (scene.kind !== 'activity') {
+  for (const item of scenes) {
+    const scene = sceneActivity(item)
+    if (!scene) {
       continue
     }
 
