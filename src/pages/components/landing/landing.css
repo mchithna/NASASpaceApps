@@ -1,0 +1,1151 @@
+.nova-landing {
+  --lp-bg: var(--color-landing-bg, #050a12);
+  --lp-text: var(--color-landing-text, #f5f7fb);
+  --lp-muted: var(--color-landing-muted, #aab7c8);
+  --lp-lime: var(--color-landing-lime, #d9fca7);
+  --lp-line: #344354;
+  background: var(--lp-bg);
+  color: var(--lp-text);
+  min-height: 100svh;
+  overflow: clip;
+}
+.nova-landing * {
+  box-sizing: border-box;
+}
+.nova-landing a {
+  text-decoration: none;
+}
+.nova-landing button {
+  font: inherit;
+  cursor: pointer;
+}
+.nova-landing :focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 5px;
+}
+.nova-landing section,
+.nova-landing details {
+  scroll-margin-top: 110px;
+}
+.nova-landing section:focus:not(:focus-visible) {
+  outline: none;
+}
+.nova-landing .lp-container {
+  width: min(1480px, calc(100% - 88px));
+  margin-inline: auto;
+}
+.nova-landing .lp-header {
+  position: fixed;
+  z-index: 10;
+  inset: 18px 28px auto;
+  animation: lp-nav-in 500ms both;
+}
+.nova-landing .lp-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1552px;
+  margin: auto;
+  min-height: 70px;
+  padding: 10px 22px;
+  border: 1px solid #52677c80;
+  border-radius: 40px;
+  background: #0b1421b8;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px #0003;
+  transition: background 250ms;
+}
+.nova-landing .lp-header-scrolled .lp-nav {
+  background: #0b1421f5;
+}
+.nova-landing .lp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--lp-text);
+  font: 600 23px var(--font-heading);
+  letter-spacing: -0.7px;
+  white-space: nowrap;
+}
+.nova-landing .lp-nav-divider {
+  height: 22px;
+  width: 1px;
+  background: var(--lp-line);
+}
+.nova-landing .lp-desktop-links {
+  display: flex;
+  gap: 4px;
+  margin-inline: auto;
+}
+.nova-landing .lp-desktop-links a {
+  color: var(--lp-muted);
+  padding: 12px 19px;
+  border-radius: 28px;
+  font-size: 14px;
+  transition:
+    background 200ms,
+    color 200ms;
+}
+.nova-landing .lp-desktop-links a[aria-current],
+.nova-landing .lp-desktop-links a:hover {
+  color: var(--lp-text);
+  background: #91b4d212;
+  box-shadow: inset 0 -1px #d9fca780;
+}
+.nova-landing .lp-desktop-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 13px;
+}
+.nova-landing .lp-desktop-actions > a:not(.lp-button) {
+  color: var(--lp-muted);
+  padding-block: 13px;
+}
+.nova-landing .lp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 48px;
+  padding: 12px 23px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    box-shadow 200ms,
+    background 200ms,
+    border-color 200ms;
+}
+.nova-landing .lp-button svg {
+  flex-shrink: 0;
+  transition: transform 200ms;
+}
+.nova-landing .lp-button:hover svg {
+  transform: translate(3px, -1px);
+}
+.nova-landing .lp-primary {
+  background: var(--lp-lime);
+  color: var(--lp-bg);
+  border: 1px solid #e9ffcd;
+  box-shadow: 0 0 23px #d9fca716;
+}
+.nova-landing .lp-primary:hover {
+  background: #e5ffc2;
+  box-shadow: 0 0 30px #d9fca72e;
+}
+.nova-landing .lp-secondary {
+  color: var(--lp-text);
+  border: 1px solid #60788f99;
+  background: #0d192980;
+}
+.nova-landing .lp-secondary:hover {
+  background: #152333;
+  border-color: #aab7c8;
+}
+.nova-landing .lp-menu-toggle {
+  display: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--lp-text);
+  background: #152333;
+  border: 1px solid var(--lp-line);
+  border-radius: 50%;
+}
+.nova-landing .lp-mobile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline: 0;
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid var(--lp-line);
+  border-radius: 24px;
+  background: #0b1421fa;
+  box-shadow: 0 18px 38px #0008;
+  animation: lp-nav-in 200ms both;
+  max-height: calc(100svh - 120px);
+  overflow: auto;
+}
+.nova-landing .lp-mobile-menu > a {
+  min-height: 44px;
+  padding: 12px 18px;
+  color: var(--lp-text);
+  border-radius: 12px;
+}
+.nova-landing .lp-mobile-menu > a[aria-current] {
+  background: #152333;
+}
+.nova-landing .lp-mobile-menu > .lp-primary {
+  color: var(--lp-bg);
+}
+.nova-landing .lp-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: min(830px, 94svh);
+  padding: 175px 0 130px;
+  isolation: isolate;
+  background: radial-gradient(ellipse at 65% 33%, #14283e99, transparent 55%);
+}
+.nova-landing .lp-cosmos {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  pointer-events: none;
+  transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px));
+  animation: lp-cosmos-in 1300ms both;
+}
+.nova-landing .lp-planet {
+  position: absolute;
+  width: min(49vw, 720px);
+  aspect-ratio: 1;
+  right: 2%;
+  top: 14%;
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #563526;
+  box-shadow:
+    -2px -2px 3px #ffe0bc99,
+    -8px -6px 26px #dbac7440,
+    0 0 70px #bf673419,
+    24px 28px 70px #0007;
+  transform: rotate(-16deg);
+}
+.nova-landing .lp-planet img {
+  position: absolute;
+  inset: -50%;
+  display: block;
+  width: 200%;
+  height: 200%;
+  max-width: none;
+  object-fit: cover;
+  filter: saturate(1.12) contrast(1.06);
+}
+.nova-landing .lp-planet > div {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 29% 25%, #ffe0b52b, transparent 44%),
+    radial-gradient(
+      ellipse at 22% 26%,
+      transparent 24%,
+      #160d092e 48%,
+      #080b13d9 73%,
+      #050a12 94%
+    );
+  box-shadow:
+    inset 3px 4px 8px #ffe1b773,
+    inset 15px 12px 32px #e8a86a24,
+    inset -22px -18px 45px #02050bd9,
+    inset 0 0 28px #050a1259;
+}
+.nova-landing .lp-planet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #f4d5af40;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.nova-landing .lp-cosmos::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #050a12 0%,
+      #050a12e6 18%,
+      #050a1250 46%,
+      transparent 65%
+    ),
+    linear-gradient(0deg, #050a12 0%, transparent 40%);
+}
+.nova-landing .lp-sunrise {
+  position: absolute;
+  left: 59%;
+  top: 21%;
+  width: 180px;
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    #ffdeab 0%,
+    #ebad6d66 8%,
+    #b8673b22 28%,
+    transparent 65%
+  );
+}
+.nova-landing .lp-small-world {
+  position: absolute;
+  right: 47%;
+  top: 23%;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 20% 15%,
+    #a5b5c3,
+    #293b4a 25%,
+    #050a12 70%
+  );
+  box-shadow: -1px -1px 2px #b9cad7;
+}
+.nova-landing .lp-orbits {
+  position: absolute;
+  width: 66%;
+  height: 100%;
+  right: -8%;
+  top: 0;
+  stroke: #9bb9d84d;
+  stroke-width: 0.7;
+}
+.nova-landing .lp-orbit-highlight {
+  stroke: #d9fca7;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 1780;
+  animation: lp-orbit 32s linear infinite;
+}
+.nova-landing .lp-horizon {
+  position: absolute;
+  height: 90px;
+  inset: auto -20px 0;
+  background: linear-gradient(#16202c, #050a12);
+  clip-path: polygon(
+    0 40%,
+    5% 25%,
+    13% 39%,
+    22% 16%,
+    29% 34%,
+    40% 26%,
+    47% 50%,
+    59% 37%,
+    66% 21%,
+    75% 42%,
+    86% 19%,
+    100% 45%,
+    100% 100%,
+    0 100%
+  );
+  opacity: 0.35;
+}
+.nova-landing .lp-stars {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 23%, #c9e2ff 80%, transparent),
+    radial-gradient(1px 1px at 43% 14%, #fff 80%, transparent),
+    radial-gradient(1px 1px at 71% 38%, #c9e2ff 80%, transparent),
+    radial-gradient(1px 1px at 82% 72%, #fff 80%, transparent);
+  background-size:
+    223px 193px,
+    367px 257px,
+    389px 317px,
+    491px 449px;
+  opacity: 0.45;
+}
+.nova-landing .lp-stars i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #d6edff;
+  border-radius: 50%;
+  top: 24%;
+  left: 48%;
+  box-shadow: 0 0 7px #b6dfff;
+  animation: lp-twinkle 5s ease-in-out infinite alternate;
+}
+.nova-landing .lp-stars i:nth-child(2) {
+  top: 69%;
+  left: 88%;
+  animation-delay: -2s;
+}
+.nova-landing .lp-stars i:nth-child(3) {
+  top: 16%;
+  left: 81%;
+  animation-delay: -4s;
+}
+.nova-landing .lp-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  line-height: 1.6;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--lp-lime);
+  margin: 0 0 18px;
+}
+.nova-landing .lp-status-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lp-lime);
+  box-shadow: 0 0 9px #d9fca755;
+}
+.nova-landing .lp-rule {
+  width: 70px;
+  height: 1px;
+  background: #63798f;
+  margin-left: 6px;
+}
+.nova-landing .lp-hero h1 {
+  margin: 26px 0 25px;
+  font-size: clamp(40px, 4.6vw, 74px);
+  line-height: 1.09;
+  letter-spacing: -3px;
+  font-weight: 500;
+}
+.nova-landing .lp-hero h1 span {
+  display: block;
+  animation: lp-rise 700ms both;
+}
+.nova-landing .lp-hero h1 span:nth-child(2) {
+  color: var(--lp-lime);
+  animation-delay: 130ms;
+}
+.nova-landing .lp-hero-description {
+  max-width: 545px;
+  font-size: 16px;
+  line-height: 1.85;
+  color: #c0cbd9;
+  margin: 0;
+  animation: lp-rise 600ms 230ms both;
+}
+.nova-landing .lp-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px;
+  animation: lp-rise 600ms 330ms both;
+}
+.nova-landing .lp-hero-actions .lp-button {
+  min-height: 53px;
+  padding-inline: 25px;
+}
+.nova-landing .lp-hero-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
+  font-size: 11px;
+  color: var(--lp-muted);
+  animation: lp-rise 600ms 400ms both;
+}
+.nova-landing .lp-hero-note svg {
+  color: var(--lp-lime);
+}
+.nova-landing .lp-hero-bottom {
+  position: absolute;
+  inset: auto 0 29px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-hero-bottom a {
+  color: var(--lp-muted);
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.nova-landing .lp-section {
+  padding-block: 70px;
+}
+.nova-landing .lp-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+.nova-landing .lp-section-heading .lp-eyebrow {
+  font-size: 9px;
+  margin-bottom: 10px;
+}
+.nova-landing h2 {
+  font-size: clamp(28px, 2.7vw, 40px);
+  font-weight: 500;
+  margin: 0 0 12px;
+  letter-spacing: -1px;
+}
+.nova-landing .lp-section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.nova-landing .lp-section-subtitle {
+  color: var(--lp-muted);
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  margin: 0;
+  line-height: 1.8;
+}
+.nova-landing .lp-missions {
+  padding-top: 32px;
+}
+.nova-landing .lp-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+.nova-landing .lp-mission-card {
+  min-width: 0;
+  border: 1px solid #536b8099;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #142030, #0b1421);
+  overflow: hidden;
+  transition:
+    transform 300ms,
+    border-color 300ms,
+    box-shadow 300ms;
+}
+.nova-landing .lp-mission-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--lp-text);
+}
+.nova-landing .lp-card-image {
+  position: relative;
+  aspect-ratio: 1.22;
+  background: #101c2a;
+}
+.nova-landing .lp-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms;
+}
+.nova-landing .lp-mission-card[data-mission='opportunity'] .lp-card-image img {
+  object-position: 50% 68%;
+}
+.nova-landing .lp-card-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, #111d2b 0%, #111d2b00 44%);
+}
+.nova-landing .lp-destination {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  left: 13px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 20px;
+  font-size: 9px;
+  color: #e3eaf4;
+  background: #08111ed9;
+  border: 1px solid #aab7c833;
+}
+.nova-landing .lp-card-number {
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  font-size: 10px;
+  text-shadow: 0 1px 5px #000;
+}
+.nova-landing .lp-card-copy {
+  padding: 2px 19px 12px;
+  position: relative;
+}
+.nova-landing .lp-card-copy h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+.nova-landing .lp-story-title {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--lp-lime);
+  min-height: 35px;
+  margin: 0 0 12px;
+}
+.nova-landing .lp-card-description {
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--lp-muted);
+  margin: 0;
+}
+.nova-landing .lp-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 19px 18px;
+  margin-top: auto;
+  font-size: 10px;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-arrow-circle {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  border: 1px solid #60788f99;
+  border-radius: 20px;
+  background: linear-gradient(#203146, #0b1421);
+}
+.nova-landing .lp-arrow-circle svg {
+  transition: transform 300ms;
+}
+.nova-landing .lp-mission-card:focus-within {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+.nova-landing .lp-image-fallback {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-availability {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 11px;
+  color: var(--lp-muted);
+  margin: 24px 0 0;
+  line-height: 1.8;
+}
+.nova-landing .lp-process {
+  border-block: 1px solid #34435466;
+  background:
+    radial-gradient(ellipse at 50% 100%, #152b3b66, transparent 70%), #0b142166;
+}
+.nova-landing .lp-centered-heading {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.nova-landing .lp-centered-heading .lp-eyebrow {
+  justify-content: center;
+}
+.nova-landing .lp-centered-heading > p:last-child {
+  font-size: 14px;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nova-landing .lp-step {
+  position: relative;
+  border: 1px solid #344354;
+  background: linear-gradient(145deg, #152333b3, #0b1421b3);
+  border-radius: 18px;
+  padding: 24px;
+  transition: border-color 250ms;
+}
+.nova-landing .lp-step:hover {
+  border-color: #839984;
+}
+.nova-landing .lp-step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 23px;
+}
+.nova-landing .lp-step-icon {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  border: 1px solid #61794966;
+  border-radius: 50%;
+  background: radial-gradient(#d9fca714, #d9fca703);
+  color: var(--lp-lime);
+}
+.nova-landing .lp-step-number {
+  font: 400 28px var(--font-heading);
+  color: #7a8a9e;
+}
+.nova-landing .lp-step h3 {
+  font-size: 16px;
+  margin: 0 0 11px;
+  font-weight: 500;
+}
+.nova-landing .lp-step p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--lp-muted);
+  margin: 0;
+}
+.nova-landing .lp-step-connector {
+  position: absolute;
+  right: -22px;
+  top: 50%;
+  z-index: 1;
+  color: var(--lp-lime);
+}
+.nova-landing .lp-process-note {
+  max-width: 600px;
+  margin: 25px auto 0;
+  font-size: 11px;
+  color: var(--lp-muted);
+  text-align: center;
+}
+.nova-landing .lp-about {
+  display: flex;
+  align-items: center;
+  gap: 55px;
+  padding-block: 80px;
+}
+.nova-landing .lp-about > div:nth-child(2) {
+  max-width: 650px;
+}
+.nova-landing .lp-about h2 span {
+  color: var(--lp-lime);
+}
+.nova-landing .lp-about p:not(.lp-eyebrow) {
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-about-symbol {
+  display: grid;
+  place-items: center;
+  min-width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(#152c3c, transparent 70%);
+}
+.nova-landing .lp-about-symbol svg {
+  width: 105px;
+  height: 105px;
+  stroke-width: 0.6;
+  color: var(--lp-lime);
+}
+.nova-landing .lp-about > .lp-button {
+  margin-left: auto;
+}
+.nova-landing .lp-footer {
+  border-top: 1px solid #34435480;
+  padding: 45px 0 18px;
+  background: #080f19;
+}
+.nova-landing .lp-footer-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 70px;
+}
+.nova-landing .lp-footer p {
+  color: var(--lp-muted);
+  font-size: 12px;
+  line-height: 1.85;
+  margin-block: 17px;
+}
+.nova-landing .lp-footer h2 {
+  font-size: 14px;
+  letter-spacing: 0;
+  margin: 8px 0 18px;
+}
+.nova-landing .lp-footer-grid > div > a:not(.lp-brand) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lp-muted);
+  font-size: 12px;
+  width: fit-content;
+  min-height: 34px;
+}
+.nova-landing .lp-footer .lp-eyebrow {
+  font-size: 9px;
+  color: var(--lp-lime);
+  margin: 8px 0 17px;
+}
+.nova-landing .lp-footer a:hover {
+  color: var(--lp-lime);
+}
+.nova-landing .lp-credits {
+  border-top: 1px solid #34435480;
+  margin-top: 30px;
+  padding: 16px 0;
+  color: var(--lp-muted);
+  font-size: 12px;
+}
+.nova-landing .lp-credits summary {
+  cursor: pointer;
+  min-height: 28px;
+  width: fit-content;
+}
+.nova-landing .lp-credits li {
+  margin-block: 10px;
+  line-height: 1.7;
+}
+.nova-landing .lp-credits a {
+  color: var(--lp-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.nova-landing .lp-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid #34435480;
+  padding-top: 18px;
+  font-size: 10px;
+  color: var(--lp-muted);
+}
+.nova-landing .lp-footer-bottom a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--lp-muted);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .nova-landing .lp-mission-card:hover {
+    transform: translateY(-5px);
+    border-color: #a6c0cf;
+    box-shadow: 0 12px 30px #53cbff12;
+  }
+  .nova-landing .lp-mission-card:hover img {
+    transform: scale(1.04);
+  }
+  .nova-landing .lp-mission-card:hover .lp-arrow-circle svg {
+    transform: translateX(3px);
+  }
+}
+@keyframes lp-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes lp-cosmos-in {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lp-twinkle {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes lp-orbit {
+  to {
+    stroke-dashoffset: -1785;
+  }
+}
+@keyframes lp-planet-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nova-landing .lp-planet img {
+    animation: lp-planet-spin 90s linear infinite;
+  }
+  .nova-landing .lp-reveal-pending {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .nova-landing [data-reveal] {
+    transition:
+      opacity 650ms var(--reveal-delay, 0ms),
+      transform 650ms var(--reveal-delay, 0ms),
+      border-color 300ms,
+      box-shadow 300ms;
+  }
+  @supports (animation-timeline: scroll()) {
+    .nova-landing .lp-cosmos {
+      animation: lp-hero-exit linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 750px;
+    }
+  }
+}
+@keyframes lp-hero-exit {
+  to {
+    opacity: 0.3;
+  }
+}
+@media (min-width: 1700px) {
+  .nova-landing .lp-hero {
+    min-height: 850px;
+  }
+}
+@media (max-width: 1279px) {
+  .nova-landing .lp-mission-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .nova-landing .lp-hero h1 {
+    font-size: 56px;
+    letter-spacing: -2px;
+  }
+  .nova-landing .lp-card-image {
+    aspect-ratio: 1.55;
+  }
+  .nova-landing .lp-about {
+    gap: 25px;
+  }
+}
+@media (max-width: 1099px) {
+  .nova-landing .lp-desktop-links,
+  .nova-landing .lp-desktop-actions,
+  .nova-landing .lp-nav-divider {
+    display: none;
+  }
+  .nova-landing .lp-menu-toggle {
+    display: flex;
+  }
+  .nova-landing .lp-nav {
+    min-height: 64px;
+  }
+  .nova-landing .lp-process-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .nova-landing .lp-step-connector {
+    display: none;
+  }
+  .nova-landing .lp-about-symbol {
+    display: none;
+  }
+  .nova-landing .lp-hero {
+    min-height: 740px;
+  }
+  .nova-landing .lp-planet {
+    width: min(62vw, 600px);
+    right: 2%;
+    top: 130px;
+    opacity: 0.7;
+  }
+  .nova-landing .lp-cosmos::after {
+    background:
+      linear-gradient(90deg, #050a12f5, #050a1277 60%, transparent),
+      linear-gradient(0deg, #050a12, transparent 60%);
+  }
+  .nova-landing .lp-footer-grid {
+    gap: 32px;
+  }
+}
+@media (max-width: 899px) {
+  .nova-landing .lp-mission-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .nova-landing .lp-container {
+    width: calc(100% - 48px);
+  }
+  .nova-landing .lp-section-heading {
+    align-items: flex-start;
+  }
+  .nova-landing .lp-footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .nova-landing .lp-footer-grid > div:first-child {
+    grid-column: 1 / -1;
+    max-width: 450px;
+  }
+}
+@media (max-width: 767px) {
+  .nova-landing .lp-container {
+    width: calc(100% - 36px);
+  }
+  .nova-landing .lp-header {
+    inset: 12px 12px auto;
+  }
+  .nova-landing .lp-nav {
+    padding: 8px 12px 8px 17px;
+    gap: 10px;
+  }
+  .nova-landing .lp-brand {
+    font-size: 20px;
+    gap: 8px;
+  }
+  .nova-landing .lp-brand svg {
+    width: 27px;
+    height: 27px;
+  }
+  .nova-landing .lp-hero {
+    min-height: 780px;
+    padding: 155px 0 125px;
+    align-items: flex-start;
+  }
+  .nova-landing .lp-hero-label {
+    font-size: 8px;
+    letter-spacing: 1.4px;
+    gap: 8px;
+  }
+  .nova-landing .lp-rule {
+    width: 25px;
+  }
+  .nova-landing .lp-hero h1 {
+    font-size: clamp(30px, 7.6vw, 45px);
+    letter-spacing: -1.5px;
+    line-height: 1.14;
+    margin: 22px 0;
+  }
+  .nova-landing .lp-hero-description {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+  .nova-landing .lp-hero-actions {
+    gap: 12px;
+    margin-top: 25px;
+  }
+  .nova-landing .lp-hero-actions .lp-button {
+    width: 100%;
+  }
+  .nova-landing .lp-hero-note {
+    font-size: 10px;
+    align-items: flex-start;
+  }
+  .nova-landing .lp-hero-note svg {
+    flex-shrink: 0;
+  }
+  .nova-landing .lp-planet {
+    width: min(86vw, 480px);
+    right: 4%;
+    top: 250px;
+    opacity: 0.5;
+  }
+  .nova-landing .lp-small-world {
+    right: 12%;
+    top: 17%;
+    width: 32px;
+    height: 32px;
+  }
+  .nova-landing .lp-orbits {
+    width: 130%;
+    right: -55%;
+  }
+  .nova-landing .lp-hero-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    bottom: 22px;
+    font-size: 9px;
+  }
+  .nova-landing .lp-section {
+    padding-block: 48px;
+  }
+  .nova-landing .lp-missions {
+    padding-top: 22px;
+  }
+  .nova-landing .lp-section-heading {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .nova-landing .lp-section-heading .lp-button {
+    min-height: 44px;
+  }
+  .nova-landing .lp-section-subtitle {
+    font-size: 8px;
+    letter-spacing: 1.1px;
+  }
+  .nova-landing .lp-mission-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .nova-landing .lp-card-image {
+    aspect-ratio: 1.45;
+  }
+  .nova-landing .lp-card-copy {
+    padding-inline: 22px;
+  }
+  .nova-landing .lp-story-title {
+    min-height: auto;
+    font-size: 12px;
+  }
+  .nova-landing .lp-card-description {
+    font-size: 13px;
+  }
+  .nova-landing .lp-card-bottom {
+    padding-inline: 22px;
+    font-size: 12px;
+  }
+  .nova-landing .lp-availability {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .nova-landing .lp-availability .lp-status-dot {
+    margin-top: 7px;
+  }
+  .nova-landing .lp-process-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .nova-landing .lp-step-connector {
+    display: block;
+    top: auto;
+    bottom: -20px;
+    right: calc(50% - 9px);
+    transform: rotate(90deg);
+  }
+  .nova-landing .lp-about {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .nova-landing .lp-about > .lp-button {
+    margin-left: 0;
+  }
+  .nova-landing .lp-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .nova-landing .lp-footer-grid > div:first-child {
+    grid-column: auto;
+  }
+  .nova-landing .lp-footer-bottom {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nova-landing *,
+  .nova-landing *::before,
+  .nova-landing *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .nova-landing .lp-cosmos {
+    transform: none !important;
+  }
+}

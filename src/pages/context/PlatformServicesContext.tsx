@@ -25,40 +25,6 @@ function getSharedPlayerServices(): NovaServices {
   return sharedPlayerServices
 }
 
-function DevModeBanner({ acceptanceMode }: { acceptanceMode: boolean }) {
-  return (
-    <aside
-      aria-label="Development Mode Notice"
-      className="border-b border-warning/40 bg-warning/10 px-4 py-2 text-xs text-foreground"
-    >
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="rounded bg-warning/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-warning">
-            Dev Mock Mode
-          </span>
-          <span className="text-secondary">
-            {acceptanceMode ? (
-              'Explicit acceptance fixture. Local tab storage only; no Supabase connection.'
-            ) : (
-              <>
-                Supabase credentials not configured in{' '}
-                <code className="text-foreground">.env.local</code>. Running
-                with in-memory mock services.
-              </>
-            )}
-          </span>
-        </div>
-        <span className="text-[11px] text-muted">
-          Setup: copy <code className="text-foreground">.env.example</code> to{' '}
-          <code className="text-foreground">.env.local</code> and set{' '}
-          <code className="text-foreground">VITE_SUPABASE_URL</code> and{' '}
-          <code className="text-foreground">VITE_SUPABASE_PUBLISHABLE_KEY</code>
-          .
-        </span>
-      </div>
-    </aside>
-  )
-}
 
 export function PlatformServicesProvider({
   children,
@@ -161,10 +127,8 @@ export function PlatformServicesProvider({
 
   return (
     <PlatformServicesContext.Provider value={value}>
-      {import.meta.env.DEV && !value.isLive ? (
-        <DevModeBanner acceptanceMode={acceptanceMode} />
-      ) : null}
       {children}
     </PlatformServicesContext.Provider>
   )
+
 }

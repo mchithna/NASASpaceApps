@@ -17,6 +17,14 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Auth presentation:** `/auth` now presents login and registration in a responsive
+cinematic layout, using existing design tokens and auth services. It includes
+keyboard-operated tabs, password visibility controls, avatar selection, guest
+storage explanations, and motion that respects reduced-motion preferences.
+The new Mars photograph is NASA Photojournal PIA00003, credited to NASA/JPL/USGS:
+[source and media credit](https://science.nasa.gov/photojournal/valles-marineris-hemisphere/).
+This presentation update does not change persistence behavior or close the live gates.
+
 **Hosted database setup:** NOVA connector access now works for
 `ptjvlycaiigigdrcybet`. Missing engine/security migrations and a policy performance
 and constraint-validation migration were applied with existing records preserved.

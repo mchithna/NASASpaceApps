@@ -1,5 +1,6 @@
-import { Link } from 'react-router'
+import { Link, Outlet, useLocation } from 'react-router'
 import { LayoutFrame } from '@/components/layout/LayoutFrame.tsx'
+import { SkipLink } from '@/components/layout/SkipLink.tsx'
 import { TextNav } from '@/components/layout/TextNav.tsx'
 import { brandLinkClass } from '@/components/layout/layoutClasses.ts'
 
@@ -11,6 +12,24 @@ const publicNavItems = [
 ] as const
 
 export function PublicLayout() {
+  const location = useLocation()
+  const isFullWidthPage = location.pathname === '/' || location.pathname === '/auth'
+
+  if (isFullWidthPage) {
+    return (
+      <div className="min-h-svh bg-landing-bg text-landing-text selection:bg-landing-lime selection:text-landing-bg">
+        <SkipLink />
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="focus-visible:outline-none"
+        >
+          <Outlet />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <LayoutFrame
       header={

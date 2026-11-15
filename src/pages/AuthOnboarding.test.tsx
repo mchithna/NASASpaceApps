@@ -8,7 +8,9 @@ import { AuthPage } from '@/pages/AuthPage.tsx'
 import { OnboardingPage } from '@/pages/OnboardingPage.tsx'
 import { PlatformServicesProvider } from '@/pages/context/index.ts'
 
-function renderAuthPage(initialPersona: 'signed-out' | 'registered' | 'guest' = 'signed-out') {
+function renderAuthPage(
+  initialPersona: 'signed-out' | 'registered' | 'guest' = 'signed-out',
+) {
   const services = createMockServices({ persona: initialPersona })
   return {
     services,
@@ -19,7 +21,9 @@ function renderAuthPage(initialPersona: 'signed-out' | 'registered' | 'guest' = 
             <Route path="/auth" element={<AuthPage />} />
             <Route
               path="/dashboard"
-              element={<div data-testid="dashboard-screen">Mission Control</div>}
+              element={
+                <div data-testid="dashboard-screen">Mission Control</div>
+              }
             />
           </Routes>
         </PlatformServicesProvider>
@@ -28,7 +32,9 @@ function renderAuthPage(initialPersona: 'signed-out' | 'registered' | 'guest' = 
   }
 }
 
-function renderOnboardingPage(initialPersona: 'signed-out' | 'guest' | 'registered' = 'guest') {
+function renderOnboardingPage(
+  initialPersona: 'signed-out' | 'guest' | 'registered' = 'guest',
+) {
   const services = createMockServices({ persona: initialPersona })
   return {
     services,
@@ -39,7 +45,9 @@ function renderOnboardingPage(initialPersona: 'signed-out' | 'guest' | 'register
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route
               path="/dashboard"
-              element={<div data-testid="dashboard-screen">Mission Control</div>}
+              element={
+                <div data-testid="dashboard-screen">Mission Control</div>
+              }
             />
           </Routes>
         </PlatformServicesProvider>
@@ -53,7 +61,10 @@ describe('AuthPage presentation and mock service integration', () => {
     renderAuthPage('signed-out')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Sign In to NovaExplorer' }),
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Welcome back, explorer.',
+      }),
     ).toBeInTheDocument()
 
     expect(
@@ -63,7 +74,36 @@ describe('AuthPage presentation and mock service integration', () => {
     expect(
       screen.getByText(/Development mock services operate in memory/i),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Creating an account does not transfer guest progress or rank/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        /Creating an account does not transfer guest progress or rank/i,
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('uses arrow keys to switch tabs and updates the page title', async () => {
+    const user = userEvent.setup()
+    renderAuthPage()
+    screen.getByRole('tab', { name: 'Sign In' }).focus()
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('tab', { name: 'Create Account' })).toHaveFocus()
+    expect(screen.getByRole('tabpanel')).toHaveAccessibleName('Create Account')
+    expect(document.title).toBe('Create Account · NovaExplorer')
+    await user.keyboard('{Home}')
+    expect(screen.getByRole('tab', { name: 'Sign In' })).toHaveFocus()
+    expect(document.title).toBe('Sign In · NovaExplorer')
+  })
+
+  it('shows and hides the password without losing its value', async () => {
+    const user = userEvent.setup()
+    renderAuthPage()
+    const password = screen.getByLabelText('Password')
+    await user.type(password, 'example-password')
+    await user.click(screen.getByRole('button', { name: 'Show password' }))
+    expect(password).toHaveAttribute('type', 'text')
+    expect(password).toHaveValue('example-password')
+    await user.click(screen.getByRole('button', { name: 'Hide password' }))
+    expect(password).toHaveAttribute('type', 'password')
   })
 
   it('starts guest session and navigates to dashboard on clicking Guest CTA', async () => {
@@ -93,7 +133,7 @@ describe('AuthPage presentation and mock service integration', () => {
     await user.click(fillButton)
 
     const emailInput = screen.getByLabelText(/Academy Email/i)
-    const passwordInput = screen.getByLabelText(/Password/i)
+    const passwordInput = screen.getByLabelText('Password', { exact: true })
 
     expect(emailInput).toHaveValue(mockRegisteredCredentials.email)
     expect(passwordInput).toHaveValue(mockRegisteredCredentials.password)
@@ -114,7 +154,7 @@ describe('AuthPage presentation and mock service integration', () => {
     renderAuthPage('signed-out')
 
     const emailInput = screen.getByLabelText(/Academy Email/i)
-    const passwordInput = screen.getByLabelText(/Password/i)
+    const passwordInput = screen.getByLabelText('Password', { exact: true })
 
     await user.type(emailInput, 'wrong@example.com')
     await user.type(passwordInput, 'wrongpassword')
@@ -130,40 +170,38 @@ describe('AuthPage presentation and mock service integration', () => {
     })
   })
 
-  it(
-    'switches to create account tab and registers a new explorer',
-    async () => {
-      const user = userEvent.setup()
-      const { services } = renderAuthPage('signed-out')
+  it('switches to create account tab and registers a new explorer', async () => {
+    const user = userEvent.setup()
+    const { services } = renderAuthPage('signed-out')
 
-      const signUpTab = screen.getByRole('tab', { name: /Create Account/i })
-      await user.click(signUpTab)
+    const signUpTab = screen.getByRole('tab', { name: /Create Account/i })
+    await user.click(signUpTab)
 
-      const nicknameInput = screen.getByLabelText(/Callsign \/ Nickname/i)
-      const emailInput = screen.getByLabelText(/Academy Email/i)
-      const passwordInput = screen.getByLabelText(/Password/i)
+    const nicknameInput = screen.getByLabelText(/Callsign \/ Nickname/i)
+    const emailInput = screen.getByLabelText(/Academy Email/i)
+    const passwordInput = screen.getByLabelText('Password', { exact: true })
 
-      await user.type(nicknameInput, 'Starlight')
-      await user.type(emailInput, 'starlight@example.com')
-      await user.type(passwordInput, 'securepassword123')
+    await user.type(nicknameInput, 'Starlight')
+    await user.type(emailInput, 'starlight@example.com')
+    await user.type(passwordInput, 'securepassword123')
+    await user.click(screen.getByRole('radio', { name: 'Mars Rover Pilot' }))
 
-      const registerButton = screen.getByRole('button', {
-        name: /Register Profile & Begin/i,
-      })
-      await user.click(registerButton)
+    const registerButton = screen.getByRole('button', {
+      name: /Register Profile & Begin/i,
+    })
+    await user.click(registerButton)
 
-      await waitFor(() => {
-        expect(screen.getByTestId('dashboard-screen')).toBeInTheDocument()
-      })
+    await waitFor(() => {
+      expect(screen.getByTestId('dashboard-screen')).toBeInTheDocument()
+    })
 
-      const session = await services.auth.getSession()
-      expect(session.ok && session.data.status).toBe('authenticated')
+    const session = await services.auth.getSession()
+    expect(session.ok && session.data.status).toBe('authenticated')
 
-      const profile = await services.explorer.getProfile()
-      expect(profile.ok && profile.data.nickname).toBe('Starlight')
-    },
-    15000,
-  )
+    const profile = await services.explorer.getProfile()
+    expect(profile.ok && profile.data.nickname).toBe('Starlight')
+    expect(profile.ok && profile.data.avatarId).toBe('cadet-2')
+  }, 15000)
 })
 
 describe('OnboardingPage presentation and mock service integration', () => {
