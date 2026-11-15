@@ -4,13 +4,11 @@ import {
 } from '@/engine/activityRegistry.ts'
 import type { EngineScene } from '@/engine/scenes.ts'
 import type { MissionChapter } from '@/missions/chapter.ts'
+import { DustPowerSimulation } from './activities/DustPowerSimulation.tsx'
+import { MarsInteriorDiscovery } from './activities/MarsInteriorDiscovery.tsx'
 import { SeismicSignalDetective } from './activities/SeismicSignalDetective.tsx'
+import { SeismometerDeployment } from './activities/SeismometerDeployment.tsx'
 import { InstrumentCards, OpenArchive } from './activities/StorySteps.tsx'
-import {
-  DeploymentSlot,
-  InteriorSlot,
-  PowerSlot,
-} from './activities/TemporarySlots.tsx'
 
 const missionPage = ['insight-nasa-science']
 const instruments = ['insight-instruments']
@@ -57,9 +55,9 @@ export const scenes: readonly EngineScene[] = [
     sourceIds: [...missionPage, ...instruments],
     reward: null,
     instruction:
-      'Read why the seismometer had to be set down carefully. The deployment activity is not built yet.',
-    activityId: 'deployment-slot',
-    activityType: 'insight-deployment-slot',
+      'Examine three practice patches, choose the flat clear ground, then activate the arm and place the wind and thermal shield. This is a simulation, not a record of the real placement.',
+    activityId: 'seismometer-deployment',
+    activityType: 'insight-deployment',
     config: {},
   },
   {
@@ -85,10 +83,10 @@ export const scenes: readonly EngineScene[] = [
     discoveryId: 'insight-notes',
     body: 'Seismic signals change as they pass through different materials. Scientists read those records to study Mars’s crust, mantle, and core. Most marsquakes come from heat and pressure that crack rock. Meteorite impacts are another source. The waves travel through the planet, so nobody has to dig to the core to investigate it.',
     instruction:
-      'The interior diagram is not built yet. Mark the notes ready to continue. The heat-probe note below is part of this scene.',
+      'Interpret three seismic clues to reveal a schematic interior. The drawing is not to scale and is not a NASA measurement.',
     interaction: {
-      activityId: 'interior-slot',
-      activityType: 'insight-interior-slot',
+      activityId: 'interior-discovery',
+      activityType: 'insight-interior',
       config: {},
     },
   },
@@ -100,9 +98,9 @@ export const scenes: readonly EngineScene[] = [
     sourceIds: ['insight-power', ...retirement],
     reward: null,
     instruction:
-      'Read how dust reduced the energy the solar panels could produce in 2022. The power demonstration is not built yet.',
-    activityId: 'power-slot',
-    activityType: 'insight-power-slot',
+      'Raise the dust on this educational model and watch the sunlight and energy indicator change. The slider is not a NASA measurement.',
+    activityId: 'dust-power',
+    activityType: 'insight-dust-power',
     config: {},
   },
   {
@@ -123,16 +121,18 @@ const registry = createActivityRegistry([
   defineActivity('insight-instruments', (props) => (
     <InstrumentCards {...props} />
   )),
-  defineActivity('insight-deployment-slot', (props) => (
-    <DeploymentSlot {...props} />
+  defineActivity('insight-deployment', (props) => (
+    <SeismometerDeployment {...props} />
   )),
   defineActivity('insight-signal-detective', (props) => (
     <SeismicSignalDetective {...props} />
   )),
-  defineActivity('insight-interior-slot', (props) => (
-    <InteriorSlot {...props} />
+  defineActivity('insight-interior', (props) => (
+    <MarsInteriorDiscovery {...props} />
   )),
-  defineActivity('insight-power-slot', (props) => <PowerSlot {...props} />),
+  defineActivity('insight-dust-power', (props) => (
+    <DustPowerSimulation {...props} />
+  )),
 ])
 if (!registry.ok) throw new Error('Invalid InSight activity registry.')
 

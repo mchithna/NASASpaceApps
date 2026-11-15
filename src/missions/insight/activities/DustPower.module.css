@@ -1,0 +1,95 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #1e4d66;
+  border-radius: 1rem;
+  background: #07111f;
+  color: #ffffff;
+}
+
+.drawing {
+  display: block;
+  width: min(100%, 28rem);
+  height: auto;
+  margin-inline: auto;
+}
+
+.rays {
+  stroke: #ffe08a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: opacity 0.4s ease;
+}
+
+.dust {
+  fill: #8a5a32;
+  transition: opacity 0.4s ease;
+}
+
+.haze {
+  fill: #c46a3a;
+  transition: opacity 0.4s ease;
+}
+
+.meter {
+  height: 0.85rem;
+  overflow: hidden;
+  border: 1px solid #1e4d66;
+  border-radius: 999px;
+  background: #0b1a2c;
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  background: #53cbff;
+  transition: width 0.4s ease;
+}
+
+.sliderLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 28rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.slider {
+  width: 100%;
+  min-height: 2.75rem;
+  accent-color: #53cbff;
+  cursor: pointer;
+}
+
+.copy,
+.note,
+.success p {
+  max-width: 65ch;
+  color: #d5deea;
+}
+
+.success {
+  padding: 0.75rem 1rem;
+  border: 1px solid #4fd1a5;
+  border-radius: 0.75rem;
+  background: #0b1a2c;
+}
+
+.slider:focus-visible,
+.panel :focus-visible {
+  outline: 3px solid #d4ff9a;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rays,
+  .dust,
+  .haze,
+  .meterFill {
+    transition: none;
+  }
+}

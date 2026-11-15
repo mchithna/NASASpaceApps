@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { MissionPlayer } from '@/engine/MissionPlayer.tsx'
@@ -32,7 +32,26 @@ describe('InSight chapter foundation', () => {
       null,
       null,
     ])
-    expect(chapter.scenes[4]).toMatchObject({ discoveryId: 'insight-notes' })
+    expect(chapter.scenes[2]).toMatchObject({
+      kind: 'activity',
+      reward: null,
+      activityType: 'insight-deployment',
+    })
+    expect(chapter.scenes[3]).toMatchObject({
+      activityType: 'insight-signal-detective',
+      reward: 'activity',
+    })
+    expect(chapter.scenes[4]).toMatchObject({
+      kind: 'discovery',
+      reward: 'discovery',
+      discoveryId: 'insight-notes',
+      interaction: expect.objectContaining({ activityType: 'insight-interior' }),
+    })
+    expect(chapter.scenes[5]).toMatchObject({
+      kind: 'activity',
+      reward: null,
+      activityType: 'insight-dust-power',
+    })
     expect(validateSceneSequence(mission, chapter.scenes)).toEqual([])
     expect(
       validateActivityBindings(chapter.scenes, chapter.activities),
@@ -80,7 +99,18 @@ describe('InSight chapter foundation', () => {
     await user.click(button('Save instrument introduction'))
     await heading("Setting Up Mars's Ears")
     await xp(20)
-    await user.click(button('Mark deployment notes ready'))
+    for (const name of [
+      'Uneven rocky ground',
+      'Obstructed ground',
+      'Flat, clear ground',
+    ]) {
+      await user.click(button(name))
+    }
+    await user.click(button('Choose this area'))
+    await user.click(button('Activate the robotic arm'))
+    await user.click(button('Place the wind and thermal shield'))
+    await xp(20)
+    await user.click(button('Save deployment exercise'))
     await heading('The First Whisper')
     await xp(20)
     await user.click(screen.getByRole('button', { name: /Signal A/ }))
@@ -98,7 +128,36 @@ describe('InSight chapter foundation', () => {
     await user.click(button('Save signal investigation'))
     await heading('Seeing the Invisible Planet')
     await xp(60)
-    await user.click(button('Mark interior notes ready'))
+    expect(chapter.scenes[4]).toMatchObject({
+      kind: 'discovery',
+      reward: 'discovery',
+      discoveryId: 'insight-notes',
+    })
+    await user.click(screen.getByRole('radio', { name: /only wind/ }))
+    await user.click(button('Check this clue'))
+    expect(screen.getByText(/Wind can shake the ground/)).toBeInTheDocument()
+    await user.click(
+      screen.getByRole('radio', { name: /outer rocky layer/ }),
+    )
+    await user.click(button('Check this clue'))
+    expect(
+      screen.getByRole('img', {
+        name: /Revealed: Crust\. Still hidden: Mantle, Core/,
+      }),
+    ).toBeInTheDocument()
+    await user.click(
+      screen.getByRole('radio', { name: /layer beneath the crust/ }),
+    )
+    await user.click(button('Check this clue'))
+    await user.click(
+      screen.getByRole('radio', { name: /Deep-traveling seismic signals/ }),
+    )
+    await user.click(button('Check this clue'))
+    expect(
+      screen.getByText('Discovery Unlocked: Mars Has a Hidden Structure'),
+    ).toBeInTheDocument()
+    await xp(60)
+    await user.click(button('Save interior discovery'))
     await heading('When the Power Faded')
     await xp(85)
     const journal = await services.rewards.listJournalEntries()
@@ -108,8 +167,14 @@ describe('InSight chapter foundation', () => {
         contentStatus: 'placeholder',
       }),
     ])
-    await user.click(button('Mark power notes ready'))
+    const dust = screen.getByRole('slider', { name: 'Dust level' })
+    expect(button('Save power demonstration')).toBeDisabled()
+    fireEvent.change(dust, { target: { value: '2' } })
+    expect(screen.getByText('Heavy dust. Illustrative energy: Low.')).toBeInTheDocument()
+    await xp(85)
+    await user.click(button('Save power demonstration'))
     await heading('Mars Was Never Truly Silent')
+    await xp(85)
     expect(button('Continue')).toBeEnabled()
     await user.click(button('Continue'))
     await screen.findByText('Chapter complete')
