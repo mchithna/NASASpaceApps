@@ -17,6 +17,38 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Opportunity chapter:** seven sourced scenes now use the existing package loader,
+player and services. Activities cover rover equipment, ancient-water clues,
+Eagle/Endurance/Victoria/Endeavour exploration, mineral evidence, airborne dust
+and the final timeline. Fixed 20/40/25/15 rewards, Martian Trailblazer and sourced
+`opportunity-notes` use the existing platform boundary. The user authorized minimal
+coordinated ending-interaction/catalog changes. Hosted catalog migration
+`20261115083036` is applied; scene order, reward mapping and restricted catalog
+privileges were checked read-only without resetting player data. See
+`src/missions/opportunity/README.md` for sources, validation and limits. Registered
+hosted browser/JWT/concurrency acceptance remains open. The foundation is not
+frozen; older statements that Opportunity is unwritten are historical.
+
+**Platform visual refresh:** all learner-facing inner pages now share the home
+page's dark surfaces, lime actions, orbital details, credited NASA image system,
+floating navigation and reduced-motion-aware transitions. Dashboard, profile,
+journal, achievements, explorer setup, mission overview/player and not-found
+presentation are updated; auth's existing space presentation has a matching
+header. Home source and the platform's data/reward boundaries are preserved.
+Scoped token aliases live in `src/styles/platform.css`; the earlier token table
+below remains the baseline. See `docs/PLATFORM_VISUAL_REFRESH.md` for validation.
+
+**Surveyor 3 chapter:** the seven-scene historical investigation is implemented
+through the existing package loader, with four interactions (equipment, sequence,
+sampler, evidence), fixed 20/40/25/15 rewards, sourced discovery and Lunar
+Archaeologist. Coordinated engine and trusted catalog changes were explicitly
+authorized. The migration is applied to `ptjvlycaiigigdrcybet` and its manifest
+and privileges were checked read-only. See `docs/SURVEYOR_3_IMPLEMENTATION.md`
+for actual validation. Other chapters remain unwritten. The open foundation
+JWT/API/concurrency/registered-browser gates are not closed by this chapter.
+AI integration remains unimplemented pending eligible provider access and keys.
+Older statements that all five chapters are unbuilt are historical below.
+
 **Auth presentation:** `/auth` now presents login and registration in a responsive
 cinematic layout, using existing design tokens and auth services. It includes
 keyboard-operated tabs, password visibility controls, avatar selection, guest

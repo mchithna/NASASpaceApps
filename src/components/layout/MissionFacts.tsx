@@ -1,79 +1,91 @@
-import { useEffect } from 'react'
-import { PageHeader } from '@/components/ui/PageHeader.tsx'
-import { textLinkClass } from '@/components/layout/layoutClasses.ts'
+import { useEffect, type ReactNode } from 'react'
+import { ArrowUpRight, Orbit, Radio, Sparkles } from 'lucide-react'
 import type { MissionDefinition } from '@/missions/types.ts'
-import { ExternalLink } from 'lucide-react'
+import { PageHero } from '@/pages/components/PageHero.tsx'
 
-type MissionFactsProps = {
+export function MissionFacts({
+  mission,
+  actions,
+}: {
   mission: MissionDefinition
-}
-
-export function MissionFacts({ mission }: MissionFactsProps) {
+  actions?: ReactNode
+}) {
   useEffect(() => {
     document.title = `${mission.displayName} · NovaExplorer`
   }, [mission.displayName])
-
+  const available = mission.status === 'available'
   return (
-    <div className="flex flex-col gap-8 animate-page-rise">
-      <div className="flex flex-col gap-2">
-        <div className="eyebrow-label">
-          <span className="eyebrow-dot" /> NASA SPACECRAFT DOSSIER
-        </div>
-        <PageHeader
-          title={mission.displayName}
-          description={mission.description}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4 p-6 rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md">
-          <p className="max-w-[65ch] text-[#9aa7bd] text-sm">
-            <span className="font-semibold text-white">Story title: </span>
-            <span className="text-[#d4ff9a] font-medium">{mission.chapterTitle}</span>
+    <div className="platform-page">
+      <PageHero
+        title={mission.displayName}
+        description={mission.chapterTitle}
+        eyebrow={`${mission.destination} / Mission dossier`}
+        visual={mission.id}
+        actions={actions}
+      />
+      <div className="mission-dossier-grid">
+        <section className="mission-dossier-panel">
+          <p className="platform-eyebrow">
+            <Orbit size={15} aria-hidden="true" />
+            The story behind the spacecraft
           </p>
-          <p className="text-[#9aa7bd] text-sm">
-            <span className="font-semibold text-white">Destination: </span>
-            <span className="text-white">{mission.destination}</span>
+          <h2>{mission.chapterTitle}</h2>
+          <p>{mission.description}</p>
+          <dl>
+            <div>
+              <dt>Destination</dt>
+              <dd>{mission.destination}</dd>
+            </div>
+            <div>
+              <dt>Mission rewards</dt>
+              <dd>Up to 100 XP</dd>
+            </div>
+          </dl>
+          <div className="mt-7 flex items-start gap-3 rounded-control border border-border p-4">
+            {available ? (
+              <Sparkles
+                className="mt-1 size-5 shrink-0 text-accent"
+                aria-hidden="true"
+              />
+            ) : (
+              <Radio
+                className="mt-1 size-5 shrink-0 text-science"
+                aria-hidden="true"
+              />
+            )}
+            <p>
+              {available
+                ? 'Your chapter is ready. Follow the story, investigate the evidence, and uncover the legacy.'
+                : 'This chapter is being prepared. Explore the NASA sources while the mission team prepares the story.'}
+            </p>
+          </div>
+        </section>
+        <aside
+          className="mission-dossier-panel"
+          aria-label="Mission reading sources"
+        >
+          <p className="platform-eyebrow">From the original archives</p>
+          <h2>NASA source</h2>
+          <p>
+            Follow the evidence. Explore the original mission records and the
+            science behind this story.
           </p>
-          <p className="max-w-[65ch] text-white/90 text-sm">
-            Mission gameplay is not implemented yet.
-          </p>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-white/15 bg-[#050a14] aspect-video">
-          <img
-            src={mission.coverImage}
-            alt="Placeholder cover. A NASA photograph is not shown yet."
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-        </div>
-      </div>
-
-      <section className="flex flex-col gap-3 p-6 rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md">
-        <h2 className="text-lg font-heading font-semibold text-white">
-          NASA source
-        </h2>
-        <ul className="flex flex-col gap-2.5">
-          {mission.sources.map((source) => (
-            <li key={source.id}>
-              <a
-                className={`${textLinkClass} inline-flex items-center gap-1.5 text-sm text-[#53cbff] hover:text-[#d4ff9a] hover:underline transition-colors`}
-                href={source.url}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <span>{source.title}</span>
-                <ExternalLink size={13} aria-hidden="true" />
-                {source.credit ? (
-                  <span className="font-normal text-[#8c9bb3] ml-1">
-                    ({source.credit})
+          <ul className="mission-source-list">
+            {mission.sources.map((source) => (
+              <li key={source.id}>
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  <span>
+                    {source.title}
+                    {source.credit ? <small>{source.credit}</small> : null}
                   </span>
-                ) : null}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
     </div>
   )
 }

@@ -150,6 +150,40 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Opportunity now exports seven authored scenes through the existing chapter loader,
+with rover hotspots, water clues, a four-crater expedition, evidence matching,
+a qualitative airborne-dust simulation and a final timeline. Milestones remain
+20/40/25/15 XP, with sourced `opportunity-notes` and Martian Trailblazer.
+The user authorized minimal coordinated ending-interaction, reward-catalog and
+trusted manifest changes. Hosted catalog version `20261115083036` is applied to
+`ptjvlycaiigigdrcybet`; seven scene rows and restricted catalog privileges were
+verified read-only. No player data was reset. See `src/missions/opportunity/README.md`
+for sources, validation and limits. Registered hosted browser/JWT/concurrency
+acceptance remains open; this does not freeze the foundation. Older statements
+that every chapter except Surveyor 3 is unbuilt are historical.
+
+The learner-facing platform now follows the home page's visual language: scoped
+dark/lime styling, floating navigation, credited NASA imagery, responsive page
+heroes, updated mission cards, profile/setup forms, journal and achievement
+presentation, mission dossiers/player, and the not-found screen. Auth retains its
+existing space artwork with a matching header. Home page source and gameplay,
+identity, service contracts, rewards and persistence behavior are preserved.
+See `docs/PLATFORM_VISUAL_REFRESH.md` for files, checks and limitations. This is a
+presentation update; the previously open foundation acceptance gates remain open.
+
+Surveyor 3 now exports an authored seven-scene chapter through its package loader,
+with equipment inspection, landing sequence, sampler simulation and Apollo evidence.
+The user authorized coordinated engine interaction/reward mapping and trusted
+manifest changes. The chapter migration is applied to `ptjvlycaiigigdrcybet`;
+hosted read-only checks confirm seven scenes and reward checkpoints at scenes 2/4/6.
+Four legacy checkpoint rows were archived and their chapter progress restarted
+with explicit user approval; earned XP and achievements were preserved.
+See `src/missions/surveyor-3/README.md` and `docs/SURVEYOR_3_IMPLEMENTATION.md`
+for validation and limitations. Other chapters remain unbuilt. Foundation gates
+remain open; this does not freeze shared contracts or establish production readiness.
+The ignored Gemini environment has one configured server-only key and two empty
+slots. No production AI integration or model/key validation was performed.
+
 The `/auth` login and registration presentation has been redesigned with a responsive
 space-themed layout, credited NASA Mars imagery, reduced-motion-aware animations,
 keyboard tabs, password visibility controls, and compact avatar selection. Existing

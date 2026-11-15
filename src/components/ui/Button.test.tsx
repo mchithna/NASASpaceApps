@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/Button.tsx'
 
 describe('Button', () => {
   it.each([
-    ['primary', 'bg-accent'],
-    ['secondary', 'bg-elevated'],
-    ['outline', 'border-accent'],
+    ['primary', 'bg-[#d4ff9a]'],
+    ['secondary', 'bg-white/[0.04]'],
+    ['outline', 'border-[#d4ff9a]/60'],
     ['ghost', 'bg-transparent'],
     ['destructive', 'bg-danger'],
   ] as const)('renders the %s variant', (variant, className) => {

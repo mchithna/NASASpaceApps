@@ -94,13 +94,13 @@ export const achievementCatalog = [
   {
     id: 'surveyor-3-story',
     missionId: 'surveyor-3',
-    title: 'Surveyor 3 story',
+    title: 'Lunar Archaeologist',
     description: 'Finish the Surveyor 3 chapter.',
   },
   {
     id: 'opportunity-story',
     missionId: 'opportunity',
-    title: 'Opportunity story',
+    title: 'Martian Trailblazer',
     description: 'Finish the Opportunity chapter.',
   },
   {
@@ -166,12 +166,22 @@ export const discoveryCatalog = [
   {
     discoveryId: 'surveyor-3-notes',
     missionId: 'surveyor-3',
-    title: 'Placeholder: Surveyor 3',
+    title: 'Surveyor 3: returned lunar hardware',
+    summary:
+      'Surveyor 3’s returned camera and scoop helped scientists study prolonged exposure to the lunar environment.',
+    contentStatus: 'sourced',
+    sourceUrl:
+      'https://www.nasa.gov/history/55-years-ago-apollo-12-makes-a-pinpoint-landing-on-the-moon/',
   },
   {
     discoveryId: 'opportunity-notes',
     missionId: 'opportunity',
-    title: 'Placeholder: Opportunity',
+    title: 'The Ancient Water of Mars',
+    summary:
+      'Hematite-rich spheres point to groundwater activity; gypsum veins record minerals deposited by water in fractures; clay-bearing rocks preserve evidence of a less acidic ancient watery environment. These findings concern past habitability, not proof of life. NASA source: https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/',
+    contentStatus: 'sourced',
+    sourceUrl:
+      'https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/',
   },
   {
     discoveryId: 'ingenuity-notes',

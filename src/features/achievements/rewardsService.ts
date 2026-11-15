@@ -472,9 +472,15 @@ export function createRewardsService(
         discoveryId: input.discoveryId,
         missionId: parsedMission.data,
         title: known?.title ?? 'Placeholder discovery',
-        summary: journalPlaceholderSummary,
+        summary:
+          known && 'summary' in known
+            ? known.summary
+            : journalPlaceholderSummary,
         unlockedAt: at,
-        contentStatus: 'placeholder',
+        contentStatus:
+          known && 'contentStatus' in known
+            ? known.contentStatus
+            : 'placeholder',
       }
       bucket.journal.push(entry)
       if (!persist(explorerId, bucket)) {

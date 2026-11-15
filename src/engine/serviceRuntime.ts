@@ -21,6 +21,7 @@ import {
 import type { EngineEffect } from '@/engine/navigation.ts'
 import type { MissionRuntimeAdapter } from '@/engine/trainingRuntime.ts'
 import type { MissionModule } from '@/engine/scenes.ts'
+import { rewardScene } from '@/engine/scenes.ts'
 import { validateResume } from '@/engine/validateModule.ts'
 import type { AuthService } from '@/contracts/services.ts'
 
@@ -129,14 +130,18 @@ export function createServiceRuntime(
       if (loaded.data.status !== 'in_progress') return loaded
       // Session-local guest writes cannot share a database transaction. Replay
       // deterministic outcomes from persisted scene evidence before exposing Next.
-      for (const kind of ['story', 'activity', 'discovery'] as const) {
-        const first = module.scenes.find((scene) => scene.kind === kind)
+      for (const milestone of [
+        'introduction',
+        'activity',
+        'discovery',
+      ] as const) {
+        const first = rewardScene(module, milestone)
         if (first && loaded.data.completedCheckpointIds.includes(first.id)) {
           const active = await checkVisit()
           if (!active.ok) return active
           const granted = await services.rewards.grantMilestone({
             missionId,
-            milestoneId: kind === 'story' ? 'introduction' : kind,
+            milestoneId: milestone,
           })
           if (!granted.ok) return granted
         }
@@ -236,16 +241,9 @@ function belongsToModule(effect: EngineEffect, module: MissionModule): boolean {
     )
   }
   if (effect.type === 'grant-milestone') {
-    const kinds: Record<string, string> = {
-      introduction: 'story',
-      activity: 'activity',
-      discovery: 'discovery',
-    }
-    const kind = kinds[effect.request.milestoneId]
     return (
-      kind !== undefined &&
-      module.scenes.find((scene) => scene.kind === kind)?.id ===
-        effect.request.checkpointId
+      rewardScene(module, effect.request.milestoneId)?.id ===
+      effect.request.checkpointId
     )
   }
   return true

@@ -16,6 +16,7 @@ import { PageHeader } from '@/components/ui/PageHeader.tsx'
 import { ProgressBar } from '@/components/ui/ProgressBar.tsx'
 import { textLinkClass } from '@/components/layout/layoutClasses.ts'
 import type { DiscoveryUnlockRequest } from '@/contracts/rewards.ts'
+import { achievementCatalog } from '@/contracts/rewards.ts'
 import {
   createActivityRegistry,
   defineActivity,
@@ -36,7 +37,7 @@ import {
   type NavigationAction,
 } from '@/engine/navigation.ts'
 import type { MissionModule } from '@/engine/scenes.ts'
-import { sceneFramingLabels } from '@/engine/scenes.ts'
+import { sceneActivity, sceneFramingLabels } from '@/engine/scenes.ts'
 import { SceneAttribution } from '@/engine/scenes/SceneAttribution.tsx'
 import { SceneMediaView } from '@/engine/scenes/SceneMediaView.tsx'
 import {
@@ -142,9 +143,17 @@ function MissionPlayerSession({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [savedNotice, setSavedNotice] = useState(false)
   const [fallbackRuntime] = useState(() =>
-    services ? createServiceRuntime(services) : import.meta.env.DEV ? createTrainingRuntime() : {
-      apply: async () => serviceError('unavailable', 'Mission services are not connected. Reload your saved place.'),
-    },
+    services
+      ? createServiceRuntime(services)
+      : import.meta.env.DEV
+        ? createTrainingRuntime()
+        : {
+            apply: async () =>
+              serviceError(
+                'unavailable',
+                'Mission services are not connected. Reload your saved place.',
+              ),
+          },
   )
   const adapter = runtime ?? fallbackRuntime
   const [activityGuard] = useState(createActivityCompletionGuard)
@@ -230,17 +239,18 @@ function MissionPlayerSession({
     position === null ? null : sceneNavigationState(module, position)
   const citation =
     scene === null ? null : citationViewFor(module.mission, scene)
+  const activityScene = scene ? sceneActivity(scene) : null
   const activityNode =
-    scene?.kind === 'activity' ? (
+    scene && activityScene ? (
       <RegisteredActivity
-        registration={activityRegistry.lookup(scene.activityType)}
+        registration={activityRegistry.lookup(activityScene.activityType)}
         activityProps={{
           missionId: module.mission.id,
           sceneId: scene.id,
-          activityId: scene.activityId,
-          activityType: scene.activityType,
-          config: scene.config,
-          prompt: scene.prompt,
+          activityId: activityScene.activityId,
+          activityType: activityScene.activityType,
+          config: activityScene.config,
+          prompt: activityScene.prompt,
           completed: position?.completedSceneIds.includes(scene.id) ?? false,
           replay,
           onComplete: () => completeCurrentActivity(scene.id),
@@ -311,6 +321,24 @@ function MissionPlayerSession({
               </p>
             ) : null}
             {sceneNode}
+            {scene?.kind !== 'activity' ? activityNode : null}
+            {replay ? (
+              <div
+                role="status"
+                className="rounded-surface border border-border bg-elevated p-4 text-foreground"
+              >
+                <p className="font-heading text-xl">Chapter complete</p>
+                <p>
+                  {
+                    achievementCatalog.find(
+                      (item) => item.id === module.mission.achievementId,
+                    )?.title
+                  }{' '}
+                  unlocked. Your chapter progress and rewards are saved.
+                  Replaying adds no duplicate XP.
+                </p>
+              </div>
+            ) : null}
             {!scene ? (
               <p className="max-w-[65ch] text-secondary">
                 Start the mission to open the first scene.

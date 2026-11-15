@@ -59,6 +59,7 @@ export function AchievementCard({ badge }: AchievementCardProps) {
 
           <div className={styles.cardHeadingGroup}>
             <h4 className={styles.cardMissionTitle}>{missionName} Story</h4>
+            <h5 className="text-sm font-semibold text-[#d4ff9a]">{badge.title}</h5>
             <span className={styles.cardChapterTitle}>
               {badge.mission?.chapterTitle ?? badge.description}
             </span>

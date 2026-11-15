@@ -127,7 +127,6 @@ export function OnboardingPage() {
 
   // Steps calculation
   const hasValidCallsign = isNicknameValid && nickname.trim().length >= 2
-  const currentStep = !hasValidCallsign ? 1 : 2
 
   if (isLoadingProfile) {
     return (

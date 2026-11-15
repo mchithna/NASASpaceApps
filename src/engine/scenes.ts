@@ -64,6 +64,15 @@ type SceneBase = {
   /** `null` means the scene expected a picture and does not have one. */
   media?: SceneMedia | null
   framing?: SceneFraming
+  /** Explicit chapter reward checkpoints; omit on all scenes for legacy defaults. */
+  reward?: 'introduction' | 'activity' | 'discovery' | null
+  /** Optional investigation inside a story, evidence, discovery, or ending scene. */
+  interaction?: {
+    activityId: string
+    activityType: string
+    config: ActivityConfig
+    prompt?: ActivityPrompt
+  }
 }
 
 export type StoryScene = SceneBase & {
@@ -102,11 +111,7 @@ export type EndingScene = SceneBase & {
 }
 
 export type EngineScene =
-  | StoryScene
-  | EvidenceScene
-  | ActivityScene
-  | DiscoveryScene
-  | EndingScene
+  StoryScene | EvidenceScene | ActivityScene | DiscoveryScene | EndingScene
 
 /**
  * A playable chapter. `mission` is the Phase 1 metadata object.
@@ -115,6 +120,24 @@ export type EngineScene =
 export type MissionModule = {
   mission: MissionDefinition
   scenes: readonly EngineScene[]
+}
+
+export function sceneActivity(scene: EngineScene): ActivityScene | null {
+  if (scene.kind === 'activity') return scene
+  return scene.interaction
+    ? { ...scene, ...scene.interaction, kind: 'activity' }
+    : null
+}
+
+export function rewardScene(
+  module: MissionModule,
+  milestone: string,
+): EngineScene | undefined {
+  if (module.scenes.some((scene) => scene.reward !== undefined)) {
+    return module.scenes.find((scene) => scene.reward === milestone)
+  }
+  const kind = milestone === 'introduction' ? 'story' : milestone
+  return module.scenes.find((scene) => scene.kind === kind)
 }
 
 export function isSceneKind(value: string): value is SceneKind {
