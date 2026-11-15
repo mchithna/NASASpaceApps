@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import type { ActivityRenderProps } from '@/engine/activityRegistry.ts'
+import styles from './InsightObservatory.module.css'
 
 const instruments = [
   {
@@ -31,8 +32,8 @@ const instruments = [
 
 export function OpenArchive(props: ActivityRenderProps) {
   return (
-    <div className="flex flex-col items-start gap-3">
-      <p className="max-w-[65ch] text-secondary">
+    <div className={styles.panel}>
+      <p className={styles.copy}>
         You are a junior seismic scientist. The recovered archive holds the
         landing, the instruments, and the vibrations InSight measured. Open it
         to start the investigation.
@@ -61,8 +62,8 @@ export function InstrumentCards(props: ActivityRenderProps) {
   }
 
   return (
-    <div className="flex flex-col items-start gap-3">
-      <p className="max-w-[65ch] text-secondary">
+    <div className={styles.panel}>
+      <p className={styles.copy}>
         Open at least three instrument records. A lander can explore without
         driving: it measures the planet from one place.
       </p>
@@ -79,10 +80,10 @@ export function InstrumentCards(props: ActivityRenderProps) {
           </Button>
         ))}
       </div>
-      <p aria-live="polite" className="max-w-[65ch] text-secondary">
+      <p aria-live="polite" className={styles.copy}>
         {current?.detail ?? 'Choose an instrument to read what it was built to measure.'}
       </p>
-      <p className="text-sm text-secondary">
+      <p className={styles.note}>
         {Math.min(seen.length, 3)} of 3 required records opened.
       </p>
       <Button

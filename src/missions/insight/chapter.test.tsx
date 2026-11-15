@@ -164,7 +164,8 @@ describe('InSight chapter foundation', () => {
     expect(journal.ok && journal.data).toEqual([
       expect.objectContaining({
         discoveryId: 'insight-notes',
-        contentStatus: 'placeholder',
+        title: 'Mars Has a Hidden Structure',
+        contentStatus: 'sourced',
       }),
     ])
     const dust = screen.getByRole('slider', { name: 'Dust level' })
@@ -179,7 +180,7 @@ describe('InSight chapter foundation', () => {
     await user.click(button('Continue'))
     await screen.findByText('Chapter complete')
     await xp(100)
-    expect(screen.getByText(/InSight story unlocked/)).toBeInTheDocument()
+    expect(screen.getByText(/Planetary Detective unlocked/)).toBeInTheDocument()
 
     const grant = vi.spyOn(services.rewards, 'grantMilestone')
     await user.click(button('Start again'))

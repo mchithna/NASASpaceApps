@@ -9,6 +9,14 @@ import { MarsInteriorDiscovery } from './activities/MarsInteriorDiscovery.tsx'
 import { SeismicSignalDetective } from './activities/SeismicSignalDetective.tsx'
 import { SeismometerDeployment } from './activities/SeismometerDeployment.tsx'
 import { InstrumentCards, OpenArchive } from './activities/StorySteps.tsx'
+import {
+  finalSelfie,
+  firstSelfie,
+  interiorDiagram,
+  lastSeismometer,
+  panelDust,
+  seisPlacement,
+} from './media.ts'
 
 const missionPage = ['insight-nasa-science']
 const instruments = ['insight-instruments']
@@ -20,8 +28,9 @@ export const scenes: readonly EngineScene[] = [
     kind: 'story',
     title: 'The Last Signal',
     narration: 'mixed',
-    sourceIds: [...missionPage, ...retirement],
+    sourceIds: [...missionPage, ...retirement, 'insight-last-image'],
     reward: null,
+    media: lastSeismometer,
     body: 'December 15, 2022. The last signal from InSight reaches Earth from Elysium Planitia. On December 21, NASA concludes that the lander’s solar-powered batteries have run out. Dust covers a spacecraft that never drove. For more than four years it stayed in one place and listened to the ground. What did those vibrations reveal beneath Mars?',
     instruction:
       'Open the recovered mission archive. This starts the investigation.',
@@ -36,9 +45,15 @@ export const scenes: readonly EngineScene[] = [
     kind: 'story',
     title: 'A Scientist Arrives on Mars',
     narration: 'mixed',
-    sourceIds: [...missionPage, ...instruments, 'insight-power'],
+    sourceIds: [
+      ...missionPage,
+      ...instruments,
+      'insight-power',
+      'insight-first-selfie',
+    ],
     reward: 'introduction',
-    body: 'Rewind to November 26, 2018. InSight lands on Elysium Planitia, a flat plain chosen because the science target was underground, not a scenic surface. The lander stays put. From one spot it can still take a planet’s pulse, look for heat flowing outward, and track how Mars wobbles as it spins.',
+    media: firstSelfie,
+    body: 'Rewind to November 26, 2018. InSight lands on Elysium Planitia, a flat plain near the equator. The site was chosen for a safe landing, because the science target was the interior rather than a feature on the surface. The lander stays put. From one place it can take Mars’s pulse, look for heat flowing outward, and track how the planet wobbles as it spins.',
     instruction:
       'Inspect at least three instruments, including the tools that listen, measure heat, track the core, and collect sunlight.',
     interaction: {
@@ -52,10 +67,12 @@ export const scenes: readonly EngineScene[] = [
     kind: 'activity',
     title: "Setting Up Mars's Ears",
     narration: 'factual',
-    sourceIds: [...missionPage, ...instruments],
+    sourceIds: [...missionPage, ...instruments, 'insight-seis-deployed'],
     reward: null,
+    framing: 'simulation',
+    media: seisPlacement,
     instruction:
-      'Examine three practice patches, choose the flat clear ground, then activate the arm and place the wind and thermal shield. This is a simulation, not a record of the real placement.',
+      'Examine three practice patches, choose the flat clear ground, then activate the arm and place the shield. The exercise is a simulation. The photograph shows the real December 19, 2018 placement, before the wind and thermal shield.',
     activityId: 'seismometer-deployment',
     activityType: 'insight-deployment',
     config: {},
@@ -81,6 +98,7 @@ export const scenes: readonly EngineScene[] = [
     sourceIds: ['insight-interior', ...instruments, ...retirement],
     reward: 'discovery',
     discoveryId: 'insight-notes',
+    media: interiorDiagram,
     body: 'Seismic signals change as they pass through different materials. Scientists read those records to study Mars’s crust, mantle, and core. Most marsquakes come from heat and pressure that crack rock. Meteorite impacts are another source. The waves travel through the planet, so nobody has to dig to the core to investigate it.',
     instruction:
       'Interpret three seismic clues to reveal a schematic interior. The drawing is not to scale and is not a NASA measurement.',
@@ -97,8 +115,10 @@ export const scenes: readonly EngineScene[] = [
     narration: 'factual',
     sourceIds: ['insight-power', ...retirement],
     reward: null,
+    framing: 'simulation',
+    media: panelDust,
     instruction:
-      'Raise the dust on this educational model and watch the sunlight and energy indicator change. The slider is not a NASA measurement.',
+      'Raise the dust on this educational model and watch the sunlight and energy indicator change. The slider is not a NASA measurement. The chart’s right-hand photograph is from 2019; the 500 watt-hour figure is NASA’s spring 2022 measurement.',
     activityId: 'dust-power',
     activityType: 'insight-dust-power',
     config: {},
@@ -108,9 +128,10 @@ export const scenes: readonly EngineScene[] = [
     kind: 'ending',
     title: 'Mars Was Never Truly Silent',
     narration: 'mixed',
-    sourceIds: [...retirement, 'insight-interior'],
+    sourceIds: [...retirement, 'insight-interior', 'insight-final-selfie'],
     reward: null,
-    body: 'Return to December 2022. The lander had stopped answering, but the ground had not been quiet. SEIS detected 1,319 marsquakes, including some from meteoroid impacts. Those records helped scientists study the crust, mantle, and core. A machine that never drove changed what we know about the inside of Mars. The mission ended. The listening did not.',
+    media: finalSelfie,
+    body: 'Return to December 2022. The lander had stopped answering, but the ground had not been quiet. SEIS detected 1,319 marsquakes, including some from meteoroid impacts. Those records helped scientists study the crust, mantle, and core. The April 24, 2022 selfie shows the dust that had settled on the solar panels. A machine that never drove changed what we know about the inside of Mars. The mission ended. The listening did not.',
     instruction:
       'Select Continue to save chapter completion. Replaying does not add duplicate rewards.',
   },

@@ -2,7 +2,7 @@ import { useId, useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import type { ActivityRenderProps } from '@/engine/activityRegistry.ts'
 import { useActivityAttempt } from '@/engine/activities/useActivityAttempt.ts'
-import styles from './Deployment.module.css'
+import styles from './InsightObservatory.module.css'
 
 type SiteId = 'rocky' | 'flat' | 'blocked'
 type Phase = 'survey' | 'chosen' | 'placed' | 'covered'

@@ -150,6 +150,17 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+InSight now exports an authored seven-scene chapter through its package loader,
+with instrument inspection, a seismometer-deployment simulation, seismic signal
+investigation, an interior discovery, a qualitative dust model, and a final
+timeline. Milestones remain 20/40/25/15 XP. The shared catalog displays
+`insight-story` as Planetary Detective and `insight-notes` as Mars Has a Hidden
+Structure. Guest mock play, resume, and a no-duplicate replay were verified
+locally. Migration `20261115171000_insight_chapter.sql` is local only and has
+not been applied to `ptjvlycaiigigdrcybet`, so registered hosted checkpoint
+saving is unverified. No player data was reset. See `src/missions/insight/README.md`.
+This does not freeze the foundation. Ingenuity and Pioneer 10 remain unbuilt.
+
 The inner-page observatory redesign adds a locally served NASA/JAXA night-sky
 photograph, decorative animated stars, glass panels, refreshed page heroes,
 mission imagery on achievement cards, consistent actions and a rebuilt footer.

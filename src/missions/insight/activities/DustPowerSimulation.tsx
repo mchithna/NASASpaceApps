@@ -2,7 +2,7 @@ import { useId, useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import type { ActivityRenderProps } from '@/engine/activityRegistry.ts'
 import { useActivityAttempt } from '@/engine/activities/useActivityAttempt.ts'
-import styles from './DustPower.module.css'
+import styles from './InsightObservatory.module.css'
 
 const dustLabels = [
   'Clear sunlight',
@@ -47,7 +47,7 @@ export function DustPowerSimulation(props: ActivityRenderProps) {
         Qualitative educational model. The dust control and the energy
         indicator are not NASA measurements and do not calculate watt-hours.
       </p>
-      <svg className={styles.drawing} viewBox="0 0 360 200" role="img" aria-labelledby={titleId}>
+      <svg className={styles.sketch} viewBox="0 0 360 200" role="img" aria-labelledby={titleId}>
         <title id={titleId}>
           {`Educational drawing of a solar-powered lander. ${reading} Not a NASA measurement.`}
         </title>

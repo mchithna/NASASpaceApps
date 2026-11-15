@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import type { ActivityRenderProps } from '@/engine/activityRegistry.ts'
 import { useActivityAttempt } from '@/engine/activities/useActivityAttempt.ts'
-import styles from './InsightSignals.module.css'
+import styles from './InsightObservatory.module.css'
 
 const audioSrc = '/assets/missions/insight/first-likely-marsquake.wav'
 

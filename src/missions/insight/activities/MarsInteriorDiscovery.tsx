@@ -2,7 +2,7 @@ import { useId, useState } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
 import type { ActivityRenderProps } from '@/engine/activityRegistry.ts'
 import { useActivityAttempt } from '@/engine/activities/useActivityAttempt.ts'
-import styles from './MarsInterior.module.css'
+import styles from './InsightObservatory.module.css'
 
 type Choice = { id: string; label: string }
 
