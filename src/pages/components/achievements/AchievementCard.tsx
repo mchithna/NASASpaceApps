@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import { Lock, CheckCircle2, Sparkles } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
-import type { MissionPackage } from '@/missions/types.ts'
+import type { MissionDefinition } from '@/missions/types.ts'
 import styles from './achievements.module.css'
 
 export interface ChapterBadgeItem {
@@ -9,7 +9,7 @@ export interface ChapterBadgeItem {
   missionId: string
   title: string
   description: string
-  mission: MissionPackage | null
+  mission: MissionDefinition | null
   isUnlocked: boolean
   unlockedAt: string | null
 }

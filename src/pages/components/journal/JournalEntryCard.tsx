@@ -2,12 +2,12 @@ import { Calendar, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-reac
 import { Badge } from '@/components/ui/Badge.tsx'
 import { lookupMission } from '@/missions/registry.ts'
 import type { MissionId } from '@/missions/types.ts'
-import type { DiscoveryJournalEntry } from '@/contracts/rewards.ts'
+import type { JournalEntry } from '@/contracts/rewards.ts'
 import { landingMedia } from '@/pages/components/landing/landingMedia.ts'
 import styles from './journal.module.css'
 
 interface JournalEntryCardProps {
-  entry: DiscoveryJournalEntry
+  entry: JournalEntry
   formatDate: (dateStr: string) => string
 }
 
@@ -69,6 +69,9 @@ export function JournalEntryCard({ entry, formatDate }: JournalEntryCardProps) {
               loading="lazy"
               width="64"
               height="64"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+              }}
             />
           </div>
           <div className={styles.contextDetails}>

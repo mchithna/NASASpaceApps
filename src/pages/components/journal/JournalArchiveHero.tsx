@@ -1,11 +1,10 @@
 import { Search, BookOpen } from 'lucide-react'
-import type { MissionId } from '@/missions/types.ts'
-import type { MissionPackage } from '@/missions/types.ts'
+import type { MissionId, MissionDefinition } from '@/missions/types.ts'
 import styles from './journal.module.css'
 
 interface JournalArchiveHeroProps {
   totalCount: number
-  missions: MissionPackage[]
+  missions: readonly MissionDefinition[]
   selectedMissionId: string
   onSelectMission: (missionId: string) => void
   searchQuery: string
@@ -64,7 +63,7 @@ export function JournalArchiveHero({
               All Spacecraft ({totalCount})
             </button>
             {missions.map((m) => {
-              const count = getMissionCount(m.id as MissionId)
+              const count = getMissionCount(m.id)
               const isSelected = selectedMissionId === m.id
               return (
                 <button

@@ -1,4 +1,4 @@
-/* Achievements Page Cinematic Styles - Developer B Stage 2 */
+/* Achievements Page Cinematic Styles - Developer B Stage 3 Final Polish */
 
 .achievementsContainer {
   display: flex;
@@ -80,6 +80,7 @@
   letter-spacing: -0.02em;
   color: #f5f7fb;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .heroDescription {
@@ -135,6 +136,7 @@
   font-weight: 600;
   color: #f5f7fb;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .sectionSubtitle {
@@ -163,6 +165,7 @@
   justify-content: space-between;
   gap: 1.25rem;
   transition: all 220ms ease;
+  overflow: hidden;
 }
 
 .badgeCardUnlocked {
@@ -250,12 +253,14 @@
   font-weight: 700;
   color: #f5f7fb;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .cardChapterTitle {
   font-size: 0.75rem;
   font-weight: 500;
   color: #f7c66a;
+  overflow-wrap: break-word;
 }
 
 .cardDescription {
@@ -263,6 +268,7 @@
   line-height: 1.6;
   color: #b8c8dd;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .cardFooter {
@@ -292,11 +298,20 @@
   font-weight: 500;
   text-decoration: none;
   transition: color 150ms ease;
+  min-height: 2rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .dossierLink:hover {
   text-decoration: underline;
   color: #8ee2ff;
+}
+
+.dossierLink:focus-visible {
+  outline: 2px solid #53cbff;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Supreme Honor Meta Card */
@@ -312,6 +327,7 @@
   font-weight: 600;
   color: #f5f7fb;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .supremeCard {
@@ -407,6 +423,7 @@
   font-weight: 700;
   color: #f5f7fb;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .supremeHonorDesc {
@@ -415,6 +432,7 @@
   color: #b8c8dd;
   max-width: 65ch;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .supremeStatusArea {
@@ -435,7 +453,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .badgeCard,
-  .badgeCardUnlocked {
-    transition: none;
+  .badgeCardUnlocked,
+  .dossierLink {
+    transition: none !important;
+    transform: none !important;
   }
 }
