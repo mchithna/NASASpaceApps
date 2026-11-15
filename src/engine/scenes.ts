@@ -66,7 +66,7 @@ type SceneBase = {
   framing?: SceneFraming
   /** Explicit chapter reward checkpoints; omit on all scenes for legacy defaults. */
   reward?: 'introduction' | 'activity' | 'discovery' | null
-  /** Optional investigation inside a story, evidence, or discovery scene. */
+  /** Optional investigation inside a story, evidence, discovery, or ending scene. */
   interaction?: {
     activityId: string
     activityType: string

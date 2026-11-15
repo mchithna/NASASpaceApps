@@ -26,7 +26,8 @@ export function MissionControlHero({
             Unauthenticated Explorer
           </p>
           <p className="text-sm text-secondary">
-            Sign in or continue as guest to start logging discoveries and earning ranks.
+            Sign in or continue as guest to start logging discoveries and
+            earning ranks.
           </p>
         </div>
       </Card>
@@ -48,7 +49,7 @@ export function MissionControlHero({
       : `${totalXp} XP (Maximum Rank Reached)`
 
   return (
-    <Card variant="elevated" className="p-6">
+    <Card variant="elevated" className="profile-summary p-6 sm:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -94,8 +95,10 @@ export function MissionControlHero({
 
           {rank.xpUntilNextRank !== null ? (
             <p className="text-right text-xs text-secondary">
-              <strong className="text-science">{rank.xpUntilNextRank} XP</strong> remaining until{' '}
-              {rank.nextRankName}
+              <strong className="text-science">
+                {rank.xpUntilNextRank} XP
+              </strong>{' '}
+              remaining until {rank.nextRankName}
             </p>
           ) : (
             <p className="text-right text-xs text-reward">

@@ -1,3 +1,4 @@
+import { SpaceArtwork } from './SpaceArtwork.tsx'
 import { Link } from 'react-router'
 import { ArrowRight, RotateCcw, Play } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
@@ -57,17 +58,12 @@ export function MissionDashboardCard({
   return (
     <Card
       variant="interactive"
-      className="flex flex-col justify-between overflow-hidden"
+      className="mission-card flex flex-col justify-between overflow-hidden"
     >
       <div>
         {/* Cover Preview Thumbnail */}
-        <div className="relative aspect-video w-full overflow-hidden bg-background">
-          <img
-            src={mission.coverImage}
-            alt={`Cover illustration representing the ${mission.displayName} mission`}
-            className="h-full w-full object-cover"
-            loading="lazy"
-          />
+        <div className="relative w-full overflow-hidden bg-background">
+          <SpaceArtwork visual={mission.id} className="mission-card-image" />
           <div className="absolute top-3 left-3">
             <Badge variant="neutral">{mission.destination}</Badge>
           </div>
@@ -77,11 +73,9 @@ export function MissionDashboardCard({
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-2.5 p-5">
+        <div className="mission-card-content flex flex-col gap-2.5">
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-reward">
-              {mission.chapterTitle}
-            </span>
+            <span className="mission-card-chapter">{mission.chapterTitle}</span>
             <h3 className="font-heading text-xl font-bold text-foreground">
               <Link
                 to={`/missions/${mission.id}`}
@@ -117,7 +111,7 @@ export function MissionDashboardCard({
       </div>
 
       {/* Footer Actions */}
-      <div className="flex items-center justify-between border-t border-border bg-surface/50 px-5 py-3 text-xs">
+      <div className="mission-card-footer flex items-center justify-between border-t border-border bg-surface/50 text-xs">
         <Link
           to={`/missions/${mission.id}`}
           className="text-secondary hover:text-foreground hover:underline focus-visible:outline-focus"

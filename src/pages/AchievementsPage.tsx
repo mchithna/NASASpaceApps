@@ -1,3 +1,4 @@
+import { SpaceArtwork } from './components/SpaceArtwork.tsx'
 import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { Award, Lock, CheckCircle2, Shield, Sparkles } from 'lucide-react'
@@ -15,8 +16,7 @@ import {
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
 export function AchievementsPage() {
-  const { achievements, session, isLoading, error, refresh } =
-    usePlatformData()
+  const { achievements, session, isLoading, error, refresh } = usePlatformData()
 
   useEffect(() => {
     document.title = 'Achievements · NovaExplorer'
@@ -28,7 +28,8 @@ export function AchievementsPage() {
   const chapterBadges = achievementCatalog.map((catalogItem) => {
     const record = achievements.find((a) => a.id === catalogItem.id)
     const missionLookup = lookupMission(catalogItem.missionId)
-    const mission = missionLookup.status === 'found' ? missionLookup.mission : null
+    const mission =
+      missionLookup.status === 'found' ? missionLookup.mission : null
 
     const isUnlocked = Boolean(record?.unlockedAt)
     return {
@@ -49,6 +50,7 @@ export function AchievementsPage() {
 
   return (
     <PageShell
+      visual="pioneer-10"
       title="Achievements"
       description="Honors and story insignia awarded by the Academy for investigating abandoned NASA spacecraft."
       eyebrow="Academy Honors"
@@ -65,14 +67,21 @@ export function AchievementsPage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are exploring without an active profile. Achievements earned
-                  during missions cannot be tracked until you establish an explorer session.
+                  You are exploring without an active profile. Achievements
+                  earned during missions cannot be tracked until you establish
+                  an explorer session.
                 </p>
                 <div className="flex gap-3">
-                  <Link to="/auth" className="font-semibold text-science hover:underline">
+                  <Link
+                    to="/auth"
+                    className="font-semibold text-science hover:underline"
+                  >
                     Sign in to account
                   </Link>
-                  <Link to="/onboarding" className="font-semibold text-secondary hover:underline">
+                  <Link
+                    to="/onboarding"
+                    className="font-semibold text-secondary hover:underline"
+                  >
                     Continue as guest
                   </Link>
                 </div>
@@ -95,8 +104,8 @@ export function AchievementsPage() {
                 Academy Story Honors
               </h2>
               <p className="text-sm text-secondary">
-                Conclude mission story chapters to recover the legacy of forgotten
-                spacecraft and unlock official academy trophies.
+                Conclude mission story chapters to recover the legacy of
+                forgotten spacecraft and unlock official academy trophies.
               </p>
             </div>
 
@@ -134,9 +143,15 @@ export function AchievementsPage() {
         ) : null}
 
         {/* Chapter Badges Section */}
-        <section aria-labelledby="chapter-badges-heading" className="flex flex-col gap-4">
+        <section
+          aria-labelledby="chapter-badges-heading"
+          className="flex flex-col gap-4"
+        >
           <div className="flex flex-col gap-1">
-            <h3 id="chapter-badges-heading" className="font-heading text-xl font-semibold text-foreground">
+            <h3
+              id="chapter-badges-heading"
+              className="font-heading text-xl font-semibold text-foreground"
+            >
               Mission Chapter Badges
             </h3>
             <p className="text-xs text-secondary">
@@ -153,13 +168,17 @@ export function AchievementsPage() {
                 <Card
                   key={badge.id}
                   variant={badge.isUnlocked ? 'elevated' : 'standard'}
-                  className={`flex flex-col justify-between p-5 transition-all ${
+                  className={`achievement-card flex flex-col justify-between p-5 transition-all ${
                     badge.isUnlocked
                       ? 'border-reward/40 bg-gradient-to-b from-surface to-elevated'
                       : 'opacity-85 border-border bg-surface/60'
                   }`}
                 >
                   <div className="flex flex-col gap-3">
+                    <SpaceArtwork
+                      visual={badge.missionId}
+                      className="achievement-image"
+                    />
                     <div className="flex items-center justify-between">
                       <Badge variant="neutral">{destination}</Badge>
                       {badge.isUnlocked ? (
@@ -207,7 +226,10 @@ export function AchievementsPage() {
                   <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs">
                     {badge.isUnlocked ? (
                       <span className="text-success font-medium flex items-center gap-1">
-                        <Sparkles className="size-3 text-reward" aria-hidden="true" />
+                        <Sparkles
+                          className="size-3 text-reward"
+                          aria-hidden="true"
+                        />
                         15 XP Legacy Awarded
                       </span>
                     ) : (
@@ -228,8 +250,14 @@ export function AchievementsPage() {
         </section>
 
         {/* Final Milestone Meta-Badge */}
-        <section aria-labelledby="meta-badge-heading" className="flex flex-col gap-3">
-          <h3 id="meta-badge-heading" className="font-heading text-xl font-semibold text-foreground">
+        <section
+          aria-labelledby="meta-badge-heading"
+          className="flex flex-col gap-3"
+        >
+          <h3
+            id="meta-badge-heading"
+            className="font-heading text-xl font-semibold text-foreground"
+          >
             Supreme Academy Honor
           </h3>
 

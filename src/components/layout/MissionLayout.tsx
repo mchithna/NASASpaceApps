@@ -1,6 +1,6 @@
 import { useParams } from 'react-router'
 import { LayoutFrame } from '@/components/layout/LayoutFrame.tsx'
-import { TextNav } from '@/components/layout/TextNav.tsx'
+import { PlatformHeader } from '@/components/layout/PlatformHeader.tsx'
 import { lookupMission } from '@/missions/registry.ts'
 import { NotFoundPage } from '@/pages/NotFoundPage.tsx'
 
@@ -23,14 +23,11 @@ export function MissionLayout() {
   return (
     <LayoutFrame
       header={
-        <header className="border-b border-border bg-surface">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:px-6">
-            <p className="text-sm font-medium tracking-wide text-muted">
-              {route.mission.displayName}
-            </p>
-            <TextNav label="Mission" items={missionItems} />
-          </div>
-        </header>
+        <PlatformHeader
+          items={missionItems}
+          label="Mission"
+          mission={route.mission.displayName}
+        />
       }
     />
   )

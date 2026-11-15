@@ -302,11 +302,7 @@ function inspectScene(
     readActivity(scene, id, issues, seenActivityIds)
   }
   if (scene.interaction !== undefined) {
-    if (
-      kind === 'activity' ||
-      kind === 'ending' ||
-      !isRecord(scene.interaction)
-    ) {
+    if (kind === 'activity' || !isRecord(scene.interaction)) {
       issues.push(
         engineIssue(
           'malformed-scene',

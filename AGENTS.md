@@ -150,6 +150,15 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The learner-facing platform now follows the home page's visual language: scoped
+dark/lime styling, floating navigation, credited NASA imagery, responsive page
+heroes, updated mission cards, profile/setup forms, journal and achievement
+presentation, mission dossiers/player, and the not-found screen. Auth retains its
+existing space artwork with a matching header. Home page source and gameplay,
+identity, service contracts, rewards and persistence behavior are preserved.
+See `docs/PLATFORM_VISUAL_REFRESH.md` for files, checks and limitations. This is a
+presentation update; the previously open foundation acceptance gates remain open.
+
 Surveyor 3 now exports an authored seven-scene chapter through its package loader,
 with equipment inspection, landing sequence, sampler simulation and Apollo evidence.
 The user authorized coordinated engine interaction/reward mapping and trusted

@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router'
-import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router'
+import { LogOut, Orbit, UserRound, BookOpen, Award } from 'lucide-react'
 import type { AuthSession } from '@/contracts/auth.ts'
 import { LayoutFrame } from '@/components/layout/LayoutFrame.tsx'
-import { TextNav } from '@/components/layout/TextNav.tsx'
-import { brandLinkClass } from '@/components/layout/layoutClasses.ts'
+import { PlatformHeader } from '@/components/layout/PlatformHeader.tsx'
 import { useNovaServices } from '@/pages/context/index.ts'
 
 const explorerNavItems = [
-  { to: '/dashboard', label: 'Mission Control' },
-  { to: '/profile', label: 'Profile' },
-  { to: '/journal', label: 'Journal' },
-  { to: '/achievements', label: 'Achievements' },
+  { to: '/dashboard', label: 'Mission Control', icon: Orbit },
+  { to: '/profile', label: 'Profile', icon: UserRound },
+  { to: '/journal', label: 'Journal', icon: BookOpen },
+  { to: '/achievements', label: 'Achievements', icon: Award },
 ] as const
 
 export function AppLayout() {
@@ -56,34 +55,30 @@ export function AppLayout() {
   return (
     <LayoutFrame
       header={
-        <header className="border-b border-border bg-surface">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <Link to="/" className={brandLinkClass}>
-              NovaExplorer
-            </Link>
-            <div className="flex flex-wrap items-center gap-4">
-              <TextNav label="Explorer" items={explorerNavItems} />
-              {isSessionActive ? (
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  disabled={isSigningOut}
-                  className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-control border border-border bg-elevated px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-focus disabled:opacity-50"
-                  aria-label={
-                    session?.status === 'guest'
-                      ? 'End guest session'
-                      : 'Sign out of academy'
-                  }
-                >
-                  <LogOut className="size-3.5" aria-hidden="true" />
-                  <span>
-                    {session?.status === 'guest' ? 'End Session' : 'Sign Out'}
-                  </span>
-                </button>
-              ) : null}
-            </div>
-          </div>
-        </header>
+        <PlatformHeader
+          items={explorerNavItems}
+          label="Explorer"
+          actions={
+            isSessionActive ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-control border border-border bg-elevated px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-focus disabled:opacity-50"
+                aria-label={
+                  session?.status === 'guest'
+                    ? 'End guest session'
+                    : 'Sign out of academy'
+                }
+              >
+                <LogOut className="size-3.5" aria-hidden="true" />
+                <span>
+                  {session?.status === 'guest' ? 'End Session' : 'Sign Out'}
+                </span>
+              </button>
+            ) : null
+          }
+        />
       }
     />
   )

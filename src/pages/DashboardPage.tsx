@@ -46,6 +46,7 @@ export function DashboardPage() {
 
   return (
     <PageShell
+      visual="mars"
       title="Mission Control"
       description="Command headquarters for tracking deep space discoveries, mission telemetry, and academy ranks."
       eyebrow="Academy Operations"
@@ -90,9 +91,13 @@ export function DashboardPage() {
           <StatusBanner
             variant="info"
             title="Guest Session Active"
-            message={isAcceptance ? 'Isolated training fixture saved in this browser tab. Synthetic rewards are separate from real account progress.' : isLive
-              ? 'Guest progress and discoveries are saved in this browser tab. Closing the tab or clearing browser data can remove them. Guest progress is separate from account progress.'
-              : 'Development mock visit. Guest progress is kept in memory and resets on refresh.'}
+            message={
+              isAcceptance
+                ? 'Isolated training fixture saved in this browser tab. Synthetic rewards are separate from real account progress.'
+                : isLive
+                  ? 'Guest progress and discoveries are saved in this browser tab. Closing the tab or clearing browser data can remove them. Guest progress is separate from account progress.'
+                  : 'Development mock visit. Guest progress is kept in memory and resets on refresh.'
+            }
           />
         ) : null}
 
@@ -106,17 +111,25 @@ export function DashboardPage() {
         ) : null}
 
         {/* Telemetry Metrics Row */}
-        <section aria-labelledby="telemetry-heading" className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h2 id="telemetry-heading" className="text-xl font-heading text-foreground">
+        <section
+          aria-labelledby="telemetry-heading"
+          className="flex flex-col gap-3"
+        >
+          <div className="platform-section-heading">
+            <h2
+              id="telemetry-heading"
+              className="text-xl font-heading text-foreground"
+            >
               Mission Telemetry
             </h2>
             <span className="text-xs text-muted">
-              {isLive ? 'Operational telemetry' : 'Live mock services telemetry'}
+              {isLive
+                ? 'Operational telemetry'
+                : 'Live mock services telemetry'}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             <StatCard
               label="Academy Rank"
               value={profile ? profile.rank.name : '—'}
@@ -131,7 +144,8 @@ export function DashboardPage() {
               label="Accumulated XP"
               value={profile ? `${profile.totalXp} XP` : '0 XP'}
               detail={
-                profile?.rank.xpUntilNextRank !== null && profile?.rank.xpUntilNextRank !== undefined
+                profile?.rank.xpUntilNextRank !== null &&
+                profile?.rank.xpUntilNextRank !== undefined
                   ? `${profile.rank.xpUntilNextRank} XP to promotion`
                   : 'Highest rank attained'
               }
@@ -159,8 +173,14 @@ export function DashboardPage() {
 
         {/* Active In-Progress Mission Spotlight */}
         {inProgressMission && inProgressMissionProgress ? (
-          <section aria-labelledby="active-mission-heading" className="flex flex-col gap-3">
-            <h2 id="active-mission-heading" className="text-xl font-heading text-foreground">
+          <section
+            aria-labelledby="active-mission-heading"
+            className="flex flex-col gap-3"
+          >
+            <h2
+              id="active-mission-heading"
+              className="text-xl font-heading text-foreground"
+            >
               Continue Active Mission
             </h2>
             <ActiveMissionSpotlight
@@ -171,10 +191,16 @@ export function DashboardPage() {
         ) : null}
 
         {/* Stories & Spacecraft Grid */}
-        <section aria-labelledby="stories-heading" className="flex flex-col gap-4">
+        <section
+          aria-labelledby="stories-heading"
+          className="flex flex-col gap-4"
+        >
           <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <h2 id="stories-heading" className="text-xl font-heading text-foreground">
+            <div className="platform-section-heading">
+              <h2
+                id="stories-heading"
+                className="text-xl font-heading text-foreground"
+              >
                 Stories
               </h2>
               <span className="text-xs text-muted">

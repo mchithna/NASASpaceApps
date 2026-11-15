@@ -99,6 +99,7 @@ export function ProfilePage() {
 
   return (
     <PageShell
+      visual="mars"
       title="Explorer Profile"
       description="Manage your academy callsign, flight insignia, and career exploration telemetry."
       eyebrow="Academy Personnel"
@@ -107,7 +108,7 @@ export function ProfilePage() {
       onRetry={() => void refresh()}
       actions={<PersonaSwitcher />}
     >
-      <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full">
+      <div className="platform-profile-content">
         {isSignedOut ? (
           <StatusBanner
             variant="warning"
@@ -115,8 +116,8 @@ export function ProfilePage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are currently exploring without an active identity. Profile
-                  customization requires establishing a session.
+                  You are currently exploring without an active identity.
+                  Profile customization requires establishing a session.
                 </p>
                 <div className="flex gap-3">
                   <Link
@@ -144,9 +145,11 @@ export function ProfilePage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  {isAcceptance ? 'Isolated training profile and rewards are saved in this browser tab. They are not real account data.' : isLive
-                    ? 'Guest mission progress is saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is separate from registered account progress.'
-                    : 'Development mock visit. Guest progress and profile changes stay in memory and reset on refresh.'}
+                  {isAcceptance
+                    ? 'Isolated training profile and rewards are saved in this browser tab. They are not real account data.'
+                    : isLive
+                      ? 'Guest mission progress is saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is separate from registered account progress.'
+                      : 'Development mock visit. Guest progress and profile changes stay in memory and reset on refresh.'}
                 </p>
                 <div>
                   <Link
@@ -163,7 +166,7 @@ export function ProfilePage() {
 
         {/* Career Telemetry Overview */}
         {profile && rank ? (
-          <Card variant="elevated" className="p-6">
+          <Card variant="elevated" className="profile-summary p-6 sm:p-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-start gap-4">
                 <div className="flex size-14 shrink-0 items-center justify-center rounded-surface bg-surface border border-science/40 text-science shadow-surface">
@@ -185,7 +188,8 @@ export function ProfilePage() {
                     {profile.nickname}
                   </h2>
                   <span className="text-xs text-secondary">
-                    Role: {selectedAvatarOption.name} · {selectedAvatarOption.specialty}
+                    Role: {selectedAvatarOption.name} ·{' '}
+                    {selectedAvatarOption.specialty}
                   </span>
                 </div>
               </div>
@@ -260,11 +264,17 @@ export function ProfilePage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
                 <h3 className="font-heading text-lg font-semibold text-foreground">
-                  {isGuest ? 'Guest Session Controls' : 'Explorer Account Session'}
+                  {isGuest
+                    ? 'Guest Session Controls'
+                    : 'Explorer Account Session'}
                 </h3>
                 <p className="text-xs text-secondary">
                   {isGuest
-                    ? isAcceptance ? 'Isolated test progress is saved in this browser tab.' : isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
+                    ? isAcceptance
+                      ? 'Isolated test progress is saved in this browser tab.'
+                      : isLive
+                        ? 'Guest progress is saved in this browser tab.'
+                        : 'Mock progress is kept in memory.'
                     : 'Authenticated with academy credentials. Exploration progress is preserved.'}
                 </p>
               </div>

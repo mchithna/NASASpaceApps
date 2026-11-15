@@ -24,7 +24,7 @@ export function Card({
   return (
     <article
       className={cn(
-        'overflow-hidden rounded-surface',
+        'nova-card overflow-hidden rounded-surface',
         variantClass[variant],
         className,
       )}

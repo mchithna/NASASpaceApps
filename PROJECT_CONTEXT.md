@@ -17,6 +17,15 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Platform visual refresh:** all learner-facing inner pages now share the home
+page's dark surfaces, lime actions, orbital details, credited NASA image system,
+floating navigation and reduced-motion-aware transitions. Dashboard, profile,
+journal, achievements, explorer setup, mission overview/player and not-found
+presentation are updated; auth's existing space presentation has a matching
+header. Home source and the platform's data/reward boundaries are preserved.
+Scoped token aliases live in `src/styles/platform.css`; the earlier token table
+below remains the baseline. See `docs/PLATFORM_VISUAL_REFRESH.md` for validation.
+
 **Surveyor 3 chapter:** the seven-scene historical investigation is implemented
 through the existing package loader, with four interactions (equipment, sequence,
 sampler, evidence), fixed 20/40/25/15 rewards, sourced discovery and Lunar

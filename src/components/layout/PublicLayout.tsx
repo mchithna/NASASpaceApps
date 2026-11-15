@@ -1,8 +1,7 @@
-import { Link, Outlet, useLocation } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import { LayoutFrame } from '@/components/layout/LayoutFrame.tsx'
 import { SkipLink } from '@/components/layout/SkipLink.tsx'
-import { TextNav } from '@/components/layout/TextNav.tsx'
-import { brandLinkClass } from '@/components/layout/layoutClasses.ts'
+import { PlatformHeader } from '@/components/layout/PlatformHeader.tsx'
 
 const publicNavItems = [
   { to: '/', label: 'Home', end: true },
@@ -13,7 +12,8 @@ const publicNavItems = [
 
 export function PublicLayout() {
   const location = useLocation()
-  const isFullWidthPage = location.pathname === '/' || location.pathname === '/auth'
+  const isFullWidthPage =
+    location.pathname === '/' || location.pathname === '/auth'
 
   if (isFullWidthPage) {
     return (
@@ -32,16 +32,7 @@ export function PublicLayout() {
 
   return (
     <LayoutFrame
-      header={
-        <header className="border-b border-border bg-surface">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <Link to="/" className={brandLinkClass}>
-              NovaExplorer
-            </Link>
-            <TextNav label="Public" items={publicNavItems} />
-          </div>
-        </header>
-      }
+      header={<PlatformHeader items={publicNavItems} label="Public" />}
     />
   )
 }

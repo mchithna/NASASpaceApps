@@ -10,7 +10,7 @@ export type StatCardProps = {
 
 export function StatCard({ label, value, detail, badge }: StatCardProps) {
   return (
-    <Card variant="standard" className="p-4 sm:p-5">
+    <Card variant="standard" className="stat-card">
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">
@@ -18,12 +18,10 @@ export function StatCard({ label, value, detail, badge }: StatCardProps) {
           </p>
           {badge ? <div>{badge}</div> : null}
         </div>
-        <div className="text-2xl font-bold font-heading text-foreground sm:text-3xl">
+        <div className="stat-card-value font-heading text-foreground">
           {value}
         </div>
-        {detail ? (
-          <p className="text-xs text-secondary">{detail}</p>
-        ) : null}
+        {detail ? <p className="text-xs text-secondary">{detail}</p> : null}
       </div>
     </Card>
   )

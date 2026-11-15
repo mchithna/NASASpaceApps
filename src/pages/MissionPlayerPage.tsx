@@ -1,3 +1,4 @@
+import { SpaceArtwork } from './components/SpaceArtwork.tsx'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { MissionFacts } from '@/components/layout/MissionFacts.tsx'
@@ -122,7 +123,7 @@ function ChapterPlayer({ mission }: { mission: MissionDefinition }) {
   }, [services, mission.id, attempt, isLive, isConfigured])
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mission-player-page">
       {load.status !== 'ready' ? <MissionFacts mission={mission} /> : null}
       {load.status === 'loading' ? (
         <LoadingState label="Loading your mission" />
@@ -143,6 +144,7 @@ function ChapterPlayer({ mission }: { mission: MissionDefinition }) {
       ) : null}
       {load.status === 'ready' ? (
         <>
+          <SpaceArtwork visual={mission.id} className="mission-player-banner" />
           <p className="text-sm text-secondary">
             {!isLive
               ? 'Development mock visit. Progress is not saved to a real account.'

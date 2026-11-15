@@ -100,7 +100,7 @@ export const achievementCatalog = [
   {
     id: 'opportunity-story',
     missionId: 'opportunity',
-    title: 'Opportunity story',
+    title: 'Martian Trailblazer',
     description: 'Finish the Opportunity chapter.',
   },
   {
@@ -176,7 +176,12 @@ export const discoveryCatalog = [
   {
     discoveryId: 'opportunity-notes',
     missionId: 'opportunity',
-    title: 'Placeholder: Opportunity',
+    title: 'The Ancient Water of Mars',
+    summary:
+      'Hematite-rich spheres point to groundwater activity; gypsum veins record minerals deposited by water in fractures; clay-bearing rocks preserve evidence of a less acidic ancient watery environment. These findings concern past habitability, not proof of life. NASA source: https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/',
+    contentStatus: 'sourced',
+    sourceUrl:
+      'https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/',
   },
   {
     discoveryId: 'ingenuity-notes',

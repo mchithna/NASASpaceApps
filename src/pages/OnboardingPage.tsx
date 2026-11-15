@@ -1,19 +1,16 @@
+import { PageHero } from './components/PageHero.tsx'
 import { useState, useEffect, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router'
 import { UserCheck, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button.tsx'
 import { Card } from '@/components/ui/Card.tsx'
-import { Badge } from '@/components/ui/Badge.tsx'
 import { LoadingState } from '@/components/ui/LoadingState.tsx'
 import {
   validateNickname,
   type AvatarId,
   isAvatarId,
 } from '@/contracts/explorer.ts'
-import {
-  AvatarSelector,
-  StatusBanner,
-} from '@/pages/components/index.ts'
+import { AvatarSelector, StatusBanner } from '@/pages/components/index.ts'
 import { useNovaServices } from '@/pages/context/index.ts'
 
 export function OnboardingPage() {
@@ -31,7 +28,9 @@ export function OnboardingPage() {
 
   const [nickname, setNickname] = useState('')
   const [avatarId, setAvatarId] = useState<AvatarId>('cadet-1')
-  const [sessionKind, setSessionKind] = useState<'guest' | 'registered' | 'none'>('none')
+  const [sessionKind, setSessionKind] = useState<
+    'guest' | 'registered' | 'none'
+  >('none')
 
   // Load current session & profile or initialize guest session
   useEffect(() => {
@@ -57,7 +56,10 @@ export function OnboardingPage() {
 
         if (sessionResult.ok && sessionResult.data.status === 'guest') {
           setSessionKind('guest')
-        } else if (sessionResult.ok && sessionResult.data.status === 'authenticated') {
+        } else if (
+          sessionResult.ok &&
+          sessionResult.data.status === 'authenticated'
+        ) {
           setSessionKind('registered')
         }
 
@@ -110,7 +112,9 @@ export function OnboardingPage() {
       })
 
       if (result.ok) {
-        setSuccessNotice('Explorer callsign verified and registered! Entering Mission Control...')
+        setSuccessNotice(
+          'Explorer callsign verified and registered! Entering Mission Control...',
+        )
         navigate('/dashboard')
       } else {
         setErrorMessage(result.error.message)
@@ -131,32 +135,26 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto w-full py-4 sm:py-6">
-      {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Badge variant="science">Academy Induction</Badge>
-          <span className="text-xs uppercase tracking-wider text-muted">
-            Explorer Registration
-          </span>
-        </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
-          Explorer Setup
-        </h1>
-        <p className="text-secondary text-sm sm:text-base">
-          Customize your academy callsign and flight insignia before embarking on
-          spacecraft investigation missions.
-        </p>
-      </div>
+    <div className="platform-onboarding flex flex-col gap-7">
+      <PageHero
+        title="Explorer Setup"
+        eyebrow="Your journey starts here"
+        visual="ingenuity"
+        description="A big universe. An explorer like you. Choose your callsign and your academy insignia, then make your first discovery."
+      />
 
       {/* Active Session Notice */}
       {sessionKind === 'guest' ? (
         <StatusBanner
           variant="info"
           title="Guest Explorer Mode"
-          message={isAcceptance ? 'Isolated guest fixture. Profile and training progress are stored in this tab only, with no real account writes.' : isLive
-            ? 'Guest mission progress and discoveries are saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is not copied to a registered account.'
-            : 'Development mock visit. Your guest profile, progress, and discoveries stay in memory and reset on refresh.'}
+          message={
+            isAcceptance
+              ? 'Isolated guest fixture. Profile and training progress are stored in this tab only, with no real account writes.'
+              : isLive
+                ? 'Guest mission progress and discoveries are saved in this browser tab. Your callsign and avatar stay in memory. Guest progress is not copied to a registered account.'
+                : 'Development mock visit. Your guest profile, progress, and discoveries stay in memory and reset on refresh.'
+          }
         />
       ) : null}
 
@@ -222,8 +220,14 @@ export function OnboardingPage() {
                 aria-describedby="nickname-hint"
                 className="rounded-control border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-science focus:outline-none focus:ring-1 focus:ring-science"
               />
-              <div id="nickname-hint" className="flex items-center justify-between text-xs text-muted">
-                <span>2–20 characters. Letters, numbers, spaces, apostrophes, and hyphens.</span>
+              <div
+                id="nickname-hint"
+                className="flex items-center justify-between text-xs text-muted"
+              >
+                <span>
+                  2–20 characters. Letters, numbers, spaces, apostrophes, and
+                  hyphens.
+                </span>
                 <span className="tabular-nums">{nickname.length}/20</span>
               </div>
             </div>
