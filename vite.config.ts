@@ -1,31 +1,9 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { loadEnv } from 'vite'
 import { assertPublicSupabaseKey } from './src/features/auth/publicKey.ts'
-
-function aiDevServerPlugin(): Plugin {
-  return {
-    name: 'ai-dev-server',
-    configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        if (req.url && req.url.startsWith('/api/ai')) {
-          try {
-            const { handleAiRequest } = await import('./services/ai/router.ts')
-            await handleAiRequest(req, res)
-          } catch (err) {
-            console.error('AI dev server error:', err)
-            res.statusCode = 500
-            res.end(JSON.stringify({ error: (err as Error).message }))
-          }
-        } else {
-          next()
-        }
-      })
-    },
-  }
-}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
@@ -35,7 +13,6 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
-      aiDevServerPlugin(),
       {
         name: 'api-chat-dev-middleware',
         configureServer(server) {
@@ -93,13 +70,8 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       environment: 'jsdom',
-      include: [
-        'src/**/*.test.ts',
-        'src/**/*.test.tsx',
-        'services/**/*.test.ts',
-      ],
+      include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
       setupFiles: ['./src/tests/setup.ts'],
     },
   }
 })
-

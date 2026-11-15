@@ -14,7 +14,6 @@ import { landingMedia } from '@/pages/components/landing/landingMedia.ts'
 import { useMissionProgress } from '@/pages/hooks/usePlatformData.ts'
 import type { MissionDefinition } from '@/missions/types.ts'
 import styles from './missionPresentation.module.css'
-import { MissionScienceGuide } from '@/ai/surfaces/MissionScienceGuide.tsx'
 
 export type MissionDossierProps = {
   mission: MissionDefinition
@@ -260,8 +259,6 @@ export function MissionDossier({ mission }: MissionDossierProps) {
           className={styles.schematicCompatible}
         />
       </article>
-
-      <MissionScienceGuide mission={mission} />
 
       {/* Verified NASA Sources Section */}
       <section

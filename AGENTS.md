@@ -150,23 +150,6 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
-InSight now exports an authored seven-scene chapter through its package loader,
-with instrument inspection, a seismometer-deployment simulation, seismic signal
-investigation, an interior discovery, a qualitative dust model, and a final
-timeline. Milestones remain 20/40/25/15 XP. The shared catalog displays
-`insight-story` as Planetary Detective and `insight-notes` as Mars Has a Hidden
-Structure. Guest mock play, resume, and a no-duplicate replay were verified
-locally. Migration `20261115171000_insight_chapter.sql` is local only and has
-not been applied to `ptjvlycaiigigdrcybet`, so registered hosted checkpoint
-saving is unverified. No player data was reset. See `src/missions/insight/README.md`.
-This does not freeze the foundation.
-
-The develop preview failed because the Edge Function `api/chat` imported
-`src/ai/nova-system-prompt.ts`. Vercel cannot bundle that outside TypeScript
-module into an Edge Function. The same prompt now lives in `api/chat.ts`, and
-gateway settings are read from the function environment. The chat request and
-streamed response contract is unchanged. No provider key was added.
-
 Pioneer 10 now exports seven sourced scenes through the existing chapter loader,
 with spacecraft inspection, a sparse-belt journey, Jupiter instrument science,
 plaque decoding, a light-delay communication lab and legacy ordering. Fixed
@@ -183,16 +166,6 @@ Fixed 20/40/25/15 XP, the existing `ingenuity-story` achievement and sourced
 the trusted catalog migration `20261115134651` is prepared locally, not hosted.
 See `src/missions/ingenuity/README.md` for validation and deployment limits.
 No home page, auth, routing, reward logic or other chapter source was changed.
-
-The live AI companion and Mission Commander platform is now implemented on
-`feature/nova-ai-live`. It integrates real-time Gemini 3.5 Flash chat inference,
-streaming SSE, multi-key rotation across configured `GEMINI_API_KEY_*` slots,
-Gemini 3.8 Flash TTS for voice synthesis, Web Audio analyser real-time RMS
-amplitude waveform, child-safety filtering (ages 10-17), prompt injection defense,
-grounded NASA scientific context across the five target spacecraft, and AI surfaces
-in Mission Control, Landing, Auth, Profile, Dossiers, Journal, and Achievements.
-Zero credentials or keys are exposed to the browser or client bundle. See
-`docs/AI_PLATFORM_LIVE.md` for full architecture, safety, and validation records.
 
 The inner-page observatory redesign adds a locally served NASA/JAXA night-sky
 photograph, decorative animated stars, glass panels, refreshed page heroes,

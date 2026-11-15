@@ -55,7 +55,6 @@ describe('mission registry', () => {
       expect(mission.status).toBe(
         mission.id === 'surveyor-3' ||
           mission.id === 'opportunity' ||
-          mission.id === 'insight' ||
           mission.id === 'ingenuity' ||
           mission.id === 'pioneer-10'
           ? 'available'

@@ -112,7 +112,7 @@ export const achievementCatalog = [
   {
     id: 'insight-story',
     missionId: 'insight',
-    title: 'Planetary Detective',
+    title: 'InSight story',
     description: 'Finish the InSight chapter.',
   },
   {
@@ -196,12 +196,7 @@ export const discoveryCatalog = [
   {
     discoveryId: 'insight-notes',
     missionId: 'insight',
-    title: 'Mars Has a Hidden Structure',
-    summary:
-      'InSight’s seismometer detected 1,319 marsquakes, including some caused by meteoroid impacts. Those records gave scientists a way to study Mars’s crust, mantle, and core. NASA source: https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/',
-    contentStatus: 'sourced',
-    sourceUrl:
-      'https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/',
+    title: 'Placeholder: InSight',
   },
   {
     discoveryId: 'pioneer-10-notes',

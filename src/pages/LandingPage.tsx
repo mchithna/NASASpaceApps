@@ -7,7 +7,6 @@ import { LandingHowItWorks } from '@/pages/components/landing/LandingHowItWorks.
 import { LandingAbout } from '@/pages/components/landing/LandingAbout.tsx'
 import { LandingFooter } from '@/pages/components/landing/LandingFooter.tsx'
 import { LandingStarfield } from '@/pages/components/landing/LandingStarfield.tsx'
-import { LandingAiGuide } from '@/ai/surfaces/LandingAiGuide.tsx'
 
 const LIQUID_SELECTOR =
   '.lp-nav, .lp-button, .lp-mission-card, .lp-step, .lp-about, .lp-desktop-links a, .lp-desktop-actions > a'
@@ -78,7 +77,6 @@ export function LandingPage() {
       <LandingStarfield />
       <LandingNavbar />
       <LandingHero />
-      <LandingAiGuide />
       <LandingMissions />
       <LandingHowItWorks />
       <LandingAbout />

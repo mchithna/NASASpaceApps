@@ -15,7 +15,6 @@ import {
 } from '@/pages/components/index.ts'
 import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
-import { NovaMissionCommander } from '@/ai/surfaces/NovaMissionCommander.tsx'
 
 export function DashboardPage() {
   const { isLive, isAcceptance } = useNovaServices()
@@ -139,13 +138,6 @@ export function DashboardPage() {
             }
           />
         ) : null}
-
-        <NovaMissionCommander
-          profile={profile}
-          progress={progress}
-          missions={missions}
-          journalCount={journalEntries.length}
-        />
 
         <section aria-labelledby="telemetry-heading" className="flex flex-col gap-3">
           <div className="flex flex-wrap items-end justify-between gap-2">
