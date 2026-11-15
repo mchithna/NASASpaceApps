@@ -150,6 +150,14 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The missing Nova AI provider crash was traced to page-level consumers outside the
+companion-only provider. The existing AI rollback removes those consumers;
+this task preserves that rollback. The production companion browser check now
+covers direct entry to the eight affected routes, launcher open/close and uncaught
+runtime errors. Build, lint, 14 targeted tests and the production browser check
+passed; the live routes also loaded without runtime errors. The full suite was
+not run. No deployment was made by this task.
+
 InSight now exports an authored seven-scene chapter through its package loader,
 with instrument inspection, a seismometer-deployment simulation, seismic signal
 investigation, an interior discovery, a qualitative dust model, and a final

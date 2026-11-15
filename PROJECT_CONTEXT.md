@@ -17,6 +17,12 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Nova provider crash regression:** page-level AI consumers in the merged live-AI
+work were outside its companion-only provider. The existing rollback
+removes that dependency. `e2e/ai-production.spec.ts` now checks all eight affected
+routes and companion open/close against a production build. This task preserves
+the rollback and does not deploy or restore the removed AI system.
+
 **Inner-page observatory redesign:** the non-home application layouts now show a
 credited NASA/JAXA night-sky photograph with decorative star animation. Scoped
 glass styling covers the dashboard, setup, auth, profile, journal, achievements,
