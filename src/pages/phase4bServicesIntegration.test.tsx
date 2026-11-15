@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { AppLayout } from '@/components/layout/AppLayout.tsx'
+import { achievementCatalog, discoveryCatalog } from '@/contracts/rewards.ts'
 import { createPlayerServices } from '@/features/index.ts'
 import { AchievementsPage } from '@/pages/AchievementsPage.tsx'
 import { AuthPage } from '@/pages/AuthPage.tsx'
@@ -19,10 +20,23 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
     await services.auth.startGuestSession()
     const read = services.rewards.listJournalEntries.bind(services.rewards)
     let failed = true
-    services.rewards.listJournalEntries = async () => failed
-      ? { ok: false, error: { code: 'unavailable', message: 'Journal connection interrupted.' } }
-      : read()
-    render(<MemoryRouter><PlatformServicesProvider services={services} isLive={true}><JournalPage /></PlatformServicesProvider></MemoryRouter>)
+    services.rewards.listJournalEntries = async () =>
+      failed
+        ? {
+            ok: false,
+            error: {
+              code: 'unavailable',
+              message: 'Journal connection interrupted.',
+            },
+          }
+        : read()
+    render(
+      <MemoryRouter>
+        <PlatformServicesProvider services={services} isLive={true}>
+          <JournalPage />
+        </PlatformServicesProvider>
+      </MemoryRouter>,
+    )
     await screen.findByText('Journal connection interrupted.')
     failed = false
     await user.click(screen.getByRole('button', { name: 'Retry' }))
@@ -39,7 +53,9 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route
               path="/dashboard"
-              element={<div data-testid="dashboard-screen">Mission Control</div>}
+              element={
+                <div data-testid="dashboard-screen">Mission Control</div>
+              }
             />
           </Routes>
         </PlatformServicesProvider>
@@ -59,7 +75,9 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
 
     // Guest recovery warning should be visible
     expect(
-      screen.getByText(/Guest mission progress and discoveries are saved in this browser tab/i),
+      screen.getByText(
+        /Guest mission progress and discoveries are saved in this browser tab/i,
+      ),
     ).toBeInTheDocument()
 
     // Customize callsign and avatar
@@ -132,7 +150,10 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
 
     // Active Mission Spotlight for in-progress Surveyor 3
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Continue Active Mission' }),
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'Continue Active Mission',
+      }),
     ).toBeInTheDocument()
 
     // 5 Mission Cards from registry
@@ -215,8 +236,14 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
       await screen.findByRole('heading', { level: 1, name: 'Achievements' }),
     ).toBeInTheDocument()
 
-    // Opportunity Story should be unlocked
-    expect(screen.getByText('Opportunity Story')).toBeInTheDocument()
+    // The mission's catalog honor should be unlocked, independent of authored copy.
+    expect(
+      screen.getByRole('heading', {
+        name: achievementCatalog.find(
+          (item) => item.id === 'opportunity-story',
+        )!.title,
+      }),
+    ).toBeInTheDocument()
     expect(screen.getByText('Unlocked')).toBeInTheDocument()
     expect(screen.getByText('15 XP Legacy Awarded')).toBeInTheDocument()
 
@@ -232,14 +259,25 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
     )
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Discovery Journal' }),
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Discovery Journal',
+      }),
     ).toBeInTheDocument()
 
     // Journal should show 1 finding
     expect(screen.getByText('Total Findings')).toBeInTheDocument()
     expect(screen.getByText('1')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Opportunity \(1\)/i })).toBeInTheDocument()
-    expect(screen.getByText('Placeholder: Opportunity')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Opportunity \(1\)/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        discoveryCatalog.find(
+          (item) => item.discoveryId === 'opportunity-notes',
+        )!.title,
+      ),
+    ).toBeInTheDocument()
   })
 
   it('supports signout from AppLayout and ProfilePage, safely navigating without crashes', async () => {
@@ -263,7 +301,10 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
     )
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Explorer Profile' }),
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Explorer Profile',
+      }),
     ).toBeInTheDocument()
     expect(screen.getByText('Departure Cadet')).toBeInTheDocument()
 
@@ -299,11 +340,16 @@ describe('Phase 4B Step 3: Platform UI wired to real Phase 2 Player Services', (
     )
 
     expect(
-      await screen.findByText(/Guest Recovery Limitation:/i),
+      await screen.findByText(
+        'No account needed. Guest progress stays in this tab.',
+      ),
     ).toBeInTheDocument()
+    await userEvent
+      .setup()
+      .click(screen.getByText('How is guest progress saved?'))
     expect(
       screen.getByText(
-        /Anonymous guest sessions are tied to this browser only and cannot be recovered/i,
+        /Guest progress cannot be recovered on other devices or if browser data is cleared/i,
       ),
     ).toBeInTheDocument()
 

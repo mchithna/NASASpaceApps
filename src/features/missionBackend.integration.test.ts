@@ -194,7 +194,9 @@ describe('trusted mission flow in isolated PostgreSQL', () => {
     for (const file of Object.keys(migrations).sort()) {
       await db.exec(migrations[file]!)
     }
-    await db.exec(`INSERT INTO auth.users VALUES ('${user}'),('${other}');
+    // This legacy structural fixture replaces the authored manifest only in this embedded test database.
+    await db.exec(`DELETE FROM public.mission_scene_catalog;
+      INSERT INTO auth.users VALUES ('${user}'),('${other}');
       INSERT INTO public.profiles(id,nickname,avatar_id) VALUES
         ('${user}','Test Cadet','cadet-1'),('${other}','Other Cadet','cadet-1');
       INSERT INTO public.mission_scene_catalog(mission_id,scene_id,position,kind,discovery_id,discovery_title,discovery_summary,content_status) VALUES

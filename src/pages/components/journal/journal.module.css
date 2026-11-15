@@ -26,8 +26,17 @@
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: radial-gradient(circle at 85% 20%, rgba(83, 203, 255, 0.12) 0%, transparent 55%),
-              radial-gradient(circle at 15% 80%, rgba(217, 252, 167, 0.05) 0%, transparent 45%);
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(83, 203, 255, 0.12) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 15% 80%,
+      rgba(217, 252, 167, 0.05) 0%,
+      transparent 45%
+    );
 }
 
 .heroHeader {
@@ -221,7 +230,9 @@
   background: rgba(11, 20, 33, 0.85);
   color: #f5f7fb;
   backdrop-filter: blur(12px);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .searchInput::placeholder {
@@ -252,14 +263,18 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  transition: border-color 220ms ease, box-shadow 220ms ease;
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease;
   overflow: hidden;
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .entryCard:hover {
     border-color: rgba(145, 180, 210, 0.6);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(83, 203, 255, 0.08);
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(83, 203, 255, 0.08);
   }
 }
 
@@ -541,4 +556,46 @@
     transition: none !important;
     transform: none !important;
   }
+}
+
+.journalContainer {
+  max-width: none;
+}
+.archiveHero,
+.entryCard,
+.filterZeroState {
+  background: var(--observatory-glass);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(22px);
+  border-radius: 24px;
+}
+.archiveHero {
+  padding: clamp(24px, 3vw, 36px);
+}
+.heroTitle {
+  font-size: clamp(24px, 3vw, 32px);
+  letter-spacing: -0.04em;
+}
+.filterButton {
+  min-height: 44px;
+  border-radius: 999px;
+  background: #101c2a99;
+}
+.filterButtonActive {
+  background: #d4ff9a;
+  border-color: #eaffc7;
+  color: #050a14;
+}
+.filterButtonActive:hover {
+  background: #e4ffb8;
+  color: #050a14;
+}
+.searchInput {
+  border-radius: 999px;
+  min-height: 46px;
+  background: #070f1db3;
+}
+.entryTitle {
+  letter-spacing: -0.035em;
 }

@@ -100,7 +100,9 @@
   background: #050a12;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
   transform: perspective(900px) rotateY(-2deg) rotateX(1deg);
-  transition: transform 300ms ease, box-shadow 300ms ease;
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
   aspect-ratio: 16 / 10;
   width: 100%;
 }
@@ -113,7 +115,13 @@
   aspect-ratio: 16 / 10;
   width: 100%;
   min-height: 220px;
-  background: radial-gradient(circle at center, rgba(83, 203, 255, 0.08), transparent 70%), #050a12;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(83, 203, 255, 0.08),
+      transparent 70%
+    ),
+    #050a12;
   color: var(--color-landing-muted, #aab7c8);
   padding: 1.5rem;
   text-align: center;
@@ -337,7 +345,10 @@
   letter-spacing: -0.01em;
   text-decoration: none;
   box-shadow: 0 4px 16px rgba(217, 252, 167, 0.3);
-  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
 }
 
 .primaryCta:hover {
@@ -364,7 +375,10 @@
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
-  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
 }
 
 .secondaryLink:hover {
@@ -650,7 +664,9 @@
   font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  transition: background 150ms ease, transform 150ms ease;
+  transition:
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .buttonLink:hover {
@@ -681,5 +697,51 @@
   .engineContainer::before {
     animation: none;
     opacity: 0.6;
+  }
+}
+
+.heroCard,
+.playerCard,
+.engineContainer,
+.sourcesSection {
+  background: var(--observatory-glass);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(22px);
+  border-radius: 26px;
+}
+.dossierGrid {
+  padding: clamp(24px, 4vw, 48px);
+  gap: 36px;
+}
+.heroCard {
+  overflow: clip;
+}
+.perspectiveFrame {
+  transform: none;
+  border-radius: 20px;
+}
+.primaryCta,
+.buttonLink {
+  min-height: 48px;
+  border-radius: 999px;
+  padding-inline: 24px;
+}
+.secondaryLink {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.metaCard {
+  background: #111e2c70;
+  border-color: #c3dff529;
+  border-radius: 16px;
+}
+@media (max-width: 540px) {
+  .dossierGrid {
+    gap: 24px;
+  }
+  .actionRow {
+    align-items: stretch;
   }
 }

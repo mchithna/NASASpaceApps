@@ -17,6 +17,53 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Inner-page observatory redesign:** the non-home application layouts now show a
+credited NASA/JAXA night-sky photograph with decorative star animation. Scoped
+glass styling covers the dashboard, setup, auth, profile, journal, achievements,
+mission dossier/player and not-found page; achievement cards show matching mission
+imagery. The inner-page footer and tablet navigation are refreshed. Home page
+source, styles, assets and footer are unchanged. No services, rewards, persistence
+or mission content changed. See `docs/OBSERVATORY_REDESIGN.md` for validation.
+
+**Nova companion:** a shared visible launcher now opens local source guide tools:
+five mission briefings, simple explanations, glossary and app help. Answers are
+reviewed fixed summaries with NASA links. Generative chat, text streaming, Live
+voice and capabilities 6–20 are not implemented. Eligible provider access for the
+10–17 audience remains unresolved. Browser Gemini key access was removed. See
+`docs/AI_INTEGRATION.md` for scope and actual validation.
+
+**Opportunity chapter:** seven sourced scenes now use the existing package loader,
+player and services. Activities cover rover equipment, ancient-water clues,
+Eagle/Endurance/Victoria/Endeavour exploration, mineral evidence, airborne dust
+and the final timeline. Fixed 20/40/25/15 rewards, Martian Trailblazer and sourced
+`opportunity-notes` use the existing platform boundary. The user authorized minimal
+coordinated ending-interaction/catalog changes. Hosted catalog migration
+`20261115083036` is applied; scene order, reward mapping and restricted catalog
+privileges were checked read-only without resetting player data. See
+`src/missions/opportunity/README.md` for sources, validation and limits. Registered
+hosted browser/JWT/concurrency acceptance remains open. The foundation is not
+frozen; older statements that Opportunity is unwritten are historical.
+
+**Platform visual refresh:** all learner-facing inner pages now share the home
+page's dark surfaces, lime actions, orbital details, credited NASA image system,
+floating navigation and reduced-motion-aware transitions. Dashboard, profile,
+journal, achievements, explorer setup, mission overview/player and not-found
+presentation are updated; auth's existing space presentation has a matching
+header. Home source and the platform's data/reward boundaries are preserved.
+Scoped token aliases live in `src/styles/platform.css`; the earlier token table
+below remains the baseline. See `docs/PLATFORM_VISUAL_REFRESH.md` for validation.
+
+**Surveyor 3 chapter:** the seven-scene historical investigation is implemented
+through the existing package loader, with four interactions (equipment, sequence,
+sampler, evidence), fixed 20/40/25/15 rewards, sourced discovery and Lunar
+Archaeologist. Coordinated engine and trusted catalog changes were explicitly
+authorized. The migration is applied to `ptjvlycaiigigdrcybet` and its manifest
+and privileges were checked read-only. See `docs/SURVEYOR_3_IMPLEMENTATION.md`
+for actual validation. Other chapters remain unwritten. The open foundation
+JWT/API/concurrency/registered-browser gates are not closed by this chapter.
+AI integration remains unimplemented pending eligible provider access and keys.
+Older statements that all five chapters are unbuilt are historical below.
+
 **Auth presentation:** `/auth` now presents login and registration in a responsive
 cinematic layout, using existing design tokens and auth services. It includes
 keyboard-operated tabs, password visibility controls, avatar selection, guest

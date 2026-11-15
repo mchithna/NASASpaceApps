@@ -16,7 +16,8 @@ import { JournalFilterZeroState } from './components/journal/JournalFilterZeroSt
 import styles from './components/journal/journal.module.css'
 
 export function JournalPage() {
-  const { journalEntries, session, isLoading, error, refresh } = usePlatformData()
+  const { journalEntries, session, isLoading, error, refresh } =
+    usePlatformData()
   const [selectedMissionId, setSelectedMissionId] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -58,6 +59,7 @@ export function JournalPage() {
 
   return (
     <PageShell
+      visual="pioneer-10"
       title="Discovery Journal"
       description="Field observations, archived telemetry, and scientific records recovered from humanity's abandoned explorers."
       eyebrow="Archival Intelligence"
@@ -74,15 +76,22 @@ export function JournalPage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are viewing the journal as a guest without an active explorer
-                  profile. New discoveries made during missions will not be saved
-                  to this browser until an explorer session is established.
+                  You are viewing the journal as a guest without an active
+                  explorer profile. New discoveries made during missions will
+                  not be saved to this browser until an explorer session is
+                  established.
                 </p>
                 <div className="flex gap-3">
-                  <Link to="/auth" className="font-semibold text-science hover:underline">
+                  <Link
+                    to="/auth"
+                    className="font-semibold text-science hover:underline"
+                  >
                     Sign in to account
                   </Link>
-                  <Link to="/onboarding" className="font-semibold text-secondary hover:underline">
+                  <Link
+                    to="/onboarding"
+                    className="font-semibold text-secondary hover:underline"
+                  >
                     Continue as guest
                   </Link>
                 </div>

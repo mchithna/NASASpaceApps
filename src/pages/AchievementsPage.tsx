@@ -11,13 +11,15 @@ import {
 } from '@/pages/components/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 import { AchievementsHero } from './components/achievements/AchievementsHero.tsx'
-import { AchievementCard, type ChapterBadgeItem } from './components/achievements/AchievementCard.tsx'
+import {
+  AchievementCard,
+  type ChapterBadgeItem,
+} from './components/achievements/AchievementCard.tsx'
 import { GuardianMetaBadge } from './components/achievements/GuardianMetaBadge.tsx'
 import styles from './components/achievements/achievements.module.css'
 
 export function AchievementsPage() {
-  const { achievements, session, isLoading, error, refresh } =
-    usePlatformData()
+  const { achievements, session, isLoading, error, refresh } = usePlatformData()
 
   useEffect(() => {
     document.title = 'Achievements · NovaExplorer'
@@ -26,22 +28,25 @@ export function AchievementsPage() {
   const isSignedOut = session?.status === 'signed-out'
 
   // Map each catalog chapter achievement to its unlocked status
-  const chapterBadges: ChapterBadgeItem[] = achievementCatalog.map((catalogItem) => {
-    const record = achievements.find((a) => a.id === catalogItem.id)
-    const missionLookup = lookupMission(catalogItem.missionId)
-    const mission = missionLookup.status === 'found' ? missionLookup.mission : null
+  const chapterBadges: ChapterBadgeItem[] = achievementCatalog.map(
+    (catalogItem) => {
+      const record = achievements.find((a) => a.id === catalogItem.id)
+      const missionLookup = lookupMission(catalogItem.missionId)
+      const mission =
+        missionLookup.status === 'found' ? missionLookup.mission : null
 
-    const isUnlocked = Boolean(record?.unlockedAt)
-    return {
-      id: catalogItem.id,
-      missionId: catalogItem.missionId,
-      title: catalogItem.title,
-      description: catalogItem.description,
-      mission,
-      isUnlocked,
-      unlockedAt: record?.unlockedAt ?? null,
-    }
-  })
+      const isUnlocked = Boolean(record?.unlockedAt)
+      return {
+        id: catalogItem.id,
+        missionId: catalogItem.missionId,
+        title: catalogItem.title,
+        description: catalogItem.description,
+        mission,
+        isUnlocked,
+        unlockedAt: record?.unlockedAt ?? null,
+      }
+    },
+  )
 
   const unlockedChapterCount = chapterBadges.filter((b) => b.isUnlocked).length
   const isGuardianUnlocked = unlockedChapterCount === 5
@@ -50,6 +55,7 @@ export function AchievementsPage() {
 
   return (
     <PageShell
+      visual="surveyor-3"
       title="Achievements"
       description="Honors and story insignia awarded by the Academy for investigating abandoned NASA spacecraft."
       eyebrow="Academy Honors"
@@ -66,14 +72,21 @@ export function AchievementsPage() {
             message={
               <div className="flex flex-col gap-2">
                 <p>
-                  You are exploring without an active profile. Achievements earned
-                  during missions cannot be tracked until you establish an explorer session.
+                  You are exploring without an active profile. Achievements
+                  earned during missions cannot be tracked until you establish
+                  an explorer session.
                 </p>
                 <div className="flex gap-3">
-                  <Link to="/auth" className="font-semibold text-science hover:underline">
+                  <Link
+                    to="/auth"
+                    className="font-semibold text-science hover:underline"
+                  >
                     Sign in to account
                   </Link>
-                  <Link to="/onboarding" className="font-semibold text-secondary hover:underline">
+                  <Link
+                    to="/onboarding"
+                    className="font-semibold text-secondary hover:underline"
+                  >
                     Continue as guest
                   </Link>
                 </div>
@@ -106,7 +119,10 @@ export function AchievementsPage() {
         ) : null}
 
         {/* Chapter Badges Section */}
-        <section aria-labelledby="chapter-badges-heading" className={styles.badgesSection}>
+        <section
+          aria-labelledby="chapter-badges-heading"
+          className={styles.badgesSection}
+        >
           <div className={styles.sectionHeader}>
             <h3 id="chapter-badges-heading" className={styles.sectionTitle}>
               Mission Chapter Badges

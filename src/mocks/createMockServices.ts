@@ -773,9 +773,15 @@ export function createMockServices(
         discoveryId: input.discoveryId,
         missionId: parsed.data,
         title: known?.title ?? 'Placeholder discovery',
-        summary: journalPlaceholderSummary,
+        summary:
+          known && 'summary' in known
+            ? known.summary
+            : journalPlaceholderSummary,
         unlockedAt: clock(),
-        contentStatus: 'placeholder',
+        contentStatus:
+          known && 'contentStatus' in known
+            ? known.contentStatus
+            : 'placeholder',
       }
       gate.bucket.journal.push(entry)
       if (gate.bucket === guest) publishGuest()

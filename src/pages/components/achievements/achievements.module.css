@@ -26,8 +26,17 @@
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: radial-gradient(circle at 80% 25%, rgba(247, 198, 106, 0.12) 0%, transparent 50%),
-              radial-gradient(circle at 20% 75%, rgba(83, 203, 255, 0.08) 0%, transparent 45%);
+  background:
+    radial-gradient(
+      circle at 80% 25%,
+      rgba(247, 198, 106, 0.12) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 20% 75%,
+      rgba(83, 203, 255, 0.08) 0%,
+      transparent 45%
+    );
 }
 
 .heroContent {
@@ -171,7 +180,9 @@
 .badgeCardUnlocked {
   border-color: rgba(247, 198, 106, 0.5);
   background: linear-gradient(145deg, #172436 0%, #0c1624 100%);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 18px rgba(247, 198, 106, 0.08);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(247, 198, 106, 0.08);
 }
 
 .badgeCardLocked {
@@ -183,7 +194,9 @@
   .badgeCardUnlocked:hover {
     transform: translateY(-2px);
     border-color: rgba(247, 198, 106, 0.75);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 24px rgba(247, 198, 106, 0.18);
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.4),
+      0 0 24px rgba(247, 198, 106, 0.18);
   }
   .badgeCardLocked:hover {
     border-color: rgba(82, 103, 124, 0.6);
@@ -220,7 +233,9 @@
 
 .medallionUnlocked {
   background: linear-gradient(135deg, #ffe1b7 0%, #f7c66a 50%, #b88628 100%);
-  box-shadow: 0 0 16px rgba(247, 198, 106, 0.35), 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 0 16px rgba(247, 198, 106, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .medallionRingInner {
@@ -237,7 +252,12 @@
 
 .medallionUnlocked .medallionRingInner {
   border: 1.5px solid rgba(255, 240, 200, 0.6);
-  background: radial-gradient(circle at 35% 30%, #3a2b16 0%, #1e1509 75%, #150f06 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #3a2b16 0%,
+    #1e1509 75%,
+    #150f06 100%
+  );
   color: #f7c66a;
 }
 
@@ -344,7 +364,9 @@
 .supremeCardUnlocked {
   border-color: #f7c66a;
   background: linear-gradient(145deg, #1a283c 0%, #0f1c2d 50%, #091321 100%);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 28px rgba(247, 198, 106, 0.18);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(247, 198, 106, 0.18);
 }
 
 .supremeLayout {
@@ -384,7 +406,9 @@
 
 .supremeMedallionUnlocked {
   background: linear-gradient(135deg, #ffe0b5 0%, #f7c66a 50%, #b88628 100%);
-  box-shadow: 0 0 24px rgba(247, 198, 106, 0.4), 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 0 24px rgba(247, 198, 106, 0.4),
+    0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .supremeMedallionInner {
@@ -401,7 +425,12 @@
 
 .supremeMedallionUnlocked .supremeMedallionInner {
   border: 2px solid rgba(255, 240, 200, 0.7);
-  background: radial-gradient(circle at 35% 30%, #443219 0%, #221809 75%, #150f06 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #443219 0%,
+    #221809 75%,
+    #150f06 100%
+  );
   color: #f7c66a;
 }
 
@@ -458,4 +487,51 @@
     transition: none !important;
     transform: none !important;
   }
+}
+
+.achievementsContainer {
+  max-width: none;
+}
+.heroCard,
+.badgeCard,
+.supremeCard {
+  background: var(--observatory-glass);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(22px);
+  border-radius: 24px;
+}
+.heroCard {
+  padding: clamp(24px, 3vw, 36px);
+}
+.heroTitle {
+  font-size: clamp(24px, 3vw, 32px);
+  letter-spacing: -0.04em;
+}
+.progressContainer {
+  background: #07111b80;
+  border: 1px solid #f7c66a33;
+}
+
+.missionImage {
+  height: 170px;
+  margin: -1.5rem -1.5rem 1.5rem;
+  border-bottom: 1px solid #b9d9f02e;
+}
+.missionImage img {
+  object-position: center;
+}
+.missionImage figcaption {
+  font-size: 9px;
+}
+.badgeCard {
+  overflow: hidden;
+}
+.badgeCardLocked {
+  opacity: 1;
+}
+.dossierLink {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }

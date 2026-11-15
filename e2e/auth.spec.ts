@@ -1,8 +1,17 @@
 import { expect, test } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
-  await page.route(/\/(auth|rest)\/v1\//, (route) => route.abort())
-  await page.goto('/auth')
+  await page.route('**/*', (route) => {
+    const url = new URL(route.request().url())
+    if (
+      /\/(auth|rest)\/v1\//.test(url.pathname) ||
+      !['localhost', '127.0.0.1'].includes(url.hostname)
+    )
+      return route.abort()
+    return route.continue()
+  })
+  await page.goto('/auth', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
 })
 
 test('auth layout, keyboard tabs, password visibility and sign-in recovery', async ({

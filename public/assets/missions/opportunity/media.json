@@ -1,0 +1,76 @@
+[
+  {
+    "file": "final-panorama.jpg",
+    "url": "https://images-assets.nasa.gov/image/PIA22909/PIA22909~orig.jpg",
+    "metadata": {
+      "center": "JPL",
+      "date_created": "2019-03-12T00:00:00Z",
+      "description": "This 360-degree panorama is composed of 354 images taken by the Opportunity rover's Panoramic Camera (Pancam) from May 13 through June 10, 2018, or sols (Martian days) 5,084 through 5,111. This is the last panorama Opportunity acquired before the solar-powered rover succumbed to a global Martian dust storm on the same June 10. This version of the scene is presented in approximate true color.  To the right of center and near the top of the frame, the rim of Endeavour Crater rises in the distance. Just to the left of that, rover tracks begin their descent from over the horizon towards the location that would become Opportunity's final resting spot in Perseverance Valley, where the panorama was taken. At the bottom, just left of center, is the rocky outcrop Opportunity was investigating with the instruments on its robotic arm. To the right of center and halfway down the frame is another rocky outcrop - about 23 feet (7 meters) distant from the camera - called \"Ysleta del Sur,\" which Opportunity investigated from March 3 through 29, 2018, or sols 5,015 through 5,038. In the far right and left of the frame are the bottom of Perseverance Valley and the floor of Endeavour Crater.  Located on the inner slope of the western rim of Endeavour Crater, Perseverance Valley is a system of shallow troughs descending eastward about the length of two football fields from the crest of Endeavour's rim to its floor.  This true-color version combines images collected through three Pancam filters. The filters admit light centered on wavelengths of 753 nanometers (near-infrared), 535 nanometers (green) and 432 nanometers (blue). The three-color bands are combined.  A few frames (bottom left) remain black and white, as the solar-powered rover did not have the time to photograph those locations using the green and violet filters before a severe Mars-wide dust storm swept in on June 2018.  https://photojournal.jpl.nasa.gov/catalog/PIA22909",
+      "description_508": "This image is an edited version of the last 360-degree panorama taken by the Opportunity rover's Pancam from May 13 through June 10, 2018. The version of the scene is presented in approximate true color.",
+      "keywords": [
+        "Mars Exploration Rover (MER)",
+        "Mars"
+      ],
+      "media_type": "image",
+      "nasa_id": "PIA22909",
+      "secondary_creator": "NASA/JPL-Caltech/Cornell/ASU",
+      "title": "Opportunity Legacy Pan (True Color)"
+    }
+  },
+  {
+    "file": "endurance-shadow.jpg",
+    "url": "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/internal_resources/3452/rover_casting_a_shadow.jpeg?w=1024&h=1024&fit=clip&crop=faces%2Cfocalpoint",
+    "source": "https://science.nasa.gov/mission/mer-opportunity/"
+  },
+  {
+    "file": "victoria-crater.jpg",
+    "url": "https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/internal_resources/3449/cliff_at_crater_rim_in_red-colored_desert.jpeg?w=1373&h=914&fit=clip&crop=faces%2Cfocalpoint",
+    "source": "https://science.nasa.gov/mission/mer-opportunity/"
+  },
+  {
+    "file": "endeavour-crater.jpg",
+    "url": "https://science.nasa.gov/wp-content/uploads/2024/03/jpegpia18393.jpg?w=768",
+    "source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/"
+  },
+  {
+    "file": "eagle-crater.jpg",
+    "url": "https://images-assets.nasa.gov/image/PIA05755/PIA05755~orig.jpg",
+    "metadata": {
+      "center": "JPL",
+      "date_created": "2004-04-14T21:34:02Z",
+      "description": "Opportunity Captures Lion",
+      "keywords": [
+        "Mars",
+        "Mars Exploration Rover MER"
+      ],
+      "media_type": "image",
+      "nasa_id": "PIA05755",
+      "secondary_creator": "NASA/JPL/Cornell",
+      "title": "Opportunity Captures Lion"
+    }
+  },
+  {
+    "file": "blueberries.jpg",
+    "url": "https://images-assets.nasa.gov/image/PIA05564/PIA05564~orig.jpg",
+    "metadata": {
+      "center": "JPL",
+      "date_created": "2004-03-13T05:13:53Z",
+      "description": "Finding the Blueberry Muffin Recipe",
+      "description_508": "Finding the Blueberry Muffin Recipe",
+      "keywords": [
+        "Mars",
+        "Mars Exploration Rover MER"
+      ],
+      "media_type": "image",
+      "nasa_id": "PIA05564",
+      "secondary_creator": "NASA/JPL",
+      "title": "Finding the Blueberry Muffin Recipe"
+    }
+  },
+  {
+    "file": "gypsum-vein.jpg",
+    "url": "https://science.nasa.gov/wp-content/uploads/2024/03/pia15033-pancam.jpg?w=768",
+    "source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/science-highlights/",
+    "credit": "NASA/JPL-Caltech/Cornell/ASU"
+  }
+]

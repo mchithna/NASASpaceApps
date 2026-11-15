@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge.tsx'
 import { Card } from '@/components/ui/Card.tsx'
 import type { MissionProgress } from '@/contracts/progress.ts'
 import type { MissionDefinition } from '@/missions/types.ts'
+import { SpaceArtwork } from './SpaceArtwork.tsx'
 
 export type ActiveMissionSpotlightProps = {
   mission: MissionDefinition
@@ -19,13 +20,17 @@ export function ActiveMissionSpotlight({
   return (
     <Card
       variant="elevated"
-      className="border-science/50 bg-gradient-to-br from-surface to-elevated p-6 shadow-elevated"
+      className="active-mission-spotlight border-science/50 bg-gradient-to-br from-surface to-elevated p-6 shadow-elevated"
     >
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <SpaceArtwork visual={mission.id} className="active-mission-art" />
+      <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-science">
-              <Radio className="size-3.5 animate-pulse text-science" aria-hidden="true" />
+              <Radio
+                className="size-3.5 animate-pulse text-science"
+                aria-hidden="true"
+              />
               Active Telemetry Downlink
             </span>
             <Badge variant="science">{mission.destination}</Badge>
@@ -51,7 +56,8 @@ export function ActiveMissionSpotlight({
               </span>
             ) : null}
             <span>
-              {completedCount} checkpoint{completedCount === 1 ? '' : 's'} logged
+              {completedCount} checkpoint{completedCount === 1 ? '' : 's'}{' '}
+              logged
             </span>
           </div>
         </div>

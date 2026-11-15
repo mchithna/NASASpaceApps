@@ -73,14 +73,18 @@ export function MissionDossier({ mission }: MissionDossierProps) {
                 {mission.category.replace(/-/g, ' ')}
               </span>
               {isCompleted ? (
-                <span className={`${styles.badge} ${styles.statusBadgeCompleted}`}>
+                <span
+                  className={`${styles.badge} ${styles.statusBadgeCompleted}`}
+                >
                   Completed
                 </span>
               ) : isInProgress ? (
                 <span className={styles.badge}>In Progress</span>
               ) : (
                 <span className={`${styles.badge} ${styles.statusBadge}`}>
-                  Planned Chapter
+                  {mission.status === 'available'
+                    ? 'Ready to explore'
+                    : 'Planned Chapter'}
                 </span>
               )}
             </div>
@@ -110,14 +114,18 @@ export function MissionDossier({ mission }: MissionDossierProps) {
               <div className={styles.metaCard}>
                 <span className={styles.metaLabel}>Destination</span>
                 <p className={styles.metaValue}>
-                  <span className="font-medium text-foreground">Destination: </span>
+                  <span className="font-medium text-foreground">
+                    Destination:{' '}
+                  </span>
                   {mission.destination}
                 </p>
               </div>
               <div className={styles.metaCard}>
                 <span className={styles.metaLabel}>Story Title</span>
                 <p className={styles.metaValue}>
-                  <span className="font-medium text-foreground">Story title: </span>
+                  <span className="font-medium text-foreground">
+                    Story title:{' '}
+                  </span>
                   {mission.chapterTitle}
                 </p>
               </div>
@@ -126,9 +134,15 @@ export function MissionDossier({ mission }: MissionDossierProps) {
             {/* Chapter Readiness Notice */}
             {mission.status === 'planned' ? (
               <div className={styles.noticeBox}>
-                <Info size={18} className={styles.noticeIcon} aria-hidden="true" />
+                <Info
+                  size={18}
+                  className={styles.noticeIcon}
+                  aria-hidden="true"
+                />
                 <div>
-                  <p className="font-semibold text-foreground">Chapter In Development</p>
+                  <p className="font-semibold text-foreground">
+                    Chapter In Development
+                  </p>
                   <p>Mission gameplay is not implemented yet.</p>
                 </div>
               </div>
@@ -136,7 +150,10 @@ export function MissionDossier({ mission }: MissionDossierProps) {
 
             {/* Action Row */}
             <div className={styles.actionRow}>
-              <Link to={`/missions/${mission.id}/play`} className={styles.primaryCta}>
+              <Link
+                to={`/missions/${mission.id}/play`}
+                className={styles.primaryCta}
+              >
                 <span>{actionText}</span>
                 <ArrowRight size={18} aria-hidden="true" />
               </Link>
@@ -234,13 +251,20 @@ export function MissionDossier({ mission }: MissionDossierProps) {
         {/* Compatibility Cover Image Element for Testing Infrastructure */}
         <img
           src={mission.coverImage}
-          alt="Placeholder cover. A NASA photograph is not shown yet."
+          alt={
+            mission.status === 'planned'
+              ? 'Placeholder cover. A NASA photograph is not shown yet.'
+              : `${mission.displayName} chapter cover`
+          }
           className={styles.schematicCompatible}
         />
       </article>
 
       {/* Verified NASA Sources Section */}
-      <section className={styles.sourcesSection} aria-labelledby="nasa-sources-heading">
+      <section
+        className={styles.sourcesSection}
+        aria-labelledby="nasa-sources-heading"
+      >
         <h2 id="nasa-sources-heading" className={styles.sourcesHeading}>
           NASA source
         </h2>
