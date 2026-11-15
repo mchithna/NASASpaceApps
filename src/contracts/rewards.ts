@@ -186,7 +186,12 @@ export const discoveryCatalog = [
   {
     discoveryId: 'ingenuity-notes',
     missionId: 'ingenuity',
-    title: 'Placeholder: Ingenuity',
+    title: 'The Final Flight of Ingenuity',
+    summary:
+      'January 18, 2024: Flight 72 ended with a hard landing and rotor damage. Terrain images, navigation analysis and a damaged rotor shadow informed NASA’s investigation. Insufficient visual-navigation information over relatively featureless terrain was the likely beginning of the accident sequence. Reliable autonomous navigation and safe landing conditions are essential. NASA source: https://www.nasa.gov/missions/mars-2020-perseverance/ingenuity-helicopter/nasa-performs-first-aircraft-accident-investigation-on-another-world/',
+    contentStatus: 'sourced',
+    sourceUrl:
+      'https://www.nasa.gov/missions/mars-2020-perseverance/ingenuity-helicopter/nasa-performs-first-aircraft-accident-investigation-on-another-world/',
   },
   {
     discoveryId: 'insight-notes',

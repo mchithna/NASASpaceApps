@@ -150,6 +150,15 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Ingenuity now exports seven sourced scenes through the existing chapter loader,
+with aircraft inspection, a qualitative flight lab, autonomous first-flight
+simulation, hypothetical scouting, Flight 72 evidence and a legacy timeline.
+Fixed 20/40/25/15 XP, the existing `ingenuity-story` achievement and sourced
+`ingenuity-notes` use shared services. Minimal catalog integration was authorized;
+the trusted catalog migration `20261115134651` is prepared locally, not hosted.
+See `src/missions/ingenuity/README.md` for validation and deployment limits.
+No home page, auth, routing, reward logic or other chapter source was changed.
+
 The shared Nova companion is now mounted once through App.tsx, with a visible
 launcher, local sourced mission briefings, simple explanations, glossary and app
 help. This is explicitly source guide mode, not connected generative AI. Live
