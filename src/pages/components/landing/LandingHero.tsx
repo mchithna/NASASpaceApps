@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router'
 import { ArrowDown, ArrowRight, ArrowUpRight, Orbit } from 'lucide-react'
 import { scrollToLandingSection } from './landingNavigation.ts'
+import { LandingMars3D } from './LandingMars3D.tsx'
 
 export function LandingHero() {
   const art = useRef<HTMLDivElement>(null)
@@ -45,41 +46,7 @@ export function LandingHero() {
       </div>
       <div ref={art} className="lp-cosmos" aria-hidden="true">
         <div className="lp-sunrise" />
-        <div className="lp-small-world" />
-        <div className="lp-planet">
-          <img
-            src="/assets/common/landing/mars.webp"
-            width="1000"
-            height="1000"
-            alt=""
-            fetchPriority="high"
-          />
-          <div />
-        </div>
-        <svg className="lp-orbits" viewBox="0 0 900 700" fill="none">
-          <ellipse
-            cx="470"
-            cy="340"
-            rx="414"
-            ry="132"
-            transform="rotate(-28 470 340)"
-          />
-          <ellipse
-            cx="470"
-            cy="340"
-            rx="360"
-            ry="240"
-            transform="rotate(-28 470 340)"
-          />
-          <ellipse
-            className="lp-orbit-highlight"
-            cx="470"
-            cy="340"
-            rx="414"
-            ry="132"
-            transform="rotate(-28 470 340)"
-          />
-        </svg>
+        <LandingMars3D />
         <div className="lp-horizon" />
       </div>
       <div className="lp-container lp-hero-content">
