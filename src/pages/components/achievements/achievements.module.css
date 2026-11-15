@@ -1,0 +1,461 @@
+/* Achievements Page Cinematic Styles - Developer B Stage 3 Final Polish */
+
+.achievementsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  max-width: 64rem;
+  margin-inline: auto;
+  width: 100%;
+}
+
+/* Trophy Showcase Hero */
+.heroCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(82, 103, 124, 0.5);
+  background: linear-gradient(145deg, #0f1a28 0%, #08111e 100%);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+}
+
+.heroCosmos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle at 80% 25%, rgba(247, 198, 106, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 20% 75%, rgba(83, 203, 255, 0.08) 0%, transparent 45%);
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .heroContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+.heroIdentity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 36rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.125em;
+  text-transform: uppercase;
+  color: #f7c66a;
+}
+
+.statusDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f7c66a;
+  box-shadow: 0 0 8px rgba(247, 198, 106, 0.8);
+}
+
+.heroTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f5f7fb;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.heroDescription {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #aab7c8;
+  margin: 0;
+}
+
+.progressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 220px;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  background: rgba(16, 28, 42, 0.75);
+  border: 1px solid rgba(82, 103, 124, 0.45);
+  backdrop-filter: blur(12px);
+}
+
+.progressHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8c9bb3;
+}
+
+.progressScore {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #d9fca7;
+}
+
+/* Badges Section */
+.badgesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f7fb;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.sectionSubtitle {
+  font-size: 0.8125rem;
+  color: #8c9bb3;
+  margin: 0;
+}
+
+/* Responsive Auto-Fit Grid (no fixed widths, no horizontal overflow) */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+}
+
+/* Achievement Card */
+.badgeCard {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(82, 103, 124, 0.4);
+  background: linear-gradient(145deg, #121e2d 0%, #0a1320 100%);
+  padding: 1.4rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  transition: all 220ms ease;
+  overflow: hidden;
+}
+
+.badgeCardUnlocked {
+  border-color: rgba(247, 198, 106, 0.5);
+  background: linear-gradient(145deg, #172436 0%, #0c1624 100%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 18px rgba(247, 198, 106, 0.08);
+}
+
+.badgeCardLocked {
+  border-color: rgba(82, 103, 124, 0.35);
+  background: linear-gradient(145deg, #0e1724 0%, #080f1a 100%);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .badgeCardUnlocked:hover {
+    transform: translateY(-2px);
+    border-color: rgba(247, 198, 106, 0.75);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 24px rgba(247, 198, 106, 0.18);
+  }
+  .badgeCardLocked:hover {
+    border-color: rgba(82, 103, 124, 0.6);
+  }
+}
+
+.cardTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cardMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* Academy Medallion — CSS Concentric Rings & Metallic Sheen */
+.medallionWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #52677c 0%, #1d2940 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.medallionUnlocked {
+  background: linear-gradient(135deg, #ffe1b7 0%, #f7c66a 50%, #b88628 100%);
+  box-shadow: 0 0 16px rgba(247, 198, 106, 0.35), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.medallionRingInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: radial-gradient(circle at 35% 30%, #1d2940 0%, #0d1624 85%);
+  color: #8c9bb3;
+}
+
+.medallionUnlocked .medallionRingInner {
+  border: 1.5px solid rgba(255, 240, 200, 0.6);
+  background: radial-gradient(circle at 35% 30%, #3a2b16 0%, #1e1509 75%, #150f06 100%);
+  color: #f7c66a;
+}
+
+.cardHeadingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.cardMissionTitle {
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #f5f7fb;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.cardChapterTitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #f7c66a;
+  overflow-wrap: break-word;
+}
+
+.cardDescription {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #b8c8dd;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.cardFooter {
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(82, 103, 124, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+.awardXpTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #4fd1a5;
+  font-weight: 600;
+}
+
+.awaitingTag {
+  color: #8c9bb3;
+  font-weight: 500;
+}
+
+.dossierLink {
+  color: #53cbff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 150ms ease;
+  min-height: 2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dossierLink:hover {
+  text-decoration: underline;
+  color: #8ee2ff;
+}
+
+.dossierLink:focus-visible {
+  outline: 2px solid #53cbff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Supreme Honor Meta Card */
+.supremeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.supremeTitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f7fb;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.supremeCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(82, 103, 124, 0.5);
+  background: linear-gradient(145deg, #101c2a 0%, #08111e 100%);
+  padding: 1.85rem 2rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.supremeCardUnlocked {
+  border-color: #f7c66a;
+  background: linear-gradient(145deg, #1a283c 0%, #0f1c2d 50%, #091321 100%);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 28px rgba(247, 198, 106, 0.18);
+}
+
+.supremeLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .supremeLayout {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.supremeContentGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+/* Supreme Medallion Emblem */
+.supremeMedallionWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  padding: 4px;
+  background: linear-gradient(135deg, #52677c 0%, #1d2940 100%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.supremeMedallionUnlocked {
+  background: linear-gradient(135deg, #ffe0b5 0%, #f7c66a 50%, #b88628 100%);
+  box-shadow: 0 0 24px rgba(247, 198, 106, 0.4), 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.supremeMedallionInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: radial-gradient(circle at 35% 30%, #1d2940 0%, #0d1624 85%);
+  color: #8c9bb3;
+}
+
+.supremeMedallionUnlocked .supremeMedallionInner {
+  border: 2px solid rgba(255, 240, 200, 0.7);
+  background: radial-gradient(circle at 35% 30%, #443219 0%, #221809 75%, #150f06 100%);
+  color: #f7c66a;
+}
+
+.supremeDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.supremeBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.supremeHonorTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f5f7fb;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.supremeHonorDesc {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #b8c8dd;
+  max-width: 65ch;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.supremeStatusArea {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+@media (max-width: 639px) {
+  .supremeStatusArea {
+    text-align: left;
+  }
+}
+
+.remainingText {
+  font-size: 0.75rem;
+  color: #8c9bb3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badgeCard,
+  .badgeCardUnlocked,
+  .dossierLink {
+    transition: none !important;
+    transform: none !important;
+  }
+}

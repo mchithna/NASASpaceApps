@@ -1,9 +1,10 @@
 import { useEffect, type ReactNode } from 'react'
-import { PageHero } from './PageHero.tsx'
-import type { SpaceVisual } from './SpaceArtwork.tsx'
+import { PageHeader } from '@/components/ui/PageHeader.tsx'
 import { LoadingState } from '@/components/ui/LoadingState.tsx'
 import { ErrorState } from '@/components/ui/ErrorState.tsx'
 import { Button } from '@/components/ui/Button.tsx'
+import { PageHero } from './PageHero.tsx'
+import type { SpaceVisual } from './SpaceArtwork.tsx'
 
 export type PageShellProps = {
   title: string
@@ -36,21 +37,40 @@ export function PageShell({
   }, [title])
 
   return (
-    <div className="platform-page">
-      <PageHero
-        title={title}
-        description={description}
-        eyebrow={eyebrow}
-        visual={visual}
-      />
-      {actions ? <div className="platform-page-tools">{actions}</div> : null}
+    <div className="flex flex-col gap-8 animate-page-rise">
+      {visual ? (
+        <PageHero
+          title={title}
+          description={description}
+          eyebrow={eyebrow}
+          visual={visual}
+          actions={actions}
+        />
+      ) : (
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            {eyebrow ? (
+              <div className="eyebrow-label mb-2">
+                <span className="eyebrow-dot" />
+                <span>{eyebrow}</span>
+              </div>
+            ) : null}
+            <PageHeader title={title} description={description} />
+          </div>
+          {actions ? (
+            <div className="flex shrink-0 items-center gap-2 pt-1">
+              {actions}
+            </div>
+          ) : null}
+        </header>
+      )}
 
       {isLoading ? (
-        <div className="py-8">
+        <div className="py-16">
           <LoadingState label={loadingMessage} />
         </div>
       ) : error ? (
-        <div className="py-8">
+        <div className="py-16">
           <ErrorState
             title="Telemetry Error"
             message={error.message}

@@ -67,13 +67,21 @@ describe('application routes', () => {
     }
     expect(destination).toHaveTextContent('Destination: Mars')
     expect(
-      screen.getByText('Mission gameplay is not implemented yet.'),
+      screen.getByText('Ready to explore'),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('img', {
-        name: 'Placeholder cover. A NASA photograph is not shown yet.',
+        name: 'Opportunity chapter cover',
       }),
-    ).toHaveAttribute('src', '/assets/missions/opportunity/cover.svg')
+    ).toHaveAttribute('src', '/assets/missions/opportunity/victoria-crater.jpg')
+    expect(screen.getByRole('link', { name: 'Start mission' })).toHaveAttribute('href', '/missions/opportunity/play')
+    expect(screen.queryByText('Mission gameplay is not implemented yet.')).not.toBeInTheDocument()
+  })
+
+  it('keeps the preparation notice for an unbuilt chapter', () => {
+    renderRoute('/missions/pioneer-10')
+    expect(screen.getByText('Mission gameplay is not implemented yet.')).toBeInTheDocument()
+    expect(screen.getByText('Planned Chapter')).toBeInTheDocument()
   })
 
   it('shows the play placeholder for a known mission', () => {

@@ -11,7 +11,7 @@ export function MissionFacts({
   actions?: ReactNode
 }) {
   useEffect(() => {
-    document.title = `${mission.displayName} � NovaExplorer`
+    document.title = `${mission.displayName} · NovaExplorer`
   }, [mission.displayName])
   const available = mission.status === 'available'
   return (

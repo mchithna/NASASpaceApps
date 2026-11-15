@@ -4,10 +4,12 @@
   --lp-muted: var(--color-landing-muted, #aab7c8);
   --lp-lime: var(--color-landing-lime, #d9fca7);
   --lp-line: #344354;
+  position: relative;
   background: var(--lp-bg);
   color: var(--lp-text);
   min-height: 100svh;
   overflow: clip;
+  isolation: isolate;
 }
 .nova-landing * {
   box-sizing: border-box;
@@ -34,13 +36,33 @@
   width: min(1480px, calc(100% - 88px));
   margin-inline: auto;
 }
+
+/* Live Dynamic Starfield Canvas */
+.nova-landing .lp-starfield-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.nova-landing > *:not(.lp-starfield-canvas):not(.lp-header) {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   Liquid Fluid Navbar & Navigation Pills
+   ========================================================= */
 .nova-landing .lp-header {
   position: fixed;
-  z-index: 10;
+  z-index: 20;
   inset: 18px 28px auto;
   animation: lp-nav-in 500ms both;
 }
 .nova-landing .lp-nav {
+  position: relative;
+  overflow: visible;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -48,17 +70,71 @@
   margin: auto;
   min-height: 70px;
   padding: 10px 22px;
-  border: 1px solid #52677c80;
-  border-radius: 40px;
-  background: #0b1421b8;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 12px 30px #0003;
-  transition: background 250ms;
+  border: 1px solid rgba(162, 204, 238, 0.28);
+  border-radius: 44px;
+  background:
+    radial-gradient(
+      340px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+      rgba(217, 252, 167, 0.13),
+      rgba(83, 203, 255, 0.09) 42%,
+      transparent 75%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(17, 31, 49, 0.72) 0%,
+      rgba(9, 18, 30, 0.62) 50%,
+      rgba(15, 29, 46, 0.75) 100%
+    );
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.42),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(83, 203, 255, 0.18);
+  transition:
+    background 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nova-landing .lp-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.07) 46%,
+    rgba(217, 252, 167, 0.08) 54%,
+    transparent 80%
+  );
+  background-size: 220% 100%;
+  animation: lp-liquid-wave 9s ease-in-out infinite alternate;
 }
 .nova-landing .lp-header-scrolled .lp-nav {
-  background: #0b1421f5;
+  background:
+    radial-gradient(
+      340px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+      rgba(217, 252, 167, 0.15),
+      rgba(83, 203, 255, 0.1) 42%,
+      transparent 75%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(12, 23, 38, 0.88) 0%,
+      rgba(8, 15, 26, 0.84) 50%,
+      rgba(13, 25, 40, 0.9) 100%
+    );
+  border-color: rgba(185, 222, 250, 0.34);
+  box-shadow:
+    0 20px 46px rgba(0, 0, 0, 0.56),
+    inset 0 1px 2px rgba(255, 255, 255, 0.34),
+    inset 0 -1px 2px rgba(217, 252, 167, 0.2);
 }
 .nova-landing .lp-brand {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 11px;
@@ -66,84 +142,234 @@
   font: 600 23px var(--font-heading);
   letter-spacing: -0.7px;
   white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 28px;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 300ms ease;
+}
+.nova-landing .lp-brand:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 .nova-landing .lp-nav-divider {
   height: 22px;
   width: 1px;
-  background: var(--lp-line);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(165, 205, 235, 0.45),
+    transparent
+  );
 }
 .nova-landing .lp-desktop-links {
+  position: relative;
+  z-index: 1;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-inline: auto;
 }
 .nova-landing .lp-desktop-links a {
+  position: relative;
+  overflow: hidden;
   color: var(--lp-muted);
-  padding: 12px 19px;
-  border-radius: 28px;
+  padding: 11px 20px;
+  border-radius: 30px;
   font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
   transition:
-    background 200ms,
-    color 200ms;
+    background 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 240ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nova-landing .lp-desktop-links a[aria-current],
 .nova-landing .lp-desktop-links a:hover {
   color: var(--lp-text);
-  background: #91b4d212;
-  box-shadow: inset 0 -1px #d9fca780;
+  border-color: rgba(186, 224, 255, 0.28);
+  background:
+    radial-gradient(
+      95px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+      rgba(217, 252, 167, 0.22),
+      rgba(83, 203, 255, 0.14) 55%,
+      rgba(22, 40, 62, 0.45) 100%
+    );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -1.5px 2px rgba(217, 252, 167, 0.55),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+  transform: translateY(-1px);
 }
 .nova-landing .lp-desktop-actions {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 14px;
   font-size: 13px;
 }
 .nova-landing .lp-desktop-actions > a:not(.lp-button) {
+  position: relative;
   color: var(--lp-muted);
-  padding-block: 13px;
+  padding: 10px 16px;
+  border-radius: 26px;
+  border: 1px solid transparent;
+  transition:
+    color 240ms ease,
+    background 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+.nova-landing .lp-desktop-actions > a:not(.lp-button):hover {
+  color: var(--lp-text);
+  border-color: rgba(165, 205, 235, 0.24);
+  background: radial-gradient(
+    80px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+    rgba(83, 203, 255, 0.18),
+    rgba(217, 252, 167, 0.08) 65%,
+    transparent 100%
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    0 4px 14px rgba(0, 0, 0, 0.24);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   Liquid Fluid Action Buttons
+   ========================================================= */
 .nova-landing .lp-button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 18px;
   min-height: 48px;
-  padding: 12px 23px;
-  border-radius: 14px;
+  padding: 12px 24px;
+  border-radius: 16px;
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   transition:
-    box-shadow 200ms,
-    background 200ms,
-    border-color 200ms;
+    transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 340ms ease,
+    border-color 340ms ease;
+}
+.nova-landing .lp-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    130px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+    rgba(255, 255, 255, 0.45),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+.nova-landing .lp-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 55%;
+  height: 200%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.38),
+    transparent
+  );
+  transform: rotate(24deg) translateX(-140%);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nova-landing .lp-button:hover {
+  transform: translateY(-2px) scale(1.015);
+}
+.nova-landing .lp-button:hover::before {
+  opacity: 1;
+}
+.nova-landing .lp-button:hover::after {
+  transform: rotate(24deg) translateX(360%);
 }
 .nova-landing .lp-button svg {
   flex-shrink: 0;
-  transition: transform 200ms;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nova-landing .lp-button:hover svg {
   transform: translate(3px, -1px);
 }
 .nova-landing .lp-primary {
-  background: var(--lp-lime);
+  background: linear-gradient(
+    125deg,
+    #d9fca7 0%,
+    #bef878 36%,
+    #ecffd2 68%,
+    #d2fc96 100%
+  );
+  background-size: 200% 200%;
+  animation: lp-liquid-flow 6.5s ease-in-out infinite alternate;
   color: var(--lp-bg);
-  border: 1px solid #e9ffcd;
-  box-shadow: 0 0 23px #d9fca716;
+  border: 1px solid #f0ffdc;
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 5px rgba(52, 98, 16, 0.25),
+    0 8px 26px rgba(217, 252, 167, 0.22);
 }
 .nova-landing .lp-primary:hover {
-  background: #e5ffc2;
-  box-shadow: 0 0 30px #d9fca72e;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.92),
+    inset 0 -2px 6px rgba(52, 98, 16, 0.3),
+    0 12px 34px rgba(217, 252, 167, 0.38);
 }
 .nova-landing .lp-secondary {
   color: var(--lp-text);
-  border: 1px solid #60788f99;
-  background: #0d192980;
+  border: 1px solid rgba(138, 182, 218, 0.42);
+  background:
+    radial-gradient(
+      140px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+      rgba(83, 203, 255, 0.2),
+      rgba(217, 252, 167, 0.08) 55%,
+      transparent 80%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(20, 36, 56, 0.72),
+      rgba(11, 21, 35, 0.62)
+    );
+  backdrop-filter: blur(20px) saturate(175%);
+  -webkit-backdrop-filter: blur(20px) saturate(175%);
+  box-shadow:
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 2px rgba(83, 203, 255, 0.18),
+    0 8px 24px rgba(0, 0, 0, 0.32);
+}
+.nova-landing .lp-secondary::before {
+  background: radial-gradient(
+    140px circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+    rgba(83, 203, 255, 0.25),
+    rgba(217, 252, 167, 0.12) 55%,
+    transparent 75%
+  );
 }
 .nova-landing .lp-secondary:hover {
-  background: #152333;
-  border-color: #aab7c8;
+  border-color: rgba(217, 252, 167, 0.58);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.34),
+    inset 0 -1px 3px rgba(217, 252, 167, 0.28),
+    0 12px 32px rgba(83, 203, 255, 0.18);
 }
+
 .nova-landing .lp-menu-toggle {
   display: none;
   margin-left: auto;
@@ -152,9 +378,13 @@
   align-items: center;
   justify-content: center;
   color: var(--lp-text);
-  background: #152333;
-  border: 1px solid var(--lp-line);
+  background: linear-gradient(145deg, rgba(25, 43, 64, 0.82), rgba(12, 22, 36, 0.82));
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(162, 204, 238, 0.32);
   border-radius: 50%;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    0 4px 14px rgba(0, 0, 0, 0.35);
 }
 .nova-landing .lp-mobile-menu {
   position: absolute;
@@ -163,10 +393,17 @@
   display: grid;
   gap: 6px;
   padding: 18px;
-  border: 1px solid var(--lp-line);
-  border-radius: 24px;
-  background: #0b1421fa;
-  box-shadow: 0 18px 38px #0008;
+  border: 1px solid rgba(162, 204, 238, 0.3);
+  border-radius: 26px;
+  background: linear-gradient(
+    145deg,
+    rgba(15, 28, 45, 0.92),
+    rgba(9, 17, 29, 0.95)
+  );
+  backdrop-filter: blur(26px) saturate(185%);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.26);
   animation: lp-nav-in 200ms both;
   max-height: calc(100svh - 120px);
   overflow: auto;
@@ -175,14 +412,20 @@
   min-height: 44px;
   padding: 12px 18px;
   color: var(--lp-text);
-  border-radius: 12px;
+  border-radius: 14px;
+  transition: background 220ms ease;
 }
-.nova-landing .lp-mobile-menu > a[aria-current] {
-  background: #152333;
+.nova-landing .lp-mobile-menu > a[aria-current],
+.nova-landing .lp-mobile-menu > a:hover:not(.lp-primary) {
+  background: rgba(83, 203, 255, 0.14);
 }
 .nova-landing .lp-mobile-menu > .lp-primary {
   color: var(--lp-bg);
 }
+
+/* =========================================================
+   Hero & 3D Rotating Mars + Orbiting Moon Stage
+   ========================================================= */
 .nova-landing .lp-hero {
   position: relative;
   display: flex;
@@ -190,7 +433,7 @@
   min-height: min(830px, 94svh);
   padding: 175px 0 130px;
   isolation: isolate;
-  background: radial-gradient(ellipse at 65% 33%, #14283e99, transparent 55%);
+  background: radial-gradient(ellipse at 65% 35%, rgba(20, 40, 62, 0.52), transparent 58%);
 }
 .nova-landing .lp-cosmos {
   position: absolute;
@@ -200,60 +443,109 @@
   transform: translate(var(--parallax-x, 0px), var(--parallax-y, 0px));
   animation: lp-cosmos-in 1300ms both;
 }
-.nova-landing .lp-planet {
+
+.nova-landing .lp-mars-3d-stage {
   position: absolute;
-  width: min(49vw, 720px);
+  width: min(56vw, 840px);
   aspect-ratio: 1;
-  right: 2%;
-  top: 14%;
+  right: -2%;
+  top: 6%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.nova-landing .lp-mars-3d-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+.nova-landing .lp-mars-webgl-active .lp-mars-3d-canvas {
+  opacity: 1;
+}
+.nova-landing .lp-mars-webgl-active .lp-mars-3d-fallback {
+  display: none;
+}
+
+/* CSS 3D Horizontal Rotating Mars & Orbiting Moon Fallback */
+.nova-landing .lp-mars-3d-fallback {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  display: grid;
+  place-items: center;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+.nova-landing .lp-mars-sphere-fallback {
+  position: relative;
+  width: 82%;
+  aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  isolation: isolate;
   background: #563526;
   box-shadow:
-    -2px -2px 3px #ffe0bc99,
-    -8px -6px 26px #dbac7440,
-    0 0 70px #bf673419,
-    24px 28px 70px #0007;
-  transform: rotate(-16deg);
+    -2px -2px 4px rgba(255, 224, 188, 0.6),
+    -10px -6px 28px rgba(219, 172, 116, 0.28),
+    0 0 70px rgba(191, 103, 52, 0.14),
+    24px 28px 70px rgba(0, 0, 0, 0.55);
 }
-.nova-landing .lp-planet img {
+.nova-landing .lp-mars-texture-strip {
   position: absolute;
-  inset: -50%;
-  display: block;
-  width: 200%;
-  height: 200%;
-  max-width: none;
-  object-fit: cover;
+  inset: -8%;
+  background-image: url('/assets/common/landing/mars.webp');
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  background-position: 0% 50%;
   filter: saturate(1.12) contrast(1.06);
+  animation: lp-mars-horizontal-spin 42s linear infinite;
 }
-.nova-landing .lp-planet > div {
+.nova-landing .lp-mars-atmosphere-overlay {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 29% 25%, #ffe0b52b, transparent 44%),
+    radial-gradient(circle at 29% 25%, rgba(255, 224, 181, 0.18), transparent 44%),
     radial-gradient(
       ellipse at 22% 26%,
       transparent 24%,
-      #160d092e 48%,
-      #080b13d9 73%,
+      rgba(22, 13, 9, 0.18) 48%,
+      rgba(8, 11, 19, 0.85) 73%,
       #050a12 94%
     );
   box-shadow:
-    inset 3px 4px 8px #ffe1b773,
-    inset 15px 12px 32px #e8a86a24,
-    inset -22px -18px 45px #02050bd9,
-    inset 0 0 28px #050a1259;
+    inset 3px 4px 8px rgba(255, 225, 183, 0.45),
+    inset 15px 12px 32px rgba(232, 168, 106, 0.15),
+    inset -22px -18px 45px rgba(2, 5, 11, 0.85),
+    inset 0 0 28px rgba(5, 10, 18, 0.35);
 }
-.nova-landing .lp-planet::after {
-  content: '';
+.nova-landing .lp-moon-orbit-fallback {
   position: absolute;
-  inset: 0;
-  border: 1px solid #f4d5af40;
-  border-radius: 50%;
-  pointer-events: none;
+  width: 112%;
+  height: 112%;
+  transform-style: preserve-3d;
+  animation: lp-moon-3d-orbit 14s linear infinite;
 }
+.nova-landing .lp-moon-sphere-fallback {
+  position: absolute;
+  top: 50%;
+  left: -3%;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 25% 22%,
+    #b4c3d0,
+    #384c5e 38%,
+    #060c15 76%
+  );
+  box-shadow:
+    -1px -1px 3px rgba(185, 202, 215, 0.65),
+    0 6px 18px rgba(0, 0, 0, 0.65);
+}
+
 .nova-landing .lp-cosmos::after {
   content: '';
   position: absolute;
@@ -263,16 +555,16 @@
       90deg,
       #050a12 0%,
       #050a12e6 18%,
-      #050a1250 46%,
-      transparent 65%
+      #050a1240 44%,
+      transparent 62%
     ),
-    linear-gradient(0deg, #050a12 0%, transparent 40%);
+    linear-gradient(0deg, #050a12 0%, transparent 36%);
 }
 .nova-landing .lp-sunrise {
   position: absolute;
-  left: 59%;
-  top: 21%;
-  width: 180px;
+  left: 58%;
+  top: 19%;
+  width: 190px;
   aspect-ratio: 1;
   background: radial-gradient(
     circle,
@@ -281,36 +573,6 @@
     #b8673b22 28%,
     transparent 65%
   );
-}
-.nova-landing .lp-small-world {
-  position: absolute;
-  right: 47%;
-  top: 23%;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 20% 15%,
-    #a5b5c3,
-    #293b4a 25%,
-    #050a12 70%
-  );
-  box-shadow: -1px -1px 2px #b9cad7;
-}
-.nova-landing .lp-orbits {
-  position: absolute;
-  width: 66%;
-  height: 100%;
-  right: -8%;
-  top: 0;
-  stroke: #9bb9d84d;
-  stroke-width: 0.7;
-}
-.nova-landing .lp-orbit-highlight {
-  stroke: #d9fca7;
-  stroke-width: 1.5;
-  stroke-dasharray: 5 1780;
-  animation: lp-orbit 32s linear infinite;
 }
 .nova-landing .lp-horizon {
   position: absolute;
@@ -350,7 +612,7 @@
     367px 257px,
     389px 317px,
     491px 449px;
-  opacity: 0.45;
+  opacity: 0.38;
 }
 .nova-landing .lp-stars i {
   position: absolute;
@@ -461,7 +723,15 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  transition: color 220ms ease;
 }
+.nova-landing .lp-hero-bottom a:hover {
+  color: var(--lp-lime);
+}
+
+/* =========================================================
+   Sections & Liquid Fluid Information Cards
+   ========================================================= */
 .nova-landing .lp-section {
   padding-block: 70px;
 }
@@ -502,18 +772,58 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
 }
+
+/* Liquid Fluid Featured Mission Cards */
 .nova-landing .lp-mission-card {
+  position: relative;
+  isolation: isolate;
   min-width: 0;
-  border: 1px solid #536b8099;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #142030, #0b1421);
+  border: 1px solid rgba(135, 178, 214, 0.34);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      320px circle at var(--liquid-x, 50%) var(--liquid-y, 35%),
+      rgba(83, 203, 255, 0.14),
+      rgba(217, 252, 167, 0.07) 42%,
+      transparent 74%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(22, 36, 54, 0.78) 0%,
+      rgba(11, 20, 33, 0.84) 58%,
+      rgba(15, 27, 43, 0.8) 100%
+    );
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.38),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 2px rgba(83, 203, 255, 0.14);
   overflow: hidden;
   transition:
-    transform 300ms,
-    border-color 300ms,
-    box-shadow 300ms;
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 360ms ease,
+    box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nova-landing .lp-mission-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    125deg,
+    transparent 24%,
+    rgba(255, 255, 255, 0.05) 48%,
+    rgba(217, 252, 167, 0.06) 54%,
+    transparent 78%
+  );
+  background-size: 220% 220%;
+  animation: lp-liquid-wave 11s ease-in-out infinite alternate;
 }
 .nova-landing .lp-mission-link {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -523,12 +833,13 @@
   position: relative;
   aspect-ratio: 1.22;
   background: #101c2a;
+  overflow: hidden;
 }
 .nova-landing .lp-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 300ms;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nova-landing .lp-mission-card[data-mission='opportunity'] .lp-card-image img {
   object-position: 50% 68%;
@@ -537,7 +848,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, #111d2b 0%, #111d2b00 44%);
+  background: linear-gradient(0deg, #101b29 0%, #111d2b00 46%);
 }
 .nova-landing .lp-destination {
   position: absolute;
@@ -547,12 +858,14 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  padding: 5px 8px;
+  padding: 5px 10px;
   border-radius: 20px;
   font-size: 9px;
   color: #e3eaf4;
-  background: #08111ed9;
-  border: 1px solid #aab7c833;
+  background: rgba(8, 17, 30, 0.72);
+  backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22);
 }
 .nova-landing .lp-card-number {
   position: absolute;
@@ -597,12 +910,23 @@
   place-items: center;
   width: 34px;
   height: 28px;
-  border: 1px solid #60788f99;
+  border: 1px solid rgba(154, 196, 232, 0.42);
   border-radius: 20px;
-  background: linear-gradient(#203146, #0b1421);
+  background: linear-gradient(
+    145deg,
+    rgba(38, 60, 86, 0.85),
+    rgba(11, 20, 33, 0.9)
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    background 300ms ease;
 }
 .nova-landing .lp-arrow-circle svg {
-  transition: transform 300ms;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nova-landing .lp-mission-card:focus-within {
   outline: 2px solid var(--color-focus);
@@ -628,10 +952,15 @@
   margin: 24px 0 0;
   line-height: 1.8;
 }
+
+/* =========================================================
+   Liquid Fluid Process / How It Works Cards
+   ========================================================= */
 .nova-landing .lp-process {
-  border-block: 1px solid #34435466;
+  border-block: 1px solid rgba(52, 67, 84, 0.45);
   background:
-    radial-gradient(ellipse at 50% 100%, #152b3b66, transparent 70%), #0b142166;
+    radial-gradient(ellipse at 50% 100%, rgba(21, 43, 59, 0.45), transparent 70%),
+    rgba(11, 20, 33, 0.36);
 }
 .nova-landing .lp-centered-heading {
   text-align: center;
@@ -654,14 +983,41 @@
 }
 .nova-landing .lp-step {
   position: relative;
-  border: 1px solid #344354;
-  background: linear-gradient(145deg, #152333b3, #0b1421b3);
-  border-radius: 18px;
+  isolation: isolate;
+  border: 1px solid rgba(135, 178, 214, 0.3);
+  background:
+    radial-gradient(
+      280px circle at var(--liquid-x, 50%) var(--liquid-y, 40%),
+      rgba(217, 252, 167, 0.12),
+      rgba(83, 203, 255, 0.08) 48%,
+      transparent 76%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(22, 37, 54, 0.72),
+      rgba(11, 20, 33, 0.76)
+    );
+  backdrop-filter: blur(22px) saturate(175%);
+  -webkit-backdrop-filter: blur(22px) saturate(175%);
+  border-radius: 22px;
   padding: 24px;
-  transition: border-color 250ms;
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 2px rgba(83, 203, 255, 0.12);
+  transition:
+    transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 340ms ease,
+    box-shadow 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nova-landing .lp-step:hover {
-  border-color: #839984;
+  transform: translateY(-5px);
+  border-color: rgba(217, 252, 167, 0.52);
+  box-shadow:
+    0 20px 42px rgba(0, 0, 0, 0.46),
+    0 0 28px rgba(83, 203, 255, 0.12),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.34),
+    inset 0 -1px 3px rgba(217, 252, 167, 0.24);
 }
 .nova-landing .lp-step-top {
   display: flex;
@@ -672,11 +1028,19 @@
 .nova-landing .lp-step-icon {
   display: grid;
   place-items: center;
-  width: 49px;
-  height: 49px;
-  border: 1px solid #61794966;
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(217, 252, 167, 0.38);
   border-radius: 50%;
-  background: radial-gradient(#d9fca714, #d9fca703);
+  background: radial-gradient(
+    circle at 30% 25%,
+    rgba(217, 252, 167, 0.22),
+    rgba(83, 203, 255, 0.08) 65%,
+    rgba(11, 20, 33, 0.4) 100%
+  );
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.28);
   color: var(--lp-lime);
 }
 .nova-landing .lp-step-number {
@@ -708,11 +1072,38 @@
   color: var(--lp-muted);
   text-align: center;
 }
+
+/* =========================================================
+   Liquid Fluid About Showcase Panel
+   ========================================================= */
 .nova-landing .lp-about {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 55px;
-  padding-block: 80px;
+  margin-block: 56px;
+  padding: 48px 52px;
+  border-radius: 28px;
+  border: 1px solid rgba(135, 178, 214, 0.28);
+  background:
+    radial-gradient(
+      420px circle at var(--liquid-x, 30%) var(--liquid-y, 50%),
+      rgba(217, 252, 167, 0.1),
+      rgba(83, 203, 255, 0.08) 45%,
+      transparent 75%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(19, 33, 50, 0.68),
+      rgba(9, 17, 29, 0.74)
+    );
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.38),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 2px rgba(83, 203, 255, 0.14);
 }
 .nova-landing .lp-about > div:nth-child(2) {
   max-width: 650px;
@@ -731,7 +1122,16 @@
   min-width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(#152c3c, transparent 70%);
+  border: 1px solid rgba(217, 252, 167, 0.26);
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(217, 252, 167, 0.16),
+    rgba(21, 44, 60, 0.65) 58%,
+    transparent 76%
+  );
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.28),
+    0 0 32px rgba(217, 252, 167, 0.1);
 }
 .nova-landing .lp-about-symbol svg {
   width: 105px;
@@ -742,10 +1142,15 @@
 .nova-landing .lp-about > .lp-button {
   margin-left: auto;
 }
+
+/* =========================================================
+   Footer
+   ========================================================= */
 .nova-landing .lp-footer {
   border-top: 1px solid #34435480;
   padding: 45px 0 18px;
-  background: #080f19;
+  background: rgba(8, 15, 25, 0.88);
+  backdrop-filter: blur(16px);
 }
 .nova-landing .lp-footer-grid {
   display: grid;
@@ -818,19 +1223,31 @@
   min-height: 44px;
   color: var(--lp-muted);
 }
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .nova-landing .lp-mission-card:hover {
-    transform: translateY(-5px);
-    border-color: #a6c0cf;
-    box-shadow: 0 12px 30px #53cbff12;
+    transform: translateY(-7px) scale(1.012);
+    border-color: rgba(217, 252, 167, 0.55);
+    box-shadow:
+      0 22px 46px rgba(0, 0, 0, 0.5),
+      0 0 32px rgba(83, 203, 255, 0.16),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.36),
+      inset 0 -1px 3px rgba(217, 252, 167, 0.26);
   }
   .nova-landing .lp-mission-card:hover img {
-    transform: scale(1.04);
+    transform: scale(1.05);
+  }
+  .nova-landing .lp-mission-card:hover .lp-arrow-circle {
+    border-color: rgba(217, 252, 167, 0.65);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.4),
+      0 0 16px rgba(217, 252, 167, 0.25);
   }
   .nova-landing .lp-mission-card:hover .lp-arrow-circle svg {
     transform: translateX(3px);
   }
 }
+
 @keyframes lp-nav-in {
   from {
     opacity: 0;
@@ -867,20 +1284,40 @@
     opacity: 0.9;
   }
 }
-@keyframes lp-orbit {
-  to {
-    stroke-dashoffset: -1785;
+@keyframes lp-liquid-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
   }
 }
-@keyframes lp-planet-spin {
-  to {
-    transform: rotate(360deg);
+@keyframes lp-liquid-wave {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
   }
 }
+@keyframes lp-mars-horizontal-spin {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+@keyframes lp-moon-3d-orbit {
+  0% {
+    transform: rotateZ(-14deg) rotateX(72deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(-14deg) rotateX(72deg) rotateZ(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .nova-landing .lp-planet img {
-    animation: lp-planet-spin 90s linear infinite;
-  }
   .nova-landing .lp-reveal-pending {
     opacity: 0;
     transform: translateY(20px);
@@ -923,6 +1360,7 @@
   }
   .nova-landing .lp-about {
     gap: 25px;
+    padding: 36px;
   }
 }
 @media (max-width: 1099px) {
@@ -949,11 +1387,11 @@
   .nova-landing .lp-hero {
     min-height: 740px;
   }
-  .nova-landing .lp-planet {
-    width: min(62vw, 600px);
-    right: 2%;
-    top: 130px;
-    opacity: 0.7;
+  .nova-landing .lp-mars-3d-stage {
+    width: min(68vw, 660px);
+    right: -2%;
+    top: 100px;
+    opacity: 0.78;
   }
   .nova-landing .lp-cosmos::after {
     background:
@@ -1038,21 +1476,11 @@
   .nova-landing .lp-hero-note svg {
     flex-shrink: 0;
   }
-  .nova-landing .lp-planet {
-    width: min(86vw, 480px);
-    right: 4%;
-    top: 250px;
-    opacity: 0.5;
-  }
-  .nova-landing .lp-small-world {
-    right: 12%;
-    top: 17%;
-    width: 32px;
-    height: 32px;
-  }
-  .nova-landing .lp-orbits {
-    width: 130%;
-    right: -55%;
+  .nova-landing .lp-mars-3d-stage {
+    width: min(92vw, 520px);
+    right: -4%;
+    top: 220px;
+    opacity: 0.56;
   }
   .nova-landing .lp-hero-bottom {
     flex-direction: column;
@@ -1121,6 +1549,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+    padding: 28px 24px;
   }
   .nova-landing .lp-about > .lp-button {
     margin-left: 0;
