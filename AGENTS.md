@@ -173,6 +173,16 @@ the trusted catalog migration `20261115134651` is prepared locally, not hosted.
 See `src/missions/ingenuity/README.md` for validation and deployment limits.
 No home page, auth, routing, reward logic or other chapter source was changed.
 
+The live AI companion and Mission Commander platform is now implemented on
+`feature/nova-ai-live`. It integrates real-time Gemini 3.5 Flash chat inference,
+streaming SSE, multi-key rotation across configured `GEMINI_API_KEY_*` slots,
+Gemini 3.8 Flash TTS for voice synthesis, Web Audio analyser real-time RMS
+amplitude waveform, child-safety filtering (ages 10-17), prompt injection defense,
+grounded NASA scientific context across the five target spacecraft, and AI surfaces
+in Mission Control, Landing, Auth, Profile, Dossiers, Journal, and Achievements.
+Zero credentials or keys are exposed to the browser or client bundle. See
+`docs/AI_PLATFORM_LIVE.md` for full architecture, safety, and validation records.
+
 The inner-page observatory redesign adds a locally served NASA/JAXA night-sky
 photograph, decorative animated stars, glass panels, refreshed page heroes,
 mission imagery on achievement cards, consistent actions and a rebuilt footer.
