@@ -1,0 +1,50 @@
+[
+  {
+    "file": "last-seismometer.jpg",
+    "pia": "PIA25680",
+    "url": "https://images-assets.nasa.gov/image/PIA25680/PIA25680~orig.jpg",
+    "source": "https://science.nasa.gov/resource/one-of-insights-last-images/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "December 11, 2022, sol 1436. Seismometer on the surface. File is the NASA images library original, about 105 KB."
+  },
+  {
+    "file": "first-selfie.jpg",
+    "pia": "PIA22876",
+    "url": "https://images-assets.nasa.gov/image/PIA22876/PIA22876~large.jpg",
+    "source": "https://science.nasa.gov/resource/insights-first-selfie/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "December 6, 2018, sol 10. Large rendition, about 202 KB."
+  },
+  {
+    "file": "seis-on-mars.jpg",
+    "pia": "PIA22956",
+    "url": "https://images-assets.nasa.gov/image/PIA22956/PIA22956~orig.jpg",
+    "source": "https://science.nasa.gov/resource/seis-deployed-on-mars/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "December 19, 2018. Arm placing the copper-colored seismometer. Original JPEG, about 184 KB."
+  },
+  {
+    "file": "panel-dust.jpg",
+    "pia": "PIA25284",
+    "url": "https://images-assets.nasa.gov/image/PIA25284/PIA25284~large.jpg",
+    "source": "https://science.nasa.gov/resource/insights-power-generation-after-landing-and-spring-2022/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "Chart uses the December 2018 selfie and the March–April 2019 selfie. The 500 watt-hour bar is the spring 2022 measurement, not a reading from the 2019 photograph."
+  },
+  {
+    "file": "interior-layers.jpg",
+    "pia": "PIA25282",
+    "url": "https://images-assets.nasa.gov/image/PIA25282/PIA25282~large.jpg",
+    "source": "https://science.nasa.gov/resource/how-insight-studies-mars-inner-layers/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "Illustrated cutaway. Large rendition, about 231 KB. The multi-megabyte original was not downloaded."
+  },
+  {
+    "file": "final-selfie.jpg",
+    "pia": "PIA25287",
+    "url": "https://images-assets.nasa.gov/image/PIA25287/PIA25287~large.jpg",
+    "source": "https://science.nasa.gov/resource/insights-final-selfie/",
+    "credit": "NASA/JPL-Caltech",
+    "note": "April 24, 2022, sol 1211. Large rendition, about 141 KB."
+  }
+]
