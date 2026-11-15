@@ -33,13 +33,14 @@ export function PageShell({
   }, [title])
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8 animate-page-rise">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              {eyebrow}
-            </p>
+            <div className="eyebrow-label mb-2">
+              <span className="eyebrow-dot" />
+              <span>{eyebrow}</span>
+            </div>
           ) : null}
           <PageHeader title={title} description={description} />
         </div>
@@ -49,11 +50,11 @@ export function PageShell({
       </header>
 
       {isLoading ? (
-        <div className="py-8">
+        <div className="py-16">
           <LoadingState label={loadingMessage} />
         </div>
       ) : error ? (
-        <div className="py-8">
+        <div className="py-16">
           <ErrorState
             title="Telemetry Error"
             message={error.message}

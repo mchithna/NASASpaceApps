@@ -9,10 +9,12 @@ type CardProps = HTMLAttributes<HTMLElement> & {
 }
 
 const variantClass: Record<CardVariant, string> = {
-  standard: 'border border-border bg-surface shadow-surface',
-  elevated: 'border border-border bg-elevated shadow-elevated',
+  standard:
+    'border border-white/[0.08] bg-white/[0.04] backdrop-blur-md shadow-surface transition-all duration-300 hover:border-[#d4ff9a]/30 hover:shadow-[0_16px_36px_rgba(0,0,0,0.4),0_0_20px_rgba(212,255,154,0.08)]',
+  elevated:
+    'border border-white/[0.12] bg-white/[0.06] backdrop-blur-lg shadow-elevated transition-all duration-300 hover:border-[#d4ff9a]/40 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(0,0,0,0.45),0_0_24px_rgba(212,255,154,0.12)]',
   interactive:
-    'border border-border bg-surface shadow-surface motion-safe:transition-colors motion-safe:duration-150 hover:border-science',
+    'border border-white/[0.08] bg-white/[0.04] backdrop-blur-md shadow-surface transition-all duration-300 hover:border-[#d4ff9a]/50 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(0,0,0,0.45),0_0_24px_rgba(212,255,154,0.15)] cursor-pointer',
 }
 
 export function Card({
@@ -24,7 +26,7 @@ export function Card({
   return (
     <article
       className={cn(
-        'overflow-hidden rounded-surface',
+        'overflow-hidden rounded-2xl',
         variantClass[variant],
         className,
       )}
@@ -43,14 +45,14 @@ type CardHeaderProps = {
 
 export function CardHeader({ title, description, children }: CardHeaderProps) {
   return (
-    <div className="flex flex-col gap-1 border-b border-border px-5 py-4">
+    <div className="flex flex-col gap-1 border-b border-white/[0.08] px-6 py-4">
       {title ? (
         <p className="font-heading text-lg font-semibold text-foreground">
           {title}
         </p>
       ) : null}
       {description ? (
-        <p className="max-w-[65ch] text-sm text-secondary">{description}</p>
+        <p className="max-w-[65ch] text-sm text-[#9aa7bd]">{description}</p>
       ) : null}
       {children}
     </div>
@@ -63,7 +65,7 @@ type CardBodyProps = {
 }
 
 export function CardBody({ children, className }: CardBodyProps) {
-  return <div className={cn('px-5 py-4', className)}>{children}</div>
+  return <div className={cn('px-6 py-5', className)}>{children}</div>
 }
 
 type CardFooterProps = {
@@ -72,7 +74,7 @@ type CardFooterProps = {
 
 export function CardFooter({ children }: CardFooterProps) {
   return (
-    <div className="flex flex-wrap gap-2 border-t border-border px-5 py-4">
+    <div className="flex flex-wrap gap-2 border-t border-white/[0.08] px-6 py-4">
       {children}
     </div>
   )

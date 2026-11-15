@@ -392,6 +392,12 @@ export function AuthPage() {
                 </p>
                 <Link to="/onboarding">Go to Explorer Setup →</Link>
               </details>
+
+              {isLive ? (
+                <div className="mt-3 p-3.5 rounded-xl border border-amber-400/30 bg-amber-400/10 text-xs text-[#b8c8dd]">
+                  <strong className="font-semibold text-white">Guest Recovery Limitation:</strong> Anonymous guest sessions are tied to this browser only and cannot be recovered if browser data is cleared or on other devices.
+                </div>
+              ) : null}
             </section>
 
             {!isLive ? (

@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { ArrowRight, RotateCcw, Play } from 'lucide-react'
+import { ArrowRight, RotateCcw, Play, ArrowUpRight } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
 import { Card } from '@/components/ui/Card.tsx'
 import type { MissionProgress } from '@/contracts/progress.ts'
@@ -26,7 +26,7 @@ export function MissionDashboardCard({
           badgeVariant: 'success' as const,
           badgeLabel: 'Completed',
           actionClass:
-            'bg-surface border border-border text-foreground hover:bg-elevated hover:border-science',
+            'bg-white/[0.08] text-white border border-white/15 hover:border-[#d4ff9a] hover:text-[#d4ff9a]',
         }
       case 'in_progress':
         return {
@@ -35,7 +35,8 @@ export function MissionDashboardCard({
           icon: ArrowRight,
           badgeVariant: 'science' as const,
           badgeLabel: 'In Progress',
-          actionClass: 'bg-accent text-on-bright hover:brightness-110',
+          actionClass:
+            'bg-[#d4ff9a] text-[#050a14] font-semibold shadow-[0_0_16px_rgba(212,255,154,0.35)] hover:bg-[#e4ffb8]',
         }
       case 'not_started':
       default:
@@ -46,7 +47,7 @@ export function MissionDashboardCard({
           badgeVariant: 'neutral' as const,
           badgeLabel: 'Not Started',
           actionClass:
-            'bg-elevated border border-border text-foreground hover:bg-surface hover:border-science',
+            'bg-white/[0.08] text-white border border-white/15 hover:border-[#d4ff9a] hover:text-[#d4ff9a]',
         }
     }
   }
@@ -57,19 +58,23 @@ export function MissionDashboardCard({
   return (
     <Card
       variant="interactive"
-      className="flex flex-col justify-between overflow-hidden"
+      className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-md transition-all duration-300 hover:border-[#d4ff9a]/40 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(0,0,0,0.4),0_0_20px_rgba(212,255,154,0.12)]"
     >
       <div>
-        {/* Cover Preview Thumbnail */}
-        <div className="relative aspect-video w-full overflow-hidden bg-background">
+        {/* Cover Preview Thumbnail with Hover Zoom */}
+        <div className="relative aspect-video w-full overflow-hidden bg-[#050a14]">
           <img
             src={mission.coverImage}
             alt={`Cover illustration representing the ${mission.displayName} mission`}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-108"
             loading="lazy"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1421] via-transparent to-transparent opacity-60" />
+
           <div className="absolute top-3 left-3">
-            <Badge variant="neutral">{mission.destination}</Badge>
+            <span className="text-[11px] font-medium text-white/90 bg-[#0b1421]/80 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/15">
+              {mission.destination}
+            </span>
           </div>
           <div className="absolute top-3 right-3">
             <Badge variant={action.badgeVariant}>{action.badgeLabel}</Badge>
@@ -77,27 +82,27 @@ export function MissionDashboardCard({
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-2.5 p-5">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-reward">
+        <div className="flex flex-col gap-2.5 p-6">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#d4ff9a]">
               {mission.chapterTitle}
             </span>
-            <h3 className="font-heading text-xl font-bold text-foreground">
+            <h3 className="font-heading text-xl font-bold text-white group-hover:text-[#d4ff9a] transition-colors">
               <Link
                 to={`/missions/${mission.id}`}
-                className="hover:text-science focus-visible:outline-focus"
+                className="focus-visible:outline-focus"
               >
                 {mission.displayName}
               </Link>
             </h3>
           </div>
 
-          <p className="line-clamp-3 text-xs leading-relaxed text-secondary">
+          <p className="line-clamp-3 text-xs leading-relaxed text-[#9aa7bd]">
             {mission.description}
           </p>
 
           {/* Telemetry Checkpoint Note */}
-          <div className="mt-1 text-xs text-muted">
+          <div className="mt-1 text-xs text-[#8c9bb3]">
             {status === 'completed' ? (
               <span className="text-success font-medium">
                 All milestones verified · 100 XP awarded
@@ -117,21 +122,22 @@ export function MissionDashboardCard({
       </div>
 
       {/* Footer Actions */}
-      <div className="flex items-center justify-between border-t border-border bg-surface/50 px-5 py-3 text-xs">
+      <div className="flex items-center justify-between border-t border-white/[0.08] bg-white/[0.02] px-6 py-3.5 text-xs">
         <Link
           to={`/missions/${mission.id}`}
-          className="text-secondary hover:text-foreground hover:underline focus-visible:outline-focus"
+          className="inline-flex items-center gap-1 text-[#9aa7bd] hover:text-white transition-colors"
         >
-          Mission Files
+          <span>Mission Dossier</span>
+          <ArrowUpRight size={13} aria-hidden="true" />
         </Link>
 
         <Link
           to={action.to}
-          className={`inline-flex items-center gap-1.5 rounded-control px-3 py-1.5 font-medium transition-all focus-visible:outline-2 focus-visible:outline-focus ${action.actionClass}`}
+          className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-medium transition-all ${action.actionClass}`}
           aria-label={`${action.label} for ${mission.displayName}`}
         >
           <span>{action.label}</span>
-          <ActionIcon className="size-3.5" aria-hidden="true" />
+          <ActionIcon className="size-3.5 shrink-0" aria-hidden="true" />
         </Link>
       </div>
     </Card>
