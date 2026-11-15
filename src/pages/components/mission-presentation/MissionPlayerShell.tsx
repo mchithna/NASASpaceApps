@@ -162,8 +162,9 @@ export function MissionPlayerShell({
             </p>
             <p className={styles.plannedExplicitNote}>
               Exploration telemetry notice: Factual educational activities and
-              interactive story scenes for {mission.displayName} are currently in development.
-              No XP, rank advancements, or Discovery Journal entries are granted by this preview.
+              interactive story scenes for {mission.displayName} remain unimplemented
+              in this repository version. No mission progress, XP rewards, rank advancements,
+              or Discovery Journal entries are granted or marked complete by this preview.
             </p>
           </div>
         </article>
@@ -190,23 +191,25 @@ export function MissionPlayerShell({
         </div>
       ) : null}
 
-      {/* Ready State: Live interactive mission chapter player */}
+      {/* Ready State: Live interactive mission chapter player with decorative framing */}
       {load.status === 'ready' ? (
-        <div className="flex flex-col gap-4">
+        <div className={styles.engineFrame}>
           <p className={styles.playerServiceNotice}>
             {!isLive
               ? 'Development mock visit. Progress is not saved to a real account.'
               : 'Mission progress uses your player services. Guest progress is saved in this browser tab.'}
           </p>
 
-          <MissionPlayer
-            key={`${load.identity}:${attempt}`}
-            module={load.chapter.module}
-            activities={load.chapter.activities}
-            runtime={load.runtime}
-            progress={load.progress}
-            onExit={onExit}
-          />
+          <div className={styles.engineContainer}>
+            <MissionPlayer
+              key={`${load.identity}:${attempt}`}
+              module={load.chapter.module}
+              activities={load.chapter.activities}
+              runtime={load.runtime}
+              progress={load.progress}
+              onExit={onExit}
+            />
+          </div>
         </div>
       ) : null}
 

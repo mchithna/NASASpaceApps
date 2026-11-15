@@ -591,6 +591,52 @@
   color: var(--color-secondary, #b8c8dd);
 }
 
+.engineFrame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.engineContainer {
+  position: relative;
+  border-radius: var(--radius-surface, 1rem);
+  border: 1px solid rgba(83, 203, 255, 0.25);
+  box-shadow: 0 0 32px rgba(83, 203, 255, 0.08);
+  overflow: hidden;
+  background: var(--color-landing-surface, #0b1421);
+}
+
+/* Subtle restrained ambient glow decoration around the engine frame */
+.engineContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-science, #53cbff) 50%,
+    transparent 100%
+  );
+  opacity: 0.8;
+  animation: engineBeaconPulse 6s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes engineBeaconPulse {
+  0% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0.85;
+  }
+}
+
 .buttonLink {
   display: inline-flex;
   align-items: center;
@@ -631,5 +677,9 @@
   }
   .secondaryLink {
     transition: none;
+  }
+  .engineContainer::before {
+    animation: none;
+    opacity: 0.6;
   }
 }
