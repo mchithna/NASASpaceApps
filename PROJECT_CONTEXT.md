@@ -25,6 +25,13 @@ imagery. The inner-page footer and tablet navigation are refreshed. Home page
 source, styles, assets and footer are unchanged. No services, rewards, persistence
 or mission content changed. See `docs/OBSERVATORY_REDESIGN.md` for validation.
 
+**Nova companion:** a shared visible launcher now opens local source guide tools:
+five mission briefings, simple explanations, glossary and app help. Answers are
+reviewed fixed summaries with NASA links. Generative chat, text streaming, Live
+voice and capabilities 6–20 are not implemented. Eligible provider access for the
+10–17 audience remains unresolved. Browser Gemini key access was removed. See
+`docs/AI_INTEGRATION.md` for scope and actual validation.
+
 **Opportunity chapter:** seven sourced scenes now use the existing package loader,
 player and services. Activities cover rover equipment, ancient-water clues,
 Eagle/Endurance/Victoria/Endeavour exploration, mineral evidence, airborne dust
