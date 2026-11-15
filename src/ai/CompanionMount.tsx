@@ -3,6 +3,7 @@ import { router } from '@/app/router.tsx'
 import { useNovaServices } from '@/pages/context/useNovaServices.ts'
 import { isMissionId } from '@/missions/registry.ts'
 import { AiCompanion } from './AiCompanion.tsx'
+import { NovaAiProvider } from './context/AiContext.tsx'
 
 const subscribeToRoute = (notify: () => void) => router.subscribe(notify)
 const getRoute = () => router.state.location.pathname
@@ -21,9 +22,11 @@ export function CompanionMount() {
   const missionId = candidate && isMissionId(candidate) ? candidate : undefined
   // Remount clears input/history on identity and route transitions, including logout.
   return (
-    <AiCompanion
-      key={`${route}:${identityVersion}`}
-      context={{ route, missionId }}
-    />
+    <NovaAiProvider route={route} missionId={missionId}>
+      <AiCompanion
+        key={`${route}:${identityVersion}`}
+        context={{ route, missionId }}
+      />
+    </NovaAiProvider>
   )
 }
