@@ -17,6 +17,17 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Nova AI startup correction:** `develop` retains the AI features. One
+`NovaAiProvider` now wraps the router and companion. Page prompts open the same
+chat and show its answers and source links. Route and identity changes clear the
+conversation and stop active work. Vite loads private AI settings only into its
+development server; no key is added to browser configuration. Gemini 3.5 Flash
+Lite is the first choice after a successful live generation check; Flash remains
+the fallback. Requests have deadlines and unavailable inference uses a visibly
+labeled source-guide answer. Streaming reuses one provider result. Production
+browser coverage includes eight routes, page-to-chat prompts and outage recovery.
+Microphone/voice acceptance and hosted deployment are not claimed by this fix.
+
 **Inner-page observatory redesign:** the non-home application layouts now show a
 credited NASA/JAXA night-sky photograph with decorative star animation. Scoped
 glass styling covers the dashboard, setup, auth, profile, journal, achievements,
@@ -25,7 +36,7 @@ imagery. The inner-page footer and tablet navigation are refreshed. Home page
 source, styles, assets and footer are unchanged. No services, rewards, persistence
 or mission content changed. See `docs/OBSERVATORY_REDESIGN.md` for validation.
 
-**Nova companion:** a shared visible launcher now opens local source guide tools:
+**Earlier Nova companion baseline:** a shared visible launcher opened local source guide tools:
 five mission briefings, simple explanations, glossary and app help. Answers are
 reviewed fixed summaries with NASA links. Generative chat, text streaming, Live
 voice and capabilities 6–20 are not implemented. Eligible provider access for the

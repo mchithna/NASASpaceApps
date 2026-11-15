@@ -17,6 +17,7 @@ import styles from './AuthPage.module.css'
 import { type AvatarId } from '@/contracts/explorer.ts'
 import { StatusBanner } from '@/pages/components/StatusBanner.tsx'
 import { useNovaServices } from '@/pages/context/index.ts'
+import { AuthAiHelper } from '@/ai/surfaces/AuthAiHelper.tsx'
 
 const demoCredentials = import.meta.env.DEV
   ? (await import('@/mocks/fixtures.ts')).mockRegisteredCredentials
@@ -398,6 +399,8 @@ export function AuthPage() {
                   <strong className="font-semibold text-white">Guest Recovery Limitation:</strong> Anonymous guest sessions are tied to this browser only and cannot be recovered if browser data is cleared or on other devices.
                 </div>
               ) : null}
+
+              <AuthAiHelper />
             </section>
 
             {!isLive ? (

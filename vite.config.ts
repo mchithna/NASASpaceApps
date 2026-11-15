@@ -1,9 +1,45 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vitest/config'
+import { defineConfig, type Plugin } from 'vite'
 import { loadEnv } from 'vite'
 import { assertPublicSupabaseKey } from './src/features/auth/publicKey.ts'
+
+function aiDevServerPlugin(): Plugin {
+  return {
+    name: 'ai-dev-server',
+    configureServer(server) {
+      // Vite exposes VITE_* to the browser, but AI handlers need private env too.
+      if (server.config.mode !== 'test') {
+        const serverEnv = loadEnv(server.config.mode, server.config.root, '')
+        for (const name of [
+          'GEMINI_API_KEY_1',
+          'GEMINI_API_KEY_2',
+          'GEMINI_API_KEY_3',
+          'AI_GATEWAY_API_KEY',
+          'AI_GATEWAY_URL',
+          'NOVA_MODEL',
+        ]) {
+          if (serverEnv[name]) process.env[name] = serverEnv[name]
+        }
+      }
+      server.middlewares.use(async (req, res, next) => {
+        if (req.url && req.url.startsWith('/api/ai')) {
+          try {
+            const { handleAiRequest } = await import('./services/ai/router.ts')
+            await handleAiRequest(req, res)
+          } catch (err) {
+            console.error('AI dev server error:', err)
+            res.statusCode = 500
+            res.end(JSON.stringify({ error: (err as Error).message }))
+          }
+        } else {
+          next()
+        }
+      })
+    },
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
@@ -13,6 +49,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      aiDevServerPlugin(),
       {
         name: 'api-chat-dev-middleware',
         configureServer(server) {
@@ -32,7 +69,10 @@ export default defineConfig(({ mode }) => {
                 const url = `http://${req.headers.host || 'localhost'}/api/chat`
                 const webReq = new Request(url, {
                   method: 'POST',
-                  headers: req.headers as Record<string, string | string[] | undefined> as never,
+                  headers: req.headers as Record<
+                    string,
+                    string | string[] | undefined
+                  > as never,
                   body: raw,
                 })
                 const { default: handler } = await import('./api/chat.ts')
@@ -70,7 +110,11 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       environment: 'jsdom',
-      include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      include: [
+        'src/**/*.test.ts',
+        'src/**/*.test.tsx',
+        'services/**/*.test.ts',
+      ],
       setupFiles: ['./src/tests/setup.ts'],
     },
   }

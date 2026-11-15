@@ -4,10 +4,15 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import App from '@/app/App.tsx'
 import { appRoutes } from '@/app/router.tsx'
+import { NovaAiProvider } from '@/ai/context/AiContext.tsx'
 
 function renderRoute(path: string) {
   const router = createMemoryRouter(appRoutes, { initialEntries: [path] })
-  return render(<RouterProvider router={router} />)
+  return render(
+    <NovaAiProvider route={path}>
+      <RouterProvider router={router} />
+    </NovaAiProvider>,
+  )
 }
 
 describe('application routes', () => {
@@ -66,21 +71,26 @@ describe('application routes', () => {
       throw new Error('Destination text is missing its paragraph.')
     }
     expect(destination).toHaveTextContent('Destination: Mars')
-    expect(
-      screen.getByText('Ready to explore'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Ready to explore')).toBeInTheDocument()
     expect(
       screen.getByRole('img', {
         name: 'Opportunity chapter cover',
       }),
     ).toHaveAttribute('src', '/assets/missions/opportunity/victoria-crater.jpg')
-    expect(screen.getByRole('link', { name: 'Start mission' })).toHaveAttribute('href', '/missions/opportunity/play')
-    expect(screen.queryByText('Mission gameplay is not implemented yet.')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Start mission' })).toHaveAttribute(
+      'href',
+      '/missions/opportunity/play',
+    )
+    expect(
+      screen.queryByText('Mission gameplay is not implemented yet.'),
+    ).not.toBeInTheDocument()
   })
 
   it('keeps the preparation notice for an unbuilt chapter', () => {
     renderRoute('/missions/insight')
-    expect(screen.getByText('Mission gameplay is not implemented yet.')).toBeInTheDocument()
+    expect(
+      screen.getByText('Mission gameplay is not implemented yet.'),
+    ).toBeInTheDocument()
     expect(screen.getByText('Planned Chapter')).toBeInTheDocument()
   })
 
