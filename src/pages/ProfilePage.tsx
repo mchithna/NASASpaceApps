@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { LogOut } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Card } from '@/components/ui/Card.tsx'
-import { ProgressBar } from '@/components/ui/ProgressBar.tsx'
 import { type AvatarId, isAvatarId } from '@/contracts/explorer.ts'
+import { listMissions } from '@/missions/registry.ts'
 import {
   avatarOptions,
   PageShell,
@@ -13,6 +12,11 @@ import {
   ProfileEditForm,
   StatusBanner,
 } from '@/pages/components/index.ts'
+import {
+  ProfileEditRegion,
+  ProfileIdentity,
+  profileLayoutClass,
+} from '@/pages/components/profile/ProfileIdentity.tsx'
 import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
@@ -96,18 +100,19 @@ export function ProfilePage() {
 
   const completedCount =
     progress?.missions.filter((m) => m.status === 'completed').length ?? 0
+  const missionTotal = listMissions().length
 
   return (
     <PageShell
       title="Explorer Profile"
-      description="Manage your academy callsign, flight insignia, and career exploration telemetry."
+      description="Your callsign, rank, and the profile details you can edit."
       eyebrow="Academy Personnel"
       isLoading={isLoading}
       error={error}
       onRetry={() => void refresh()}
       actions={<PersonaSwitcher />}
     >
-      <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full">
+      <div className={profileLayoutClass}>
         {isSignedOut ? (
           <StatusBanner
             variant="warning"
@@ -161,97 +166,43 @@ export function ProfilePage() {
           />
         ) : null}
 
-        {/* Career Telemetry Overview */}
         {profile && rank ? (
-          <Card variant="elevated" className="p-6">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-              <div className="flex items-start gap-4">
-                <div className="flex size-14 shrink-0 items-center justify-center rounded-surface bg-surface border border-science/40 text-science shadow-surface">
-                  <AvatarIcon className="size-7" aria-hidden="true" />
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-science">
-                      Active Callsign
-                    </span>
-                    {isGuest ? (
-                      <Badge variant="warning">Guest</Badge>
-                    ) : (
-                      <Badge variant="neutral">Verified</Badge>
-                    )}
-                  </div>
-                  <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-                    {profile.nickname}
-                  </h2>
-                  <span className="text-xs text-secondary">
-                    Role: {selectedAvatarOption.name} · {selectedAvatarOption.specialty}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 shrink-0">
-                <Badge variant="science">Level {rank.level}</Badge>
-                <Badge variant="reward">{rank.name}</Badge>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-3">
-              <div className="flex flex-col gap-1">
-                <span className="text-xs uppercase tracking-wider text-muted font-semibold">
-                  Total XP
-                </span>
-                <span className="text-2xl font-bold font-heading text-foreground">
-                  {totalXp} XP
-                </span>
-                <span className="text-xs text-secondary">
-                  {rank.xpUntilNextRank !== null
-                    ? `${rank.xpUntilNextRank} XP to promotion`
-                    : 'Maximum rank reached'}
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <span className="text-xs uppercase tracking-wider text-muted font-semibold">
-                  Missions Concluded
-                </span>
-                <span className="text-2xl font-bold font-heading text-foreground">
-                  {completedCount} / 5
-                </span>
-                <span className="text-xs text-secondary">
-                  Spacecraft investigated
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <span className="text-xs uppercase tracking-wider text-muted font-semibold">
-                  Rank Progression
-                </span>
-                <ProgressBar
-                  value={currentLevelProgress}
-                  max={bracketSpan}
-                  valueLabel={progressLabel}
-                />
-              </div>
-            </div>
-          </Card>
+          <ProfileIdentity
+            nickname={profile.nickname}
+            role={`Role: ${selectedAvatarOption.name} · ${selectedAvatarOption.specialty}`}
+            avatar={AvatarIcon}
+            isGuest={isGuest}
+            level={rank.level}
+            rankName={rank.name}
+            totalXp={totalXp}
+            xpDetail={
+              rank.xpUntilNextRank !== null
+                ? `${rank.xpUntilNextRank} XP to promotion`
+                : 'Maximum rank reached'
+            }
+            completedLabel={`${completedCount} / ${missionTotal}`}
+            progressValue={currentLevelProgress}
+            progressMax={bracketSpan}
+            progressLabel={progressLabel}
+          />
         ) : null}
 
-        {/* Profile Settings Form */}
         {profile ? (
-          <ProfileEditForm
-            key={`${profile.nickname}-${profile.avatarId}`}
-            initialNickname={profile.nickname}
-            initialAvatarId={currentAvatarId}
-            onSave={handleSaveProfile}
-            isSaving={isSaving}
-            errorMessage={errorMessage}
-            successMessage={successMessage}
-            onClearStatus={() => {
-              setErrorMessage(null)
-              setSuccessMessage(null)
-            }}
-          />
+          <ProfileEditRegion>
+            <ProfileEditForm
+              key={`${profile.nickname}-${profile.avatarId}`}
+              initialNickname={profile.nickname}
+              initialAvatarId={currentAvatarId}
+              onSave={handleSaveProfile}
+              isSaving={isSaving}
+              errorMessage={errorMessage}
+              successMessage={successMessage}
+              onClearStatus={() => {
+                setErrorMessage(null)
+                setSuccessMessage(null)
+              }}
+            />
+          </ProfileEditRegion>
         ) : null}
 
         {/* Account & Session Management Card */}

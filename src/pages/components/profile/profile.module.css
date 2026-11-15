@@ -1,0 +1,217 @@
+.layout {
+  display: flex;
+  width: 100%;
+  max-width: 64rem;
+  flex-direction: column;
+  gap: 2rem;
+  margin-inline: auto;
+  color: var(--color-landing-text);
+  font-family: var(--font-sans);
+}
+
+.identity {
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--color-landing-border);
+  border-radius: 1.75rem;
+  background:
+    radial-gradient(circle at 90% 20%, rgb(83 203 255 / 0.12), transparent 28%),
+    var(--color-landing-surface);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.28);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.identityMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.avatar {
+  display: flex;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(83 203 255 / 0.45);
+  border-radius: 1rem;
+  background: var(--color-landing-card);
+  color: var(--color-landing-blue);
+}
+
+.kicker {
+  color: var(--color-landing-blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0.15rem 0 0;
+  color: var(--color-landing-text);
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.role {
+  color: var(--color-landing-muted);
+  font-size: 0.8rem;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-landing-border);
+}
+
+.statLabel {
+  color: var(--color-landing-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  margin-top: 0.2rem;
+  color: var(--color-landing-text);
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
+.statDetail {
+  margin-top: 0.2rem;
+  color: var(--color-landing-muted);
+  font-size: 0.8rem;
+}
+
+.art {
+  position: relative;
+  min-height: 9rem;
+  margin: 0;
+  overflow: hidden;
+}
+
+.planet {
+  position: absolute;
+  top: 10%;
+  right: -12%;
+  width: min(16rem, 80%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 50px rgb(83 203 255 / 0.16);
+  opacity: 0.7;
+}
+
+.planet img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.orbits {
+  position: absolute;
+  top: 0;
+  right: -18%;
+  width: min(20rem, 100%);
+  stroke: rgb(217 252 167 / 0.4);
+  stroke-width: 1;
+}
+
+.credit {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  margin: 0;
+  color: var(--color-landing-muted);
+  font-size: 0.75rem;
+}
+
+.credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.credit a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.edit {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editTitle {
+  margin: 0;
+  color: var(--color-landing-text);
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .identity {
+    grid-template-columns: minmax(0, 1.4fr) minmax(12rem, 0.7fr);
+    align-items: stretch;
+  }
+
+  .art {
+    min-height: 100%;
+  }
+
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  .orbits {
+    transform-origin: 70% 40%;
+    animation: drift 90s linear infinite;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
