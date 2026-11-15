@@ -1,5 +1,11 @@
 # NovaExplorer
 
+Foundation status: **NOT READY / not frozen** after the Phase 4B Step 7 gate review.
+Hosted security, concurrency, real persistence acceptance and final regression gates
+remain open. See [the blocked handover and correction plan](docs/FOUNDATION_HANDOVER.md).
+Chapter handover is deferred; shared code/contracts remain integration-owned and
+require coordinated review.
+
 NovaExplorer is a gamified educational web application for the NASA Space Apps Challenge 2026. It tells standalone stories about five NASA spacecraft that remain on the Moon, on Mars, or on a path through deep space, and about the science those missions made possible.
 
 The audience is school-age space enthusiasts, approximately ages 10–17. The interface direction is **Cinematic Mission Control + Gamified Space Academy**: dark, readable, and scientifically careful, with a light progression layer for profiles, XP, ranks, achievements, and a Discovery Journal.

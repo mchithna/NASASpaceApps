@@ -150,6 +150,12 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Phase 4B Step 7 gate review: **NOT READY; foundation not frozen**. See
+`docs/FOUNDATION_HANDOVER.md` for the prioritized correction plan. Hosted security,
+concurrent rewards, real persistence acceptance and final regression remain open.
+Chapter handover is deferred. Shared code/contracts remain integration-owned and
+require coordinated review; no release tag or chapter branch was created.
+
 Phase 4B Step 6 adds an explicitly isolated development acceptance fixture and
 Playwright viewport/production checks. See `docs/PHASE4B_ACCEPTANCE_REPORT.md` for
 actual results. Live Supabase acceptance remains blocked: the connector exposes no
