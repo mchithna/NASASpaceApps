@@ -1,13 +1,16 @@
 import { Link } from 'react-router'
-import { Badge } from '@/components/ui/Badge.tsx'
 import { listMissions } from '@/missions/registry.ts'
+import { DashboardHero } from '@/pages/components/dashboard/DashboardHero.tsx'
 import {
-  ActiveMissionSpotlight,
-  MissionControlHero,
-  MissionDashboardCard,
+  DashboardMetrics,
+  type DashboardMetric,
+} from '@/pages/components/dashboard/DashboardMetrics.tsx'
+import { MissionSpotlight } from '@/pages/components/dashboard/MissionSpotlight.tsx'
+import { SpacecraftCard } from '@/pages/components/dashboard/SpacecraftCard.tsx'
+import styles from '@/pages/components/dashboard/dashboard.module.css'
+import {
   PageShell,
   PersonaSwitcher,
-  StatCard,
   StatusBanner,
 } from '@/pages/components/index.ts'
 import { useNovaServices } from '@/pages/context/index.ts'
@@ -19,7 +22,6 @@ export function DashboardPage() {
     session,
     profile,
     progress,
-    xpSummary,
     journalEntries,
     isLoading,
     error,
@@ -43,18 +45,49 @@ export function DashboardPage() {
 
   const completedCount = completedMissions.length
   const inProgressCount = inProgressMissionProgress ? 1 : 0
+  const metrics: DashboardMetric[] = [
+    {
+      label: 'Academy Rank',
+      value: profile ? profile.rank.name : '—',
+      detail: profile ? `Level ${profile.rank.level}` : 'Unranked',
+    },
+    {
+      label: 'Accumulated XP',
+      value: profile ? `${profile.totalXp} XP` : '0 XP',
+      detail:
+        profile?.rank.xpUntilNextRank !== null &&
+        profile?.rank.xpUntilNextRank !== undefined
+          ? `${profile.rank.xpUntilNextRank} XP to promotion`
+          : 'Highest rank attained',
+    },
+    {
+      label: 'Missions Completed',
+      value: `${completedCount} / ${missions.length}`,
+      detail:
+        inProgressCount > 0
+          ? '1 mission in progress'
+          : completedCount === missions.length
+            ? 'All five missions finished!'
+            : 'Ready for new launch',
+    },
+    {
+      label: 'Discoveries Logged',
+      value: String(journalEntries.length),
+      detail: 'Historical artifacts examined',
+    },
+  ]
 
   return (
     <PageShell
       title="Mission Control"
-      description="Command headquarters for tracking deep space discoveries, mission telemetry, and academy ranks."
+      description="Your rank, experience, and the spacecraft stories in one place."
       eyebrow="Academy Operations"
       isLoading={isLoading}
       error={error}
       onRetry={() => void refresh()}
       actions={<PersonaSwitcher />}
     >
-      <div className="flex flex-col gap-8">
+      <div className={styles.stage}>
         {/* Signed Out Warning */}
         {isSignedOut ? (
           <StatusBanner
@@ -96,74 +129,35 @@ export function DashboardPage() {
           />
         ) : null}
 
-        {/* Explorer Hero Banner */}
         {profile ? (
-          <MissionControlHero
-            profile={profile}
-            xpSummary={xpSummary}
-            isGuest={isGuest}
+          <DashboardHero
+            nickname={profile.nickname}
+            rankName={profile.rank.name}
+            resumeTo={
+              inProgressMission ? `/missions/${inProgressMission.id}/play` : null
+            }
           />
         ) : null}
 
-        {/* Telemetry Metrics Row */}
         <section aria-labelledby="telemetry-heading" className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h2 id="telemetry-heading" className="text-xl font-heading text-foreground">
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <h2 id="telemetry-heading" className={styles.sectionTitle}>
               Mission Telemetry
             </h2>
-            <span className="text-xs text-muted">
+            <span className={styles.sectionNote}>
               {isLive ? 'Operational telemetry' : 'Live mock services telemetry'}
             </span>
           </div>
-
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatCard
-              label="Academy Rank"
-              value={profile ? profile.rank.name : '—'}
-              detail={profile ? `Level ${profile.rank.level}` : 'Unranked'}
-              badge={
-                profile ? (
-                  <Badge variant="science">Lvl {profile.rank.level}</Badge>
-                ) : undefined
-              }
-            />
-            <StatCard
-              label="Accumulated XP"
-              value={profile ? `${profile.totalXp} XP` : '0 XP'}
-              detail={
-                profile?.rank.xpUntilNextRank !== null && profile?.rank.xpUntilNextRank !== undefined
-                  ? `${profile.rank.xpUntilNextRank} XP to promotion`
-                  : 'Highest rank attained'
-              }
-              badge={<Badge variant="reward">XP</Badge>}
-            />
-            <StatCard
-              label="Missions Completed"
-              value={`${completedCount} / ${missions.length}`}
-              detail={
-                inProgressCount > 0
-                  ? '1 mission in progress'
-                  : completedCount === missions.length
-                    ? 'All five missions finished!'
-                    : 'Ready for new launch'
-              }
-            />
-            <StatCard
-              label="Discoveries Logged"
-              value={journalEntries.length}
-              detail="Historical artifacts examined"
-              badge={<Badge variant="neutral">Journal</Badge>}
-            />
-          </div>
+          <DashboardMetrics metrics={metrics} />
         </section>
 
         {/* Active In-Progress Mission Spotlight */}
         {inProgressMission && inProgressMissionProgress ? (
           <section aria-labelledby="active-mission-heading" className="flex flex-col gap-3">
-            <h2 id="active-mission-heading" className="text-xl font-heading text-foreground">
+            <h2 id="active-mission-heading" className={styles.sectionTitle}>
               Continue Active Mission
             </h2>
-            <ActiveMissionSpotlight
+            <MissionSpotlight
               mission={inProgressMission}
               progress={inProgressMissionProgress}
             />
@@ -171,30 +165,30 @@ export function DashboardPage() {
         ) : null}
 
         {/* Stories & Spacecraft Grid */}
-        <section aria-labelledby="stories-heading" className="flex flex-col gap-4">
+        <section id="stories" aria-labelledby="stories-heading" className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <h2 id="stories-heading" className="text-xl font-heading text-foreground">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <h2 id="stories-heading" className={styles.sectionTitle}>
                 Stories
               </h2>
-              <span className="text-xs text-muted">
+              <span className={styles.sectionNote}>
                 {missions.length} NASA Spacecraft Dossiers
               </span>
             </div>
-            <p className="max-w-[70ch] text-sm text-secondary">
+            <p className={`${styles.sectionNote} max-w-[70ch]`}>
               Select an abandoned NASA spacecraft to investigate its historical
               journey, artifacts, and final transmissions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className={styles.grid}>
             {missions.map((mission) => {
               const missionProgress = progress?.missions.find(
                 (m) => m.missionId === mission.id,
               )
 
               return (
-                <MissionDashboardCard
+                <SpacecraftCard
                   key={mission.id}
                   mission={mission}
                   progress={missionProgress}
