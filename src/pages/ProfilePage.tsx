@@ -2,21 +2,20 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/Button.tsx'
-import { Card } from '@/components/ui/Card.tsx'
 import { type AvatarId, isAvatarId } from '@/contracts/explorer.ts'
 import { listMissions } from '@/missions/registry.ts'
 import {
   avatarOptions,
   PageShell,
   PersonaSwitcher,
-  ProfileEditForm,
   StatusBanner,
 } from '@/pages/components/index.ts'
 import {
   ProfileEditRegion,
   ProfileIdentity,
-  profileLayoutClass,
 } from '@/pages/components/profile/ProfileIdentity.tsx'
+import { ProfileAcademyForm } from '@/pages/components/profile/ProfileAcademyForm.tsx'
+import styles from '@/pages/components/profile/profile.module.css'
 import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
 
@@ -112,7 +111,7 @@ export function ProfilePage() {
       onRetry={() => void refresh()}
       actions={<PersonaSwitcher />}
     >
-      <div className={profileLayoutClass}>
+      <div className={styles.layout}>
         {isSignedOut ? (
           <StatusBanner
             variant="warning"
@@ -189,7 +188,7 @@ export function ProfilePage() {
 
         {profile ? (
           <ProfileEditRegion>
-            <ProfileEditForm
+            <ProfileAcademyForm
               key={`${profile.nickname}-${profile.avatarId}`}
               initialNickname={profile.nickname}
               initialAvatarId={currentAvatarId}
@@ -207,41 +206,34 @@ export function ProfilePage() {
 
         {/* Account & Session Management Card */}
         {session && session.status !== 'signed-out' ? (
-          <Card variant="standard" className="p-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex flex-col gap-1">
-                <h3 className="font-heading text-lg font-semibold text-foreground">
-                  {isGuest ? 'Guest Session Controls' : 'Explorer Account Session'}
-                </h3>
-                <p className="text-xs text-secondary">
-                  {isGuest
-                    ? isAcceptance ? 'Isolated test progress is saved in this browser tab.' : isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
-                    : 'Authenticated with academy credentials. Exploration progress is preserved.'}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                {isGuest ? (
-                  <Link
-                    to="/auth"
-                    className="inline-flex min-h-9 items-center justify-center rounded-control bg-science px-3.5 py-1.5 text-xs font-semibold text-on-bright transition-colors hover:brightness-110 focus-visible:outline-2 focus-visible:outline-focus"
-                  >
-                    Register Account
-                  </Link>
-                ) : null}
-
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={handleSignOut}
-                  loading={isSigningOut}
-                >
-                  <LogOut className="size-3.5 mr-1.5" aria-hidden="true" />
-                  <span>{isGuest ? 'End Guest Session' : 'Sign Out'}</span>
-                </Button>
-              </div>
+          <section className={styles.session} aria-labelledby="session-heading">
+            <div>
+              <h3 id="session-heading" className={styles.sessionTitle}>
+                {isGuest ? 'Guest Session Controls' : 'Explorer Account Session'}
+              </h3>
+              <p className={styles.sessionNote}>
+                {isGuest
+                  ? isAcceptance ? 'Isolated test progress is saved in this browser tab.' : isLive ? 'Guest progress is saved in this browser tab.' : 'Mock progress is kept in memory.'
+                  : 'Authenticated with academy credentials. Exploration progress is preserved.'}
+              </p>
             </div>
-          </Card>
+            <div className={styles.sessionActions}>
+              {isGuest ? (
+                <Link className={styles.register} to="/auth">
+                  Register Account
+                </Link>
+              ) : null}
+              <Button
+                variant="secondary"
+                size="small"
+                onClick={handleSignOut}
+                loading={isSigningOut}
+              >
+                <LogOut className="size-3.5 mr-1.5" aria-hidden="true" />
+                <span>{isGuest ? 'End Guest Session' : 'Sign Out'}</span>
+              </Button>
+            </div>
+          </section>
         ) : null}
       </div>
     </PageShell>

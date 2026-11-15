@@ -5,10 +5,10 @@ import {
   DashboardMetrics,
   type DashboardMetric,
 } from '@/pages/components/dashboard/DashboardMetrics.tsx'
+import { MissionSpotlight } from '@/pages/components/dashboard/MissionSpotlight.tsx'
+import { SpacecraftCard } from '@/pages/components/dashboard/SpacecraftCard.tsx'
 import styles from '@/pages/components/dashboard/dashboard.module.css'
 import {
-  ActiveMissionSpotlight,
-  MissionDashboardCard,
   PageShell,
   PersonaSwitcher,
   StatusBanner,
@@ -157,7 +157,7 @@ export function DashboardPage() {
             <h2 id="active-mission-heading" className="text-xl font-heading text-foreground">
               Continue Active Mission
             </h2>
-            <ActiveMissionSpotlight
+            <MissionSpotlight
               mission={inProgressMission}
               progress={inProgressMissionProgress}
             />
@@ -181,14 +181,14 @@ export function DashboardPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className={styles.grid}>
             {missions.map((mission) => {
               const missionProgress = progress?.missions.find(
                 (m) => m.missionId === mission.id,
               )
 
               return (
-                <MissionDashboardCard
+                <SpacecraftCard
                   key={mission.id}
                   mission={mission}
                   progress={missionProgress}

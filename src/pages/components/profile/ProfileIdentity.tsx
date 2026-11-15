@@ -107,5 +107,3 @@ export function ProfileEditRegion({ children }: { children: ReactNode }) {
     </section>
   )
 }
-
-export const profileLayoutClass = styles.layout
