@@ -1,7 +1,9 @@
 import { Calendar, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge.tsx'
 import { lookupMission } from '@/missions/registry.ts'
+import type { MissionId } from '@/missions/types.ts'
 import type { DiscoveryJournalEntry } from '@/contracts/rewards.ts'
+import { landingMedia } from '@/pages/components/landing/landingMedia.ts'
 import styles from './journal.module.css'
 
 interface JournalEntryCardProps {
@@ -13,18 +15,26 @@ export function JournalEntryCard({ entry, formatDate }: JournalEntryCardProps) {
   const missionLookup = lookupMission(entry.missionId)
   const mission = missionLookup.status === 'found' ? missionLookup.mission : null
   const isPlaceholder = entry.contentStatus === 'placeholder'
+  const media = landingMedia[entry.missionId as MissionId]
+  const missionName = mission?.displayName ?? entry.missionId
 
   return (
     <article
       className={styles.entryCard}
       aria-labelledby={`entry-title-${entry.discoveryId}`}
     >
+      {/* Technical Dossier Top Docket */}
+      <div className={styles.dossierDocket} aria-hidden="true">
+        <span>ARCHIVAL TELEMETRY DOSSIER</span>
+        <span className={styles.dossierCode}>
+          REF-ID // {entry.discoveryId.toUpperCase()}
+        </span>
+      </div>
+
       {/* Top Metadata & Categorization */}
       <div className={styles.entryMetaTop}>
         <div className={styles.badgeGroup}>
-          <Badge variant="science">
-            {mission?.displayName ?? entry.missionId}
-          </Badge>
+          <Badge variant="science">{missionName}</Badge>
           {mission?.destination ? (
             <Badge variant="neutral">{mission.destination}</Badge>
           ) : null}
@@ -48,6 +58,33 @@ export function JournalEntryCard({ entry, formatDate }: JournalEntryCardProps) {
           </time>
         </div>
       </div>
+
+      {/* Contextual Spacecraft Reference Media */}
+      {media ? (
+        <div className={styles.contextMediaBox}>
+          <div className={styles.contextThumbnail}>
+            <img
+              src={`/assets/common/landing/${entry.missionId}-480.webp`}
+              alt={media.alt}
+              loading="lazy"
+              width="64"
+              height="64"
+            />
+          </div>
+          <div className={styles.contextDetails}>
+            <span className={styles.contextTag}>
+              Contextual Spacecraft Reference
+            </span>
+            <span className={styles.contextNotice}>
+              {media.kind} reference for {missionName} (illustrative spacecraft
+              context; not an observation photograph).
+            </span>
+            <span className={styles.contextCredit}>
+              Credit: {media.credit}
+            </span>
+          </div>
+        </div>
+      ) : null}
 
       {/* Main Editorial Finding */}
       <div className={styles.entryMain}>

@@ -42,16 +42,19 @@ export function AchievementCard({ badge }: AchievementCardProps) {
         </div>
 
         <div className={styles.cardMain}>
+          {/* Academy Medallion with CSS concentric rings */}
           <div
-            className={`${styles.badgeIconBox} ${
-              badge.isUnlocked ? styles.badgeIconBoxUnlocked : ''
+            className={`${styles.medallionWrapper} ${
+              badge.isUnlocked ? styles.medallionUnlocked : ''
             }`}
           >
-            {badge.isUnlocked ? (
-              <CheckCircle2 className="size-6" aria-hidden="true" />
-            ) : (
-              <Lock className="size-5" aria-hidden="true" />
-            )}
+            <div className={styles.medallionRingInner}>
+              {badge.isUnlocked ? (
+                <CheckCircle2 className="size-6" aria-hidden="true" />
+              ) : (
+                <Lock className="size-5" aria-hidden="true" />
+              )}
+            </div>
           </div>
 
           <div className={styles.cardHeadingGroup}>

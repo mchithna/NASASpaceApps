@@ -24,12 +24,15 @@ export function GuardianMetaBadge({
       >
         <div className={styles.supremeLayout}>
           <div className={styles.supremeContentGroup}>
+            {/* Grand Ceremonial Medallion Emblem */}
             <div
-              className={`${styles.supremeEmblem} ${
-                isGuardianUnlocked ? styles.supremeEmblemUnlocked : ''
+              className={`${styles.supremeMedallionWrapper} ${
+                isGuardianUnlocked ? styles.supremeMedallionUnlocked : ''
               }`}
             >
-              <Shield className="size-8" aria-hidden="true" />
+              <div className={styles.supremeMedallionInner}>
+                <Shield className="size-8" aria-hidden="true" />
+              </div>
             </div>
 
             <div className={styles.supremeDetails}>
