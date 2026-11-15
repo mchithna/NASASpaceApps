@@ -53,7 +53,9 @@ describe('mission registry', () => {
       expect(mission.destination.length).toBeGreaterThan(0)
       expect(mission.category.length).toBeGreaterThan(0)
       expect(mission.status).toBe(
-        mission.id === 'surveyor-3' || mission.id === 'opportunity'
+        mission.id === 'surveyor-3' ||
+          mission.id === 'opportunity' ||
+          mission.id === 'insight'
           ? 'available'
           : 'planned',
       )
