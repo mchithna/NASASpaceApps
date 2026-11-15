@@ -150,6 +150,38 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Hosted database setup is now applied to `ptjvlycaiigigdrcybet`; connector access
+works. See `docs/SUPABASE_DATABASE_SETUP.md` for migration version mapping, live
+SQL checks, remaining Auth/advisor warnings and test limitations. This supersedes
+earlier empty-connector/deployment statements for this project only. It is not a
+foundation freeze; isolated live JWT/API/concurrency/browser acceptance is still open.
+
+Phase 4B Step 7 gate review: **NOT READY; foundation not frozen**. See
+`docs/FOUNDATION_HANDOVER.md` for the prioritized correction plan. Hosted security,
+concurrent rewards, real persistence acceptance and final regression remain open.
+Chapter handover is deferred. Shared code/contracts remain integration-owned and
+require coordinated review; no release tag or chapter branch was created.
+
+Phase 4B Step 6 adds an explicitly isolated development acceptance fixture and
+Playwright viewport/production checks. See `docs/PHASE4B_ACCEPTANCE_REPORT.md` for
+actual results. Live Supabase acceptance remains blocked: the connector exposes no
+organizations/projects, including after the NOVA nickname was supplied. Do not freeze
+contracts or tag a release until the report's live gates are closed.
+
+Phase 4B Step 5 security hardening is prepared. Read `docs/PHASE4B_SECURITY_AUDIT.md`
+for evidence, fixes, and open gates. The security migration is local only; hosted
+JWT/RLS verification, independent-connection contention, and browser acceptance
+remain unverified. Do not mark the deployment security gate complete from source alone.
+
+Phase 4B Step 4 integration code is prepared. The mission player consumes the provider's
+real progress/reward boundary through a validated adapter; package-local chapter exports
+are loaded without router changes. The five factual chapters remain unbuilt. The new
+trusted checkpoint/reward migration is local, not hosted. Step 4 is not yet accepted:
+hosted verification and browser acceptance remain open. Real guest progress now uses
+a versioned tab-local cache; mock training remains isolated and resets on refresh.
+See `docs/PHASE4B_STEP4.md` for the authoritative integration handover. The older phase
+descriptions below record the original Phase 1.5 baseline and are historical.
+
 Documentation is in place: `README.md`, `PROJECT_CONTEXT.md`, `docs/PARALLEL_DEVELOPMENT.md`, and this file.
 
 Phase 1 is complete. The repository root is a Vite + React + TypeScript application with the package name `novaexplorer`. Tailwind CSS v4, React Router, ESLint, Prettier, Vitest, and React Testing Library are configured. Routing is centralized in `src/app/router.tsx`. Placeholder pages use `PublicLayout`, `AppLayout`, and `MissionLayout`. Design tokens live in `src/styles/index.css`. Shared components live in `src/components/ui/`. The component preview at `/dev/components` is registered only in development. Mission metadata lives in `src/missions/<id>/mission.ts`. `src/missions/registry.ts` imports the five packages.

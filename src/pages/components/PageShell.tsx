@@ -1,0 +1,74 @@
+import { useEffect, type ReactNode } from 'react'
+import { PageHeader } from '@/components/ui/PageHeader.tsx'
+import { LoadingState } from '@/components/ui/LoadingState.tsx'
+import { ErrorState } from '@/components/ui/ErrorState.tsx'
+import { Button } from '@/components/ui/Button.tsx'
+
+export type PageShellProps = {
+  title: string
+  description?: string
+  eyebrow?: string
+  actions?: ReactNode
+  isLoading?: boolean
+  loadingMessage?: string
+  error?: { message: string } | null
+  onRetry?: () => void
+  children?: ReactNode
+}
+
+export function PageShell({
+  title,
+  description,
+  eyebrow,
+  actions,
+  isLoading = false,
+  loadingMessage = 'Loading telemetry...',
+  error = null,
+  onRetry,
+  children,
+}: PageShellProps) {
+  useEffect(() => {
+    document.title =
+      title === 'NovaExplorer' ? title : `${title} · NovaExplorer`
+  }, [title])
+
+  return (
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          {eyebrow ? (
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+              {eyebrow}
+            </p>
+          ) : null}
+          <PageHeader title={title} description={description} />
+        </div>
+        {actions ? (
+          <div className="flex shrink-0 items-center gap-2 pt-1">{actions}</div>
+        ) : null}
+      </header>
+
+      {isLoading ? (
+        <div className="py-8">
+          <LoadingState label={loadingMessage} />
+        </div>
+      ) : error ? (
+        <div className="py-8">
+          <ErrorState
+            title="Telemetry Error"
+            message={error.message}
+            action={
+              onRetry ? (
+                <Button variant="secondary" size="small" onClick={onRetry}>
+                  Retry
+                </Button>
+              ) : undefined
+            }
+          />
+        </div>
+      ) : (
+        children
+      )}
+    </div>
+  )
+}

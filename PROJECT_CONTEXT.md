@@ -17,6 +17,37 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Hosted database setup:** NOVA connector access now works for
+`ptjvlycaiigigdrcybet`. Missing engine/security migrations and a policy performance
+and constraint-validation migration were applied with existing records preserved.
+See `docs/SUPABASE_DATABASE_SETUP.md`. Earlier connector/deployment statements below
+are historical; real Auth/API/concurrency/browser gates remain open, so the
+foundation is still not frozen.
+
+**Phase 4B Step 7 gate review: NOT READY.** The freeze stopped at the prior-gate
+review; hosted security/concurrency/persistence acceptance and final regression
+remain open. `docs/FOUNDATION_HANDOVER.md` records the correction order. Contracts
+are not frozen and five-way chapter handover remains deferred. Shared code and
+contract changes remain integration-owned and require coordinated review.
+
+**Phase 4B Step 6:** local browser acceptance now has a dev-only, tab-persisted isolated
+training fixture and Playwright checks at mobile/tablet/desktop widths plus production
+route exclusion. Read `docs/PHASE4B_ACCEPTANCE_REPORT.md` for evidence. Live test-backend
+persistence remains unverified; the Step 7 gate review confirms freeze readiness is blocked.
+
+**Phase 4B Step 5:** security/recovery hardening and isolated tests are documented in
+`docs/PHASE4B_SECURITY_AUDIT.md`. No new chapter or product feature was added. The
+security release gate remains open until hosted policies/JWTs, independent database
+connections, and browser acceptance are verified on a designated test environment.
+
+**Phase 4B Step 4 update:** Builders A/B/C have been merged, with provider/auth wiring
+already in the baseline. The mission player now has a package loader and real service
+adapter, with a local trusted checkpoint/reward migration and isolated training route.
+No factual chapters were built. Real guest progress supports same-tab refresh through a
+versioned cache. Hosted deployment and browser acceptance remain open, so Step 4 is not marked complete. Read
+`docs/PHASE4B_STEP4.md` before further integration. The Phase 1.5 descriptions below
+are retained as historical planning, not the current implementation inventory.
+
 **Confirmed status:** Phase 1 is complete. Steps 1 through 5 are in place: the Vite + React + TypeScript application, routing, layouts, design system, five-mission registry, Vitest, and React Testing Library.
 
 Phase 1.5 is complete. Shared contracts live in `src/contracts/`. Deterministic mock services live in `src/mocks/` and are not connected to the shell. Ownership and the Git workflow are in `docs/PARALLEL_DEVELOPMENT.md`.
