@@ -3,6 +3,9 @@
   flex-direction: column;
   gap: 2rem;
   width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
   color: var(--color-landing-text, #f5f7fb);
   font-family: var(--font-sans);
 }
@@ -88,7 +91,7 @@
   opacity: 0.65;
 }
 
-/* Restrained CSS perspective frame */
+/* Restrained CSS perspective frame with responsive aspect ratio */
 .perspectiveFrame {
   position: relative;
   border-radius: calc(var(--radius-surface, 1rem) - 2px);
@@ -98,6 +101,22 @@
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
   transform: perspective(900px) rotateY(-2deg) rotateX(1deg);
   transition: transform 300ms ease, box-shadow 300ms ease;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+}
+
+.missingFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  min-height: 220px;
+  background: radial-gradient(circle at center, rgba(83, 203, 255, 0.08), transparent 70%), #050a12;
+  color: var(--color-landing-muted, #aab7c8);
+  padding: 1.5rem;
+  text-align: center;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -177,6 +196,8 @@
   letter-spacing: -0.03em;
   color: var(--color-landing-text, #f5f7fb);
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .chapterTitle {
@@ -185,6 +206,8 @@
   color: var(--color-landing-lime, #d9fca7);
   font-weight: 500;
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .description {
@@ -568,6 +591,52 @@
   color: var(--color-secondary, #b8c8dd);
 }
 
+.engineFrame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.engineContainer {
+  position: relative;
+  border-radius: var(--radius-surface, 1rem);
+  border: 1px solid rgba(83, 203, 255, 0.25);
+  box-shadow: 0 0 32px rgba(83, 203, 255, 0.08);
+  overflow: hidden;
+  background: var(--color-landing-surface, #0b1421);
+}
+
+/* Subtle restrained ambient glow decoration around the engine frame */
+.engineContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-science, #53cbff) 50%,
+    transparent 100%
+  );
+  opacity: 0.8;
+  animation: engineBeaconPulse 6s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes engineBeaconPulse {
+  0% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0.85;
+  }
+}
+
 .buttonLink {
   display: inline-flex;
   align-items: center;
@@ -608,5 +677,9 @@
   }
   .secondaryLink {
     transition: none;
+  }
+  .engineContainer::before {
+    animation: none;
+    opacity: 0.6;
   }
 }

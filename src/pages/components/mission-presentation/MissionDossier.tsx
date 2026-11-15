@@ -179,9 +179,18 @@ export function MissionDossier({ mission }: MissionDossierProps) {
             {/* Perspective Frame around Credited Artwork */}
             <div className={styles.perspectiveFrame}>
               {imgFailed ? (
-                <div className="flex flex-col items-center justify-center py-24 text-muted">
+                <div
+                  className={styles.missingFallback}
+                  role="img"
+                  aria-label={`${mission.displayName} visual preview offline`}
+                >
                   <DestinationIcon size={48} aria-hidden="true" />
-                  <span className="mt-3 text-sm">{mission.displayName} Visual Preview</span>
+                  <span className="mt-3 text-sm font-medium text-foreground">
+                    {mission.displayName} Visual Preview
+                  </span>
+                  <span className="mt-1 text-xs text-muted">
+                    NASA archival imagery offline
+                  </span>
                 </div>
               ) : (
                 <img
