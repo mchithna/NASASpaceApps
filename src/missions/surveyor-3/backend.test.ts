@@ -9,6 +9,81 @@ const migrations = import.meta.glob<string>(
 )
 
 describe('Surveyor 3 trusted publication', () => {
+  it('archives legacy checkpoints before restarting progress, preserving XP and achievements', async () => {
+    const db = new PGlite()
+    try {
+      await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE SCHEMA auth;
+        CREATE TABLE auth.users(id uuid PRIMARY KEY);
+        CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql AS 'SELECT NULL::uuid';
+        CREATE FUNCTION auth.jwt() RETURNS jsonb LANGUAGE sql AS 'SELECT ''{}''::jsonb';`)
+      const archiveMigration = Object.keys(migrations).find((name) =>
+        name.endsWith('_surveyor_3_legacy_checkpoint_archive.sql'),
+      )!
+      for (const name of Object.keys(migrations).sort()) {
+        if (name !== archiveMigration) await db.exec(migrations[name]!)
+      }
+      const id = '11111111-1111-4111-8111-111111111111'
+      await db.exec(`INSERT INTO auth.users VALUES ('${id}');
+        INSERT INTO public.profiles(id,nickname,avatar_id) VALUES ('${id}','Legacy tester','cadet-1');
+        INSERT INTO public.mission_progress(user_id,mission_id,status,current_checkpoint_id,completed_checkpoint_ids)
+          VALUES ('${id}','surveyor-3','in_progress','old-opening',ARRAY['old-intro']);
+        INSERT INTO public.xp_reward_events(user_id,mission_id,milestone_id,reward_key,xp)
+          VALUES ('${id}','surveyor-3','introduction','surveyor-3:introduction',20);
+        SELECT set_config('nova.trusted_context','true',false);
+        UPDATE public.mission_progress SET status='completed',completed_at=now() WHERE user_id='${id}';
+        INSERT INTO public.unlocked_achievements(user_id,achievement_id) VALUES ('${id}','surveyor-3-story');
+        SELECT set_config('nova.trusted_context','true',false);
+        UPDATE public.profiles SET total_xp=20 WHERE id='${id}';`)
+      const original = (
+        await db.query<{ snapshot: unknown }>(
+          'SELECT to_jsonb(p) AS snapshot FROM public.mission_progress p',
+        )
+      ).rows[0]!.snapshot
+      await db.exec(migrations[archiveMigration]!)
+      expect(
+        (
+          await db.query<{ progress_snapshot: unknown }>(
+            'SELECT progress_snapshot FROM public.mission_progress_archive',
+          )
+        ).rows[0]!.progress_snapshot,
+      ).toEqual(original)
+      expect(
+        (
+          await db.query(
+            'SELECT status,current_checkpoint_id,completed_checkpoint_ids FROM public.mission_progress',
+          )
+        ).rows,
+      ).toEqual([
+        {
+          status: 'not_started',
+          current_checkpoint_id: null,
+          completed_checkpoint_ids: [],
+        },
+      ])
+      expect(
+        (await db.query('SELECT total_xp FROM public.profiles')).rows,
+      ).toEqual([{ total_xp: 20 }])
+      expect(
+        (await db.query('SELECT xp FROM public.xp_reward_events')).rows,
+      ).toEqual([{ xp: 20 }])
+      expect(
+        (
+          await db.query(
+            'SELECT achievement_id FROM public.unlocked_achievements',
+          )
+        ).rows,
+      ).toHaveLength(1)
+      expect(
+        (
+          await db.query(
+            "SELECT has_table_privilege('authenticated','public.mission_progress_archive','SELECT') AS allowed",
+          )
+        ).rows,
+      ).toEqual([{ allowed: false }])
+    } finally {
+      await db.close()
+    }
+  }, 60000)
   it('matches all seven scenes, enforces reward timing, records sourced discovery and prevents duplicates', async () => {
     const db = new PGlite()
     try {

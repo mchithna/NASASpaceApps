@@ -47,14 +47,10 @@ describe('Surveyor 3 authored chapter', () => {
     }
     await user.click(screen.getByRole('button', { name: 'Start' }))
     await heading('The Robot They Came Back For')
-    await user.click(
-      screen.getByRole('button', { name: 'Continue' }),
-    )
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
     await heading('Meet Surveyor 3')
     await xp(0)
-    expect(
-      screen.getByRole('button', { name: 'Continue' }),
-    ).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
     for (const name of [
       /1. TV camera/,
       /2. Surface sampler/,
@@ -126,21 +122,15 @@ describe('Surveyor 3 authored chapter', () => {
       screen.getByRole('button', { name: 'Submit investigation' }),
     )
     await screen.findByText('Test save unavailable')
-    expect(
-      screen.getByRole('button', { name: 'Continue' }),
-    ).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
     await user.click(
       screen.getByRole('button', { name: 'Retry saving investigation' }),
     )
     await heading('The Last Transmission')
     await xp(60)
-    await user.click(
-      screen.getByRole('button', { name: 'Continue' }),
-    )
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
     await heading('Apollo 12 Returns')
-    expect(
-      screen.getByRole('button', { name: 'Continue' }),
-    ).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
     await user.click(screen.getByLabelText('The entire Surveyor 3 lander'))
     await user.click(screen.getByRole('button', { name: 'Check evidence' }))
     expect(screen.getByRole('alert')).toHaveTextContent('Look again')
@@ -159,9 +149,7 @@ describe('Surveyor 3 authored chapter', () => {
         summary: expect.stringContaining('lunar environment'),
       }),
     ])
-    await user.click(
-      screen.getByRole('button', { name: 'Continue' }),
-    )
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
     await screen.findByText('Chapter complete')
     await xp(100)
     expect(screen.getByText(/Lunar Archaeologist unlocked/)).toBeInTheDocument()
@@ -174,9 +162,7 @@ describe('Surveyor 3 authored chapter', () => {
     const summary = await services.rewards.getXpSummary()
     expect(summary.ok && summary.data.events).toHaveLength(4)
     await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Next' }),
-      ).toBeEnabled(),
+      expect(screen.getByRole('button', { name: 'Next' })).toBeEnabled(),
     )
     view.unmount()
   }, 30000)

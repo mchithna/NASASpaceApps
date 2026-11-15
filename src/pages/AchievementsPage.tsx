@@ -189,7 +189,7 @@ export function AchievementsPage() {
 
                       <div className="flex flex-col">
                         <h4 className="font-heading text-base font-bold text-foreground">
-                          {missionName} Story
+                          {badge.title}
                         </h4>
                         <span className="text-xs font-medium text-reward">
                           {badge.mission?.chapterTitle ?? badge.description}

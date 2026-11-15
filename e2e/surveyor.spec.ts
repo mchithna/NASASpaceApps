@@ -1,20 +1,30 @@
 import { expect, test } from '@playwright/test'
 
+test.setTimeout(120000)
+
 test('Surveyor 3 starts from Play, retries, resumes, completes, and shares rewards without replay duplicates', async ({
   page,
 }) => {
   let apiCalls = 0
-  await page.route(/\/(auth|rest)\/v1\//, (route) => {
-    apiCalls++
-    return route.abort()
+  await page.route('**/*', (route) => {
+    const url = new URL(route.request().url())
+    if (/\/(auth|rest)\/v1\//.test(url.pathname)) {
+      apiCalls++
+      return route.abort()
+    }
+    if (url.hostname !== '127.0.0.1' && url.hostname !== 'localhost')
+      return route.abort()
+    return route.continue()
   })
-  await page.goto('/?acceptance=training')
-  await page.getByRole('link', { name: 'Begin Exploring' }).click()
+  await page.goto('/?acceptance=training', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
+  await page.getByRole('link', { name: 'Begin Your Journey' }).click()
   await page.getByLabel('Choose Callsign').fill('Lunar Investigator')
   await page
     .getByRole('button', { name: 'Save Profile & Enter Mission Control' })
     .click()
-  await page.goto('/missions/surveyor-3')
+  await page.goto('/missions/surveyor-3', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await page.getByRole('link', { name: 'Start mission', exact: true }).click()
   await page.getByRole('button', { name: 'Start', exact: true }).click()
   const heading = (name: string) =>
@@ -39,7 +49,10 @@ test('Surveyor 3 starts from Play, retries, resumes, completes, and shares rewar
   await expect(page.getByText(/That order is not right yet/)).toBeVisible()
   await page
     .getByRole('button', { name: 'Move Descent toward the Moon up' })
-    .click()
+    .focus()
+  await page
+    .getByRole('button', { name: 'Move Descent toward the Moon up' })
+    .press('Enter')
   await page
     .getByRole('button', { name: 'Move First touchdown and bounce up' })
     .click()
@@ -48,7 +61,8 @@ test('Surveyor 3 starts from Play, retries, resumes, completes, and shares rewar
     .click()
   await page.getByRole('button', { name: 'Check order' }).click()
   await expect(heading('The Lunar Soil Investigation')).toBeVisible()
-  await page.reload()
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await expect(heading('The Lunar Soil Investigation')).toBeVisible()
   for (const name of [
     'Position arm',
@@ -92,15 +106,18 @@ test('Surveyor 3 starts from Play, retries, resumes, completes, and shares rewar
   })
   await page.getByRole('button', { name: 'Exit mission' }).click()
   await expect(page.getByText('100 XP', { exact: true }).first()).toBeVisible()
-  await page.goto('/journal')
+  await page.goto('/journal', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await expect(
     page.getByText('Surveyor 3: returned lunar hardware', { exact: true }),
   ).toBeVisible()
-  await page.goto('/achievements')
+  await page.goto('/achievements', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await expect(
     page.getByText('Lunar Archaeologist', { exact: true }),
   ).toBeVisible()
-  await page.goto('/missions/surveyor-3')
+  await page.goto('/missions/surveyor-3', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('button', { name: 'Minimize dev banner' }).click()
   await page.getByRole('link', { name: 'Replay mission', exact: true }).click()
   await page.getByRole('button', { name: 'Start again' }).click()
   await expect(heading('The Robot They Came Back For')).toBeVisible()

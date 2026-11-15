@@ -17,6 +17,17 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Surveyor 3 chapter:** the seven-scene historical investigation is implemented
+through the existing package loader, with four interactions (equipment, sequence,
+sampler, evidence), fixed 20/40/25/15 rewards, sourced discovery and Lunar
+Archaeologist. Coordinated engine and trusted catalog changes were explicitly
+authorized. The migration is applied to `ptjvlycaiigigdrcybet` and its manifest
+and privileges were checked read-only. See `docs/SURVEYOR_3_IMPLEMENTATION.md`
+for actual validation. Other chapters remain unwritten. The open foundation
+JWT/API/concurrency/registered-browser gates are not closed by this chapter.
+AI integration remains unimplemented pending eligible provider access and keys.
+Older statements that all five chapters are unbuilt are historical below.
+
 **Auth presentation:** `/auth` now presents login and registration in a responsive
 cinematic layout, using existing design tokens and auth services. It includes
 keyboard-operated tabs, password visibility controls, avatar selection, guest

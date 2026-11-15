@@ -165,7 +165,7 @@ export function SoilInvestigation(props: ActivityRenderProps) {
             if (!props.replay) props.onComplete()
           }}
         >
-          {(props.completed && !props.replay)
+          {props.completed && !props.replay
             ? 'Investigation saved'
             : solved
               ? 'Retry saving investigation'

@@ -64,7 +64,7 @@ export function EquipmentInvestigation(props: ActivityRenderProps) {
           if (!props.replay) props.onComplete()
         }}
       >
-        {(props.completed && !props.replay)
+        {props.completed && !props.replay
           ? 'Investigation saved'
           : props.replay
             ? 'Replay: equipment examined'

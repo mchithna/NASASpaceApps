@@ -79,7 +79,10 @@ export function EventOrderActivity({
   return (
     <div className="flex flex-col gap-3">
       <p className="max-w-[65ch] text-secondary">{orderPrompt.instruction}</p>
-      <ol className="flex flex-col gap-2" aria-label="Steps in the current order">
+      <ol
+        className="flex flex-col gap-2"
+        aria-label="Steps in the current order"
+      >
         {order.map((stepId, index) => {
           const label = labels.get(stepId) ?? 'Step'
           return (

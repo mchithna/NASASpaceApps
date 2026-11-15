@@ -67,7 +67,7 @@ export function ApolloEvidence(props: ActivityRenderProps) {
           if (!props.replay) props.onComplete()
         }}
       >
-        {(props.completed && !props.replay)
+        {props.completed && !props.replay
           ? 'Evidence saved'
           : solved
             ? 'Retry saving evidence'
