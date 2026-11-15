@@ -1,29 +1,29 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: #0b1020;
-  --color-surface: #151e32;
-  --color-elevated: #1d2940;
-  --color-accent: #7c6cff;
+  --color-background: #050a14;
+  --color-surface: #0b1421;
+  --color-elevated: #152333;
+  --color-accent: #d4ff9a;
   --color-science: #53cbff;
   --color-reward: #f7c66a;
-  --color-foreground: #f4f7ff;
-  --color-secondary: #b8c8dd;
+  --color-foreground: #ffffff;
+  --color-secondary: #9aa7bd;
   --color-muted: #8c9bb3;
   --color-border: #2b3850;
   --color-success: #4fd1a5;
   --color-danger: #f87171;
-  --color-on-bright: #0b1020;
-  --color-focus: #53cbff;
+  --color-on-bright: #050a14;
+  --color-focus: #d4ff9a;
 
-  /* Landing Page Cinematic Design System Tokens */
-  --color-landing-bg: #050a12;
+  /* Landing & Global Cinematic Design System Tokens */
+  --color-landing-bg: #050a14;
   --color-landing-surface: #0b1421;
   --color-landing-card: #101c2a;
   --color-landing-elevated: #152333;
-  --color-landing-text: #f5f7fb;
-  --color-landing-muted: #aab7c8;
-  --color-landing-lime: #d9fca7;
+  --color-landing-text: #ffffff;
+  --color-landing-muted: #9aa7bd;
+  --color-landing-lime: #d4ff9a;
   --color-landing-blue: #53cbff;
   --color-landing-success: #4fd1a5;
   --color-landing-border: #344354;
@@ -31,38 +31,47 @@
   --font-sans: Inter, ui-sans-serif, 'Segoe UI', sans-serif;
   --font-heading: 'Space Grotesk', Inter, ui-sans-serif, 'Segoe UI', sans-serif;
 
-  --radius-control: 0.75rem;
-  --radius-surface: 1rem;
+  --radius-control: 9999px;
+  --radius-surface: 1.25rem;
   --spacing-page: 2.5rem;
 
-  --shadow-surface: 0 12px 32px rgb(0 0 0 / 0.32);
-  --shadow-elevated: 0 20px 48px rgb(0 0 0 / 0.42);
+  --shadow-surface: 0 12px 32px rgb(0 0 0 / 0.35);
+  --shadow-elevated: 0 20px 48px rgb(0 0 0 / 0.45);
+  --shadow-lime-glow: 0 0 24px rgba(212, 255, 154, 0.35);
 
-  --default-transition-duration: 150ms;
+  --default-transition-duration: 200ms;
   --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   background-color: var(--color-background);
+  background-image: radial-gradient(circle at 50% 0%, #0d1a2d 0%, #050a14 70%);
+  background-attachment: fixed;
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.5;
   font-synthesis-weight: none;
+  min-height: 100svh;
+  overflow-x: hidden;
 }
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 dialog:not([open]) {
@@ -75,15 +84,17 @@ dialog:not([open]) {
   margin: auto;
   padding: 0;
   overflow: auto;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-surface);
-  background: var(--color-surface);
+  background: rgba(11, 20, 33, 0.92);
+  backdrop-filter: blur(20px);
   color: var(--color-foreground);
   box-shadow: var(--shadow-elevated);
 }
 
 .dialog-surface::backdrop {
-  background: color-mix(in srgb, var(--color-background) 28%, black);
+  background: rgba(5, 10, 20, 0.75);
+  backdrop-filter: blur(8px);
 }
 
 @media (forced-colors: active) {
@@ -93,19 +104,64 @@ dialog:not([open]) {
   }
 }
 
-/* Cinematic Landing Page Motion Effects */
-@keyframes star-twinkle {
-  0%, 100% {
-    opacity: 0.25;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
+/* Global Eyebrow Label with Green Status Dot */
+.eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-landing-lime);
+}
+
+.eyebrow-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-landing-lime);
+  box-shadow: 0 0 10px var(--color-landing-lime);
+  flex-shrink: 0;
+}
+
+/* Two-Tone Headline Helper */
+.headline-lime {
+  color: var(--color-landing-lime);
+}
+
+/* Glassmorphism Card Utility */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 1.25rem;
+  transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 255, 154, 0.35);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 255, 154, 0.12);
   }
 }
 
-@keyframes orbit-slow {
+/* Animations */
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes planet-spin {
   from {
     transform: rotate(0deg);
   }
@@ -114,57 +170,55 @@ dialog:not([open]) {
   }
 }
 
-@keyframes float-gentle {
+@keyframes orbit-pulse {
   0%, 100% {
-    transform: translateY(0px);
+    opacity: 0.35;
   }
   50% {
-    transform: translateY(-8px);
+    opacity: 0.7;
   }
 }
 
-@keyframes pulse-lime {
-  0%, 100% {
-    box-shadow: 0 0 16px rgba(217, 252, 167, 0.2);
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
-  50% {
-    box-shadow: 0 0 30px rgba(217, 252, 167, 0.45);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.animate-page-rise {
+  animation: page-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-star-1 {
-  animation: star-twinkle 3.2s ease-in-out infinite;
+  animation: star-twinkle 4s ease-in-out infinite;
 }
 
 .animate-star-2 {
-  animation: star-twinkle 4.8s ease-in-out 1.2s infinite;
+  animation: star-twinkle 6s ease-in-out 2s infinite;
 }
 
 .animate-star-3 {
-  animation: star-twinkle 6.4s ease-in-out 2.4s infinite;
+  animation: star-twinkle 5s ease-in-out 1s infinite;
 }
 
-.animate-orbit {
-  animation: orbit-slow 50s linear infinite;
-}
-
-.animate-float {
-  animation: float-gentle 9s ease-in-out infinite;
-}
-
-.animate-glow-lime {
-  animation: pulse-lime 3s ease-in-out infinite;
+.animate-planet-slow {
+  animation: planet-spin 120s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-page-rise,
   .animate-star-1,
   .animate-star-2,
   .animate-star-3,
-  .animate-orbit,
-  .animate-float,
-  .animate-glow-lime {
+  .animate-planet-slow,
+  .glass-card {
     animation: none !important;
+    transition: none !important;
     transform: none !important;
   }
 }
-

@@ -4,7 +4,11 @@ import { cn } from '@/lib/cn.ts'
 import { focusRing } from '@/components/ui/focusRing.ts'
 
 export type ButtonVariant =
-  'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive'
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'destructive'
 
 export type ButtonSize = 'small' | 'medium' | 'large'
 
@@ -17,21 +21,21 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClass: Record<ButtonVariant, string> = {
   primary:
-    'bg-accent text-on-bright hover:brightness-110 disabled:bg-elevated disabled:text-muted disabled:hover:brightness-100',
+    'bg-[#d4ff9a] text-[#050a14] font-semibold rounded-full border border-[#eaffc7] shadow-[0_0_20px_rgba(212,255,154,0.22)] hover:bg-[#e4ffb8] hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(212,255,154,0.4)] active:translate-y-0 disabled:bg-[#152333] disabled:text-[#8c9bb3] disabled:border-transparent disabled:shadow-none disabled:hover:translate-y-0',
   secondary:
-    'border border-border bg-elevated text-foreground hover:bg-surface disabled:bg-elevated disabled:text-muted',
+    'bg-white/[0.04] text-[#ffffff] border border-white/20 rounded-full backdrop-blur-md hover:border-[#d4ff9a] hover:text-[#d4ff9a] hover:bg-white/[0.08] hover:-translate-y-0.5 active:translate-y-0 disabled:bg-transparent disabled:text-[#8c9bb3] disabled:border-white/10 disabled:hover:translate-y-0',
   outline:
-    'border border-accent bg-transparent text-foreground hover:bg-elevated disabled:border-border disabled:text-muted',
+    'border border-[#d4ff9a]/60 bg-transparent text-[#ffffff] rounded-full hover:border-[#d4ff9a] hover:bg-[#d4ff9a]/10 hover:-translate-y-0.5 disabled:border-white/10 disabled:text-[#8c9bb3]',
   ghost:
-    'bg-transparent text-foreground hover:bg-elevated disabled:bg-transparent disabled:text-muted',
+    'bg-transparent text-[#9aa7bd] hover:text-[#ffffff] hover:bg-white/[0.06] rounded-full disabled:bg-transparent disabled:text-[#8c9bb3]',
   destructive:
-    'bg-danger text-on-bright hover:brightness-110 disabled:bg-elevated disabled:text-muted disabled:hover:brightness-100',
+    'bg-danger text-[#ffffff] rounded-full hover:brightness-110 disabled:bg-[#152333] disabled:text-[#8c9bb3]',
 }
 
 const sizeClass: Record<ButtonSize, string> = {
-  small: 'min-h-11 gap-2 px-3 text-sm',
-  medium: 'min-h-11 gap-2 px-4 text-base',
-  large: 'min-h-12 gap-2 px-5 text-base',
+  small: 'min-h-9 gap-1.5 px-3.5 text-xs',
+  medium: 'min-h-11 gap-2 px-5 text-sm',
+  large: 'min-h-12 gap-2.5 px-6 text-base',
 }
 
 export function Button({
@@ -51,7 +55,7 @@ export function Button({
       {...props}
       type={type}
       className={cn(
-        'inline-flex items-center justify-center rounded-control font-medium motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out motion-safe:active:scale-[0.96] disabled:cursor-not-allowed disabled:active:scale-100',
+        'group inline-flex items-center justify-center font-medium transition-all duration-200 ease-out cursor-pointer disabled:cursor-not-allowed select-none',
         focusRing,
         variantClass[variant],
         sizeClass[size],
@@ -62,7 +66,7 @@ export function Button({
     >
       {loading ? (
         <LoaderCircle
-          className="size-4 motion-safe:animate-spin"
+          className="size-4 motion-safe:animate-spin shrink-0"
           aria-hidden="true"
         />
       ) : null}

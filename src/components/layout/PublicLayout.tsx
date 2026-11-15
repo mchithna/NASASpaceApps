@@ -1,23 +1,16 @@
-import { Link, Outlet, useLocation } from 'react-router'
-import { LayoutFrame } from '@/components/layout/LayoutFrame.tsx'
+import { Outlet, useLocation } from 'react-router'
 import { SkipLink } from '@/components/layout/SkipLink.tsx'
-import { TextNav } from '@/components/layout/TextNav.tsx'
-import { brandLinkClass } from '@/components/layout/layoutClasses.ts'
-
-const publicNavItems = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/auth', label: 'Sign in' },
-  { to: '/onboarding', label: 'Explorer setup' },
-  { to: '/dashboard', label: 'Mission Control' },
-] as const
+import { Navbar } from '@/components/layout/Navbar.tsx'
+import { SpaceBackground } from '@/components/layout/SpaceBackground.tsx'
+import { Footer } from '@/components/layout/Footer.tsx'
 
 export function PublicLayout() {
   const location = useLocation()
-  const isFullWidthPage = location.pathname === '/' || location.pathname === '/auth'
+  const isLanding = location.pathname === '/'
 
-  if (isFullWidthPage) {
+  if (isLanding) {
     return (
-      <div className="min-h-svh bg-landing-bg text-landing-text selection:bg-landing-lime selection:text-landing-bg">
+      <div className="min-h-svh bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14]">
         <SkipLink />
         <main
           id="main-content"
@@ -31,17 +24,18 @@ export function PublicLayout() {
   }
 
   return (
-    <LayoutFrame
-      header={
-        <header className="border-b border-border bg-surface">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <Link to="/" className={brandLinkClass}>
-              NovaExplorer
-            </Link>
-            <TextNav label="Public" items={publicNavItems} />
-          </div>
-        </header>
-      }
-    />
+    <div className="flex min-h-svh flex-col bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14] relative">
+      <SkipLink />
+      <Navbar />
+      <SpaceBackground />
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 w-full max-w-6xl mx-auto pt-24 sm:pt-28 pb-16 px-4 sm:px-6 focus-visible:outline-none"
+      >
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   )
 }
