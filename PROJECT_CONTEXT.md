@@ -17,6 +17,13 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Hosted database setup:** NOVA connector access now works for
+`ptjvlycaiigigdrcybet`. Missing engine/security migrations and a policy performance
+and constraint-validation migration were applied with existing records preserved.
+See `docs/SUPABASE_DATABASE_SETUP.md`. Earlier connector/deployment statements below
+are historical; real Auth/API/concurrency/browser gates remain open, so the
+foundation is still not frozen.
+
 **Phase 4B Step 7 gate review: NOT READY.** The freeze stopped at the prior-gate
 review; hosted security/concurrency/persistence acceptance and final regression
 remain open. `docs/FOUNDATION_HANDOVER.md` records the correction order. Contracts

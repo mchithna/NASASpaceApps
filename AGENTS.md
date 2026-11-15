@@ -150,6 +150,12 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+Hosted database setup is now applied to `ptjvlycaiigigdrcybet`; connector access
+works. See `docs/SUPABASE_DATABASE_SETUP.md` for migration version mapping, live
+SQL checks, remaining Auth/advisor warnings and test limitations. This supersedes
+earlier empty-connector/deployment statements for this project only. It is not a
+foundation freeze; isolated live JWT/API/concurrency/browser acceptance is still open.
+
 Phase 4B Step 7 gate review: **NOT READY; foundation not frozen**. See
 `docs/FOUNDATION_HANDOVER.md` for the prioritized correction plan. Hosted security,
 concurrent rewards, real persistence acceptance and final regression remain open.

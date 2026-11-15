@@ -69,6 +69,22 @@ class TestDatabaseClient extends SupabaseClient {
 }
 
 describe('trusted mission flow in isolated PostgreSQL', () => {
+  it('validates existing reward constraints and disables legacy direct-write policies', async () => {
+    expect(
+      await scalar(`SELECT count(*)::int AS value FROM pg_constraint
+      WHERE conname IN ('profile_nickname_characters','canonical_reward_policy')
+      AND convalidated`),
+    ).toBe(2)
+    expect(
+      await scalar(`SELECT count(*)::int AS value FROM pg_policies
+      WHERE schemaname = 'public' AND policyname IN
+      ('mission_progress_insert_own','mission_progress_update_own',
+       'unlocked_achievements_insert_own','journal_entries_insert_own')
+      AND coalesce(with_check, 'false') = 'false'
+      AND coalesce(qual, 'false') = 'false'`),
+    ).toBe(4)
+  })
+
   it('enforces RLS, column privileges, signed-out access, and rejects forged identifiers', async () => {
     // Declared first but uses only the beforeAll fixture, before any gameplay.
     const enabled = await db.query<{
