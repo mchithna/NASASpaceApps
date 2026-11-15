@@ -1,4 +1,9 @@
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import {
+  useEffect,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react'
 import { router } from '@/app/router.tsx'
 import { useNovaServices } from '@/pages/context/useNovaServices.ts'
 import { isMissionId } from '@/missions/registry.ts'
@@ -8,8 +13,10 @@ import { NovaAiProvider } from './context/AiContext.tsx'
 const subscribeToRoute = (notify: () => void) => router.subscribe(notify)
 const getRoute = () => router.state.location.pathname
 
-/** One mount across layouts; never reads page DOM, profile or journal contents. */
-export function CompanionMount() {
+export type CompanionMountProps = { children?: ReactNode }
+
+/** Shared AI scope for routed pages and one companion across layouts. */
+export function CompanionMount({ children }: CompanionMountProps) {
   const route = useSyncExternalStore(subscribeToRoute, getRoute)
   const { services } = useNovaServices()
   const [identityVersion, setIdentityVersion] = useState(0)
@@ -22,7 +29,12 @@ export function CompanionMount() {
   const missionId = candidate && isMissionId(candidate) ? candidate : undefined
   // Remount clears input/history on identity and route transitions, including logout.
   return (
-    <NovaAiProvider route={route} missionId={missionId}>
+    <NovaAiProvider
+      route={route}
+      missionId={missionId}
+      identityVersion={identityVersion}
+    >
+      {children}
       <AiCompanion
         key={`${route}:${identityVersion}`}
         context={{ route, missionId }}

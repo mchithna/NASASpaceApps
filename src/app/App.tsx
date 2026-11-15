@@ -6,8 +6,9 @@ import { CompanionMount } from '@/ai/CompanionMount.tsx'
 export default function App() {
   return (
     <AppProviders>
-      <RouterProvider router={router} />
-      <CompanionMount />
+      <CompanionMount>
+        <RouterProvider router={router} />
+      </CompanionMount>
     </AppProviders>
   )
 }

@@ -38,3 +38,52 @@ test('production pages and the companion render without a missing AI provider', 
 
   expect(runtimeErrors).toEqual([])
 })
+
+test('page prompts share the chat, display sources and recover from an AI outage', async ({
+  page,
+}) => {
+  await page.route('**/api/ai/health', (route) =>
+    route.fulfill({
+      json: { isConfigured: true, provider: 'Test provider' },
+    }),
+  )
+  await page.route('**/api/ai/chat', (route) =>
+    route.fulfill({
+      contentType: 'text/event-stream',
+      body: [
+        'data: {"chunk":"Shared browser test answer"}',
+        'data: {"done":true,"model":"test-model","sources":[{"title":"NASA","url":"https://www.nasa.gov/"}]}',
+        '',
+      ].join('\n\n'),
+    }),
+  )
+  await page.goto('/')
+  await page
+    .getByRole('button', { name: 'How does NovaExplorer work?', exact: true })
+    .click()
+  const dialog = page.getByRole('dialog', { name: 'Nova AI chat' })
+  await expect(dialog).toHaveClass(/open/)
+  await expect(
+    dialog.getByText('Shared browser test answer', { exact: true }),
+  ).toBeVisible()
+  await expect(
+    dialog.getByRole('link', { name: 'NASA', exact: true }),
+  ).toHaveAttribute('href', 'https://www.nasa.gov/')
+  await dialog.getByRole('button', { name: 'New chat', exact: true }).click()
+  await expect(
+    dialog.getByText('Shared browser test answer', { exact: true }),
+  ).toHaveCount(0)
+
+  await page.route('**/api/ai/chat', (route) =>
+    route.fulfill({ status: 503, json: { error: 'Test outage' } }),
+  )
+  await dialog
+    .getByRole('textbox', { name: 'Ask about a mission' })
+    .fill('What is telemetry?')
+  await dialog.getByRole('button', { name: 'Send question' }).click()
+  await expect(
+    dialog.getByText('Source guide answer — live AI is unavailable.'),
+  ).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('button', { name: 'Ask Nova AI' })).toBeFocused()
+})

@@ -10,10 +10,7 @@ import {
 } from 'react'
 import type { MissionId } from '@/missions/types.ts'
 import type { ChatMessage, VoiceState } from '../types.ts'
-import {
-  checkAiHealth,
-  sendChatMessage,
-} from '../services/aiClient.ts'
+import { checkAiHealth, sendChatMessage } from '../services/aiClient.ts'
 import { useVoiceSession } from '../voice/useVoiceSession.ts'
 
 export interface AiContextValue {
@@ -26,6 +23,8 @@ export interface AiContextValue {
   isStreaming: boolean
   isLive: boolean
   providerName: string
+  isChatOpen: boolean
+  setChatOpen: (open: boolean) => void
   ask: (
     question: string,
     options?: {
@@ -60,12 +59,14 @@ export interface AiProviderProps {
   children: ReactNode
   route: string
   missionId?: MissionId
+  identityVersion?: number
 }
 
 export function NovaAiProvider({
   children,
   route,
   missionId: initialMissionId,
+  identityVersion = 0,
 }: AiProviderProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [simple, setSimple] = useState(false)
@@ -75,16 +76,10 @@ export function NovaAiProvider({
   const [isStreaming, setIsStreaming] = useState(false)
   const [isLive, setIsLive] = useState(false)
   const [providerName, setProviderName] = useState('Checking AI status...')
+  const [isChatOpen, setChatOpen] = useState(false)
 
   const abortControllerRef = useRef<AbortController | null>(null)
   const messageIdCounter = useRef(0)
-
-  // Sync mission ID with prop changes
-  useEffect(() => {
-    if (initialMissionId) {
-      setMissionId(initialMissionId)
-    }
-  }, [initialMissionId])
 
   // Check backend provider status on mount
   useEffect(() => {
@@ -131,6 +126,7 @@ export function NovaAiProvider({
     ) => {
       if (!question.trim()) return
 
+      setChatOpen(true)
       stopGeneration()
       const abortController = new AbortController()
       abortControllerRef.current = abortController
@@ -153,7 +149,11 @@ export function NovaAiProvider({
         isStreaming: true,
       }
 
-      setMessages((prev) => [...prev.slice(-18), userMessage, initialAssistantMessage])
+      setMessages((prev) => [
+        ...prev.slice(-18),
+        userMessage,
+        initialAssistantMessage,
+      ])
       setIsStreaming(true)
 
       let streamedText = ''
@@ -180,9 +180,7 @@ export function NovaAiProvider({
             streamedText += chunk
             setMessages((prev) =>
               prev.map((m) =>
-                m.id === assistantMsgId
-                  ? { ...m, content: streamedText }
-                  : m,
+                m.id === assistantMsgId ? { ...m, content: streamedText } : m,
               ),
             )
           },
@@ -233,8 +231,10 @@ export function NovaAiProvider({
           )
         }
       } finally {
-        setIsStreaming(false)
-        abortControllerRef.current = null
+        if (abortControllerRef.current === abortController) {
+          setIsStreaming(false)
+          abortControllerRef.current = null
+        }
       }
     },
     [messages, missionId, route, simple, stopGeneration],
@@ -251,6 +251,16 @@ export function NovaAiProvider({
     onNewMessage: onVoiceMessage,
   })
 
+  const stopVoiceSession = voice.stopSession
+  useEffect(() => {
+    setMissionId(initialMissionId)
+    clear()
+    stopVoiceSession()
+    setChatOpen(false)
+  }, [route, initialMissionId, identityVersion, clear, stopVoiceSession])
+
+  useEffect(() => () => abortControllerRef.current?.abort(), [])
+
   const value: AiContextValue = {
     messages,
     simple,
@@ -261,6 +271,8 @@ export function NovaAiProvider({
     isStreaming,
     isLive,
     providerName,
+    isChatOpen,
+    setChatOpen,
     ask,
     stopGeneration,
     clear,

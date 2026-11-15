@@ -10,6 +10,20 @@
 
 ## 1. Executive Summary
 
+**November 15 startup correction:** The current `develop` tree keeps the AI
+surfaces. The router and companion now share one provider; page prompts open the
+chat panel and render the same conversation with source links. Navigation and
+identity changes clear the conversation and cancel active work. Private local
+keys are loaded only by Vite's development server, and skipped in test mode.
+Gemini's model listing and a Flash Lite generation were checked with the existing
+ignored credentials; no key was printed or added to tracked files. The original
+Flash request timed out, so Lite is now tried first. Chat/TTS requests have a
+20-second server deadline; chat has a 25-second client deadline and a visibly
+labeled source-guide fallback. Streaming uses one provider result instead of
+generating a second answer for metadata. These checks cover text chat and page
+startup, not microphone/voice or hosted acceptance. Older feature and validation
+claims below describe the original branch and are not new acceptance results.
+
 NovaExplorer's AI companion has been transformed from a static, local source-guide into a genuinely intelligent, real-time, multimodal educational assistant. Nova is fully integrated across the entire platform, notably featuring the **Nova AI Mission Commander** in Mission Control, real-time audio-reactive voice interaction, streaming chat responses, and verified NASA scientific grounding.
 
 ---
@@ -17,7 +31,7 @@ NovaExplorer's AI companion has been transformed from a static, local source-gui
 ## 2. Architecture & Provider Layer
 
 ### 2.1 Provider Selection & Models
-- **Inference Model:** `gemini-3.5-flash` (with automatic failover to `gemini-3.5-flash-lite`).
+- **Inference Model:** `gemini-3.5-flash-lite` (with automatic failover to `gemini-3.5-flash`).
 - **Voice Synthesis Model:** `gemini-3.8-flash-tts` generating native `audio/wav` output.
 - **Provider Abstraction:** Clean `AiProvider` interface (`services/ai/types.ts`) decoupling application logic from vendor SDKs.
 

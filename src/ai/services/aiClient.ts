@@ -52,6 +52,10 @@ export async function checkAiHealth(): Promise<{
 export async function sendChatMessage(
   options: SendMessageOptions,
 ): Promise<SendMessageResult> {
+  const deadline = AbortSignal.timeout(25000)
+  const signal = options.signal
+    ? AbortSignal.any([options.signal, deadline])
+    : deadline
   const lastUserMsg = [...options.messages]
     .reverse()
     .find((m) => m.role === 'user')?.content
@@ -63,7 +67,7 @@ export async function sendChatMessage(
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...options, stream: true }),
-        signal: options.signal,
+        signal,
       })
 
       if (!response.ok) {
@@ -132,7 +136,7 @@ export async function sendChatMessage(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(options),
-      signal: options.signal,
+      signal,
     })
 
     if (!response.ok) {

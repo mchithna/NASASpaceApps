@@ -8,7 +8,10 @@ export interface ServerRequest {
   method?: string
   headers: Record<string, string | string[] | undefined>
   socket: { remoteAddress?: string }
-  on(event: 'data', listener: (chunk: { toString(): string } | string) => void): this
+  on(
+    event: 'data',
+    listener: (chunk: { toString(): string } | string) => void,
+  ): this
   on(event: 'end', listener: () => void): this
   on(event: 'error', listener: (err: Error) => void): this
 }
@@ -123,7 +126,11 @@ export async function handleAiRequest(
       const rawBody = await readBody()
       const body = JSON.parse(rawBody) as ChatRequestOptions
 
-      if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+      if (
+        !body.messages ||
+        !Array.isArray(body.messages) ||
+        body.messages.length === 0
+      ) {
         res.statusCode = 400
         res.setHeader('Content-Type', 'application/json')
         res.end(JSON.stringify({ error: 'Messages array is required.' }))
@@ -159,12 +166,18 @@ export async function handleAiRequest(
         res.setHeader('Cache-Control', 'no-cache')
         res.setHeader('Connection', 'keep-alive')
 
-        await provider.streamChat(body, (chunk) => {
+        let sentChunk = false
+        const finalResult = await provider.streamChat(body, (chunk) => {
+          sentChunk = true
           res.write(`data: ${JSON.stringify({ chunk })}\n\n`)
         })
 
+        if (!sentChunk && finalResult.content) {
+          res.write(
+            `data: ${JSON.stringify({ chunk: finalResult.content })}\n\n`,
+          )
+        }
         // Final payload with sources and metadata
-        const finalResult = await provider.generateChat(body)
         res.write(
           `data: ${JSON.stringify({
             done: true,

@@ -9,6 +9,20 @@ function aiDevServerPlugin(): Plugin {
   return {
     name: 'ai-dev-server',
     configureServer(server) {
+      // Vite exposes VITE_* to the browser, but AI handlers need private env too.
+      if (server.config.mode !== 'test') {
+        const serverEnv = loadEnv(server.config.mode, server.config.root, '')
+        for (const name of [
+          'GEMINI_API_KEY_1',
+          'GEMINI_API_KEY_2',
+          'GEMINI_API_KEY_3',
+          'AI_GATEWAY_API_KEY',
+          'AI_GATEWAY_URL',
+          'NOVA_MODEL',
+        ]) {
+          if (serverEnv[name]) process.env[name] = serverEnv[name]
+        }
+      }
       server.middlewares.use(async (req, res, next) => {
         if (req.url && req.url.startsWith('/api/ai')) {
           try {
@@ -55,7 +69,10 @@ export default defineConfig(({ mode }) => {
                 const url = `http://${req.headers.host || 'localhost'}/api/chat`
                 const webReq = new Request(url, {
                   method: 'POST',
-                  headers: req.headers as Record<string, string | string[] | undefined> as never,
+                  headers: req.headers as Record<
+                    string,
+                    string | string[] | undefined
+                  > as never,
                   body: raw,
                 })
                 const { default: handler } = await import('./api/chat.ts')
@@ -102,4 +119,3 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
-

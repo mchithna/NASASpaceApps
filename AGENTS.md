@@ -150,13 +150,15 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
-The missing Nova AI provider crash was traced to page-level consumers outside the
-companion-only provider. The existing AI rollback removes those consumers;
-this task preserves that rollback. The production companion browser check now
-covers direct entry to the eight affected routes, launcher open/close and uncaught
-runtime errors. Build, lint, 14 targeted tests and the production browser check
-passed; the live routes also loaded without runtime errors. The full suite was
-not run. No deployment was made by this task.
+The Nova AI startup crash on `develop` is fixed by putting the router and companion
+inside the same provider. AI features remain enabled. Page prompts and the chat
+share answers; route/identity changes clear conversation and stop active work.
+Vite loads private AI settings only on its development server. Gemini 3.5 Flash
+Lite returned a real answer; Flash remains the fallback. Request deadlines,
+labeled source-guide recovery and single-generation streaming are in place.
+Production browser coverage includes startup, page prompts and outage recovery.
+See `docs/AI_PLATFORM_LIVE.md` for scope; microphone/voice acceptance, full-suite
+acceptance and hosted deployment are not claimed by this correction.
 
 InSight now exports an authored seven-scene chapter through its package loader,
 with instrument inspection, a seismometer-deployment simulation, seismic signal

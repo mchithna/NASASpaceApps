@@ -12,10 +12,15 @@ import {
 } from './grounding.ts'
 import { sanitizeAiOutput, sanitizeHistory } from './safety.ts'
 
-const CHAT_MODEL = 'gemini-3.5-flash'
-const FALLBACK_CHAT_MODEL = 'gemini-3.5-flash-lite'
+const CHAT_MODEL = 'gemini-3.5-flash-lite'
+const FALLBACK_CHAT_MODEL = 'gemini-3.5-flash'
 const TTS_MODEL = 'gemini-3.8-flash-tts'
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta'
+
+function requestSignal(signal?: AbortSignal): AbortSignal {
+  const timeout = AbortSignal.timeout(20000)
+  return signal ? AbortSignal.any([signal, timeout]) : timeout
+}
 
 export class GeminiProvider implements AiProvider {
   public readonly name = 'Google Gemini (Verified Educational Inference)'
@@ -23,8 +28,8 @@ export class GeminiProvider implements AiProvider {
   private currentKeyIndex = 0
 
   constructor(customKeys?: string[]) {
-    if (customKeys && customKeys.length > 0) {
-      this.apiKeys = customKeys.filter(Boolean)
+    if (customKeys !== undefined) {
+      this.apiKeys = customKeys.filter((key) => Boolean(key.trim()))
     } else {
       const env = (
         globalThis as unknown as {
@@ -34,7 +39,9 @@ export class GeminiProvider implements AiProvider {
       const k1 = env?.GEMINI_API_KEY_1
       const k2 = env?.GEMINI_API_KEY_2
       const k3 = env?.GEMINI_API_KEY_3
-      this.apiKeys = [k1, k2, k3].filter((k): k is string => Boolean(k && k.trim()))
+      this.apiKeys = [k1, k2, k3].filter((k): k is string =>
+        Boolean(k && k.trim()),
+      )
     }
   }
 
@@ -62,6 +69,7 @@ export class GeminiProvider implements AiProvider {
     options: ChatRequestOptions,
     signal?: AbortSignal,
   ): Promise<ChatResponse> {
+    signal = requestSignal(signal)
     const systemPrompt = buildSystemPrompt({
       missionId: options.missionId,
       simple: options.simple,
@@ -147,6 +155,7 @@ export class GeminiProvider implements AiProvider {
             model,
           }
         } catch (err: unknown) {
+          if (signal.aborted) throw err
           lastError = err as Error
           this.rotateKey()
         }
@@ -155,7 +164,9 @@ export class GeminiProvider implements AiProvider {
 
     throw (
       lastError ??
-      new Error('Failed to generate response after rotating through available keys.')
+      new Error(
+        'Failed to generate response after rotating through available keys.',
+      )
     )
   }
 
@@ -164,6 +175,7 @@ export class GeminiProvider implements AiProvider {
     onChunk: (chunk: string) => void,
     signal?: AbortSignal,
   ): Promise<ChatResponse> {
+    signal = requestSignal(signal)
     const systemPrompt = buildSystemPrompt({
       missionId: options.missionId,
       simple: options.simple,
@@ -243,9 +255,7 @@ export class GeminiProvider implements AiProvider {
       .find((m) => m.role === 'user')?.content
 
     const sources = getGroundingSources(options.missionId, lastUserMessage)
-    const suggestedQuestions = generateSuggestedQuestions(
-      options.missionId,
-    )
+    const suggestedQuestions = generateSuggestedQuestions(options.missionId)
 
     return {
       content: fullText || 'No response generated.',
@@ -260,6 +270,7 @@ export class GeminiProvider implements AiProvider {
     options: TtsRequestOptions,
     signal?: AbortSignal,
   ): Promise<TtsResponse> {
+    signal = requestSignal(signal)
     const key = this.getKey()
     const url = `${GEMINI_BASE_URL}/models/${TTS_MODEL}:generateContent?key=${key}`
 
