@@ -3,6 +3,7 @@ import { Bot, BookOpen, Mic, Send, Sparkles } from 'lucide-react'
 import { Dialog } from '@/components/ui/Dialog.tsx'
 import { listMissions } from '@/missions/registry.ts'
 import type { MissionId } from '@/missions/types.ts'
+import { ChatLauncher } from './ChatLauncher.tsx'
 import {
   answerLocally,
   briefings,
@@ -56,14 +57,11 @@ export function AiCompanion({ context }: AiCompanionProps) {
 
   return (
     <>
-      <button
+      <ChatLauncher
         ref={launcher}
-        className="nova-ai-launcher"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-      >
-        <Bot size={22} aria-hidden="true" /> <span>Ask Nova AI</span>
-      </button>
+        open={open}
+        onClick={() => setOpen((previous) => !previous)}
+      />
       <Dialog
         open={open}
         onClose={close}
