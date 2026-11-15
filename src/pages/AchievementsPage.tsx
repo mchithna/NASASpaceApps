@@ -17,6 +17,7 @@ import {
 } from './components/achievements/AchievementCard.tsx'
 import { GuardianMetaBadge } from './components/achievements/GuardianMetaBadge.tsx'
 import styles from './components/achievements/achievements.module.css'
+import { AchievementsAiGuide } from '@/ai/surfaces/AchievementsAiGuide.tsx'
 
 export function AchievementsPage() {
   const { achievements, session, isLoading, error, refresh } = usePlatformData()
@@ -100,6 +101,8 @@ export function AchievementsPage() {
           totalUnlocked={totalUnlocked}
           totalAchievements={totalAchievements}
         />
+
+        <AchievementsAiGuide unlockedAchievements={achievements} />
 
         {/* Zero Achievements Empty State */}
         {totalUnlocked === 0 && !isLoading ? (

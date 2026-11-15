@@ -18,6 +18,7 @@ import { ProfileAcademyForm } from '@/pages/components/profile/ProfileAcademyFor
 import styles from '@/pages/components/profile/profile.module.css'
 import { useNovaServices } from '@/pages/context/index.ts'
 import { usePlatformData } from '@/pages/hooks/usePlatformData.ts'
+import { ProfileAiInsights } from '@/ai/surfaces/ProfileAiInsights.tsx'
 
 export function ProfilePage() {
   const navigate = useNavigate()
@@ -185,6 +186,12 @@ export function ProfilePage() {
             progressLabel={progressLabel}
           />
         ) : null}
+
+        <ProfileAiInsights
+          profile={profile}
+          progress={progress}
+          journalCount={progress?.missions.reduce((sum, m) => sum + (m.status === 'completed' ? 1 : 0), 0) ?? 0}
+        />
 
         {profile ? (
           <ProfileEditRegion>
