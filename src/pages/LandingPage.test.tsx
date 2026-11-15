@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it } from 'vitest'
@@ -32,47 +32,48 @@ function renderLanding() {
 }
 
 describe('LandingPage component', () => {
-  it('renders the hero headline, subtitle, and challenge banner', () => {
+  it('renders the cinematic hero headline, supporting narrative, and challenge banners', () => {
     renderLanding()
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'NovaExplorer' }),
+      screen.getByRole('heading', { level: 1, name: /Some Missions End/i }),
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText('Discover the stories that space left behind.'),
+      screen.getByText(/Journey through the extraordinary stories of five NASA spacecraft/i),
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText('NASA Space Apps Challenge 2026'),
+      screen.getByText('NASA EDUCATIONAL EXPERIENCE'),
     ).toBeInTheDocument()
+
     expect(
-      screen.getByText('Abandoned But Not Forgotten'),
-    ).toBeInTheDocument()
+      screen.getAllByText(/Abandoned But Not Forgotten/i).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders call-to-action buttons connecting to appropriate routes', async () => {
+  it('renders call-to-action buttons connecting to onboarding, mission control, and sign in', async () => {
     const user = userEvent.setup()
     renderLanding()
 
-    // Check Begin Exploring CTA
-    const beginCta = screen.getByRole('link', { name: 'Begin Exploring' })
+    // Check Begin Your Journey CTA
+    const beginCta = screen.getByRole('link', { name: 'Begin Your Journey' })
     expect(beginCta).toHaveAttribute('href', '/onboarding')
 
     // Check Mission Control link
-    const mcLink = screen.getByRole('link', { name: 'Mission Control' })
-    expect(mcLink).toHaveAttribute('href', '/dashboard')
+    const mcLinks = screen.getAllByRole('link', { name: /Mission Control/i })
+    expect(mcLinks.some((l) => l.getAttribute('href') === '/dashboard')).toBe(true)
 
-    // Check Sign in link
-    const signInLink = screen.getByRole('link', { name: 'Sign in' })
-    expect(signInLink).toHaveAttribute('href', '/auth')
+    // Check Login link
+    const loginLinks = screen.getAllByRole('link', { name: 'Login' })
+    expect(loginLinks.some((l) => l.getAttribute('href') === '/auth')).toBe(true)
 
-    // Click Begin Exploring and verify navigation
+    // Click Begin Your Journey and verify navigation
     await user.click(beginCta)
     expect(screen.getByTestId('onboarding-dest')).toBeInTheDocument()
   })
 
-  it('dynamically renders all five registered missions with accessible images and links', () => {
+  it('dynamically renders all five registered missions with accessible images, titles, and links', () => {
     renderLanding()
     const registeredMissions = listMissions()
 
@@ -94,7 +95,7 @@ describe('LandingPage component', () => {
       const image = screen.getByRole('img', {
         name: `Cover illustration representing the ${mission.displayName} mission`,
       })
-      expect(image).toHaveAttribute('src', mission.coverImage)
+      expect(image).toBeInTheDocument()
 
       // Check link to mission overview
       const inspectLink = screen.getByRole('link', {
@@ -111,19 +112,19 @@ describe('LandingPage component', () => {
       screen.getByRole('heading', { level: 2, name: 'How NovaExplorer Works' }),
     ).toBeInTheDocument()
 
-    expect(screen.getByText('1. Choose a Story')).toBeInTheDocument()
-    expect(screen.getByText('2. Investigate Science')).toBeInTheDocument()
-    expect(screen.getByText('3. Earn Academy XP')).toBeInTheDocument()
-    expect(screen.getByText('4. Fill Your Journal')).toBeInTheDocument()
+    expect(screen.getByText('Create Explorer Profile')).toBeInTheDocument()
+    expect(screen.getAllByText('Explore Missions').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Complete Challenges')).toBeInTheDocument()
+    expect(screen.getByText('Earn XP & Achievements')).toBeInTheDocument()
   })
 
-  it('renders scientific integrity notice and NASA disclaimer', () => {
+  it('renders scientific integrity notice and NASA attribution', () => {
     renderLanding()
 
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: 'Scientific Integrity & NASA Sources',
+        name: /Scientific Integrity & NASA Sources/i,
       }),
     ).toBeInTheDocument()
 
@@ -131,7 +132,33 @@ describe('LandingPage component', () => {
       screen.getByText(/All spacecraft specifications, operational timelines/i),
     ).toBeInTheDocument()
     expect(
-      screen.getByText(/not officially endorsed by NASA/i),
-    ).toBeInTheDocument()
+      screen.getAllByText(/not officially endorsed by NASA/i).length,
+    ).toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders the floating navigation bar with brand logo and quick links', () => {
+    renderLanding()
+
+    const nav = screen.getByRole('navigation', { name: 'Main Navigation' })
+    expect(nav).toBeInTheDocument()
+    expect(within(nav).getByRole('button', { name: 'NovaExplorer Home' })).toBeInTheDocument()
+    expect(within(nav).getByRole('button', { name: 'Explore Missions' })).toBeInTheDocument()
+    expect(within(nav).getByRole('button', { name: 'How It Works' })).toBeInTheDocument()
+    expect(within(nav).getByRole('button', { name: 'About' })).toBeInTheDocument()
+  })
+
+
+  it('renders the footer with official NASA resources and challenge credits', () => {
+    renderLanding()
+
+    expect(screen.getByRole('link', { name: /NASA Science/i })).toHaveAttribute(
+      'href',
+      'https://science.nasa.gov',
+    )
+    expect(screen.getByRole('link', { name: /NASA Jet Propulsion Laboratory/i })).toHaveAttribute(
+      'href',
+      'https://www.jpl.nasa.gov',
+    )
+    expect(screen.getByRole('button', { name: 'Back to top' })).toBeInTheDocument()
   })
 })

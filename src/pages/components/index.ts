@@ -35,3 +35,11 @@ export {
   ProfileEditForm,
   type ProfileEditFormProps,
 } from '@/pages/components/ProfileEditForm.tsx'
+export { LandingNavbar } from '@/pages/components/landing/LandingNavbar.tsx'
+export { LandingHero } from '@/pages/components/landing/LandingHero.tsx'
+export { LandingMissions } from '@/pages/components/landing/LandingMissions.tsx'
+export { LandingHowItWorks } from '@/pages/components/landing/LandingHowItWorks.tsx'
+export { LandingAbout } from '@/pages/components/landing/LandingAbout.tsx'
+export { LandingFooter } from '@/pages/components/landing/LandingFooter.tsx'
+export { NovaLogo, type NovaLogoProps } from '@/pages/components/landing/NovaLogo.tsx'
+
