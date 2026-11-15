@@ -386,12 +386,145 @@
   white-space: nowrap;
 }
 
+/* =========================================
+   Player Route Styles (Task C2)
+   ========================================= */
+
+.playerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  color: var(--color-landing-text, #f5f7fb);
+  font-family: var(--font-sans);
+}
+
+.playerHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(82, 103, 124, 0.25);
+}
+
+.playerNavLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.playerCard {
+  border-radius: var(--radius-surface, 1rem);
+  border: 1px solid var(--color-landing-border, #344354);
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in srgb, var(--color-science, #53cbff) 10%, transparent),
+      transparent 70%
+    ),
+    var(--color-landing-surface, #0b1421);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.plannedArtBox {
+  overflow: hidden;
+  border-radius: calc(var(--radius-surface, 1rem) - 4px);
+  border: 1px solid rgba(82, 103, 124, 0.3);
+  background: #050a12;
+  position: relative;
+}
+
+.plannedImg {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.plannedAdvisory {
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  background: rgba(83, 203, 255, 0.06);
+  border: 1px solid rgba(83, 203, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plannedAdvisoryTitle {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-science, #53cbff);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.plannedAdvisoryText {
+  color: var(--color-secondary, #b8c8dd);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.plannedExplicitNote {
+  font-size: 0.85rem;
+  color: var(--color-landing-muted, #aab7c8);
+  font-style: italic;
+  margin: 0;
+}
+
+.playerServiceNotice {
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  background: rgba(83, 203, 255, 0.08);
+  border: 1px solid rgba(83, 203, 255, 0.18);
+  color: var(--color-secondary, #b8c8dd);
+}
+
+.buttonLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  background: var(--color-landing-lime, #d9fca7);
+  color: #050a12;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.buttonLink:hover {
+  background: #e5ffd0;
+  transform: translateY(-1px);
+}
+
+.buttonLink:focus-visible {
+  outline: 2px solid var(--color-focus, #53cbff);
+  outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .primaryCta {
+  .primaryCta,
+  .buttonLink {
     transition: none;
     transform: none;
   }
-  .primaryCta:hover {
+  .primaryCta:hover,
+  .buttonLink:hover {
     transform: none;
   }
   .secondaryLink {
