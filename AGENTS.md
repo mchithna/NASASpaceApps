@@ -150,6 +150,12 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The develop preview failed because the Edge Function `api/chat` imported
+`src/ai/nova-system-prompt.ts`. Vercel cannot bundle that outside TypeScript
+module into an Edge Function. The same prompt now lives in `api/chat.ts`, and
+gateway settings are read from the function environment. The chat request and
+streamed response contract is unchanged. No provider key was added.
+
 Pioneer 10 now exports seven sourced scenes through the existing chapter loader,
 with spacecraft inspection, a sparse-belt journey, Jupiter instrument science,
 plaque decoding, a light-delay communication lab and legacy ordering. Fixed
