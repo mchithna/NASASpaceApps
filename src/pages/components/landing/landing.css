@@ -844,6 +844,10 @@
 .nova-landing .lp-mission-card[data-mission='opportunity'] .lp-card-image img {
   object-position: 50% 68%;
 }
+.nova-landing .lp-mission-card[data-mission='ingenuity'] .lp-card-image img {
+  object-position: 50% 62%;
+  transform: scale(1.06);
+}
 .nova-landing .lp-card-image::after {
   content: '';
   position: absolute;
@@ -1236,6 +1240,9 @@
   }
   .nova-landing .lp-mission-card:hover img {
     transform: scale(1.05);
+  }
+  .nova-landing .lp-mission-card[data-mission='ingenuity']:hover .lp-card-image img {
+    transform: scale(1.1);
   }
   .nova-landing .lp-mission-card:hover .lp-arrow-circle {
     border-color: rgba(217, 252, 167, 0.65);

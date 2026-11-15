@@ -158,57 +158,73 @@
   place-items: center;
   height: 360px;
 }
-.planet {
+.moon3dStage {
   position: relative;
-  width: 285px;
+  width: 320px;
   aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  background: var(--color-landing-bg);
-  box-shadow: 0 0 65px color-mix(in srgb, var(--color-reward) 12%, transparent);
-}
-.planet img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.28);
-}
-.planet::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 50%;
-  box-shadow: inset -40px -20px 45px 10px
-    color-mix(in srgb, var(--color-landing-bg) 85%, transparent);
-}
-.orbit {
-  position: absolute;
-  width: 95%;
-  height: 57%;
-  border: 1px solid
-    color-mix(in srgb, var(--color-landing-muted) 30%, transparent);
-  border-radius: 50%;
-  transform: rotate(-28deg);
-  z-index: 2;
+  display: grid;
+  place-items: center;
   pointer-events: none;
 }
-.orbit::before {
-  content: '';
-  position: absolute;
-  inset: -25px 24px;
-  border-radius: 50%;
-  border: 1px dashed
-    color-mix(in srgb, var(--color-landing-muted) 14%, transparent);
+.moon3dCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 420ms ease;
 }
-.orbit > span {
-  position: absolute;
-  top: 16%;
-  left: 10%;
-  width: 7px;
-  height: 7px;
+.moonWebglActive .moon3dCanvas {
+  opacity: 1;
+}
+.moonWebglActive .moon3dFallback {
+  display: none;
+}
+.moon3dFallback {
+  position: relative;
+  width: 82%;
+  height: 82%;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+}
+.moonSphereFallback {
+  position: relative;
+  width: 88%;
+  aspect-ratio: 1;
   border-radius: 50%;
-  background: var(--color-landing-lime);
-  box-shadow: 0 0 12px var(--color-landing-lime);
+  overflow: hidden;
+  background: radial-gradient(circle at 30% 28%, #dce4ee 0%, #7d899b 48%, #283241 85%);
+  box-shadow:
+    -4px -3px 18px rgba(173, 216, 255, 0.35),
+    0 0 60px rgba(83, 203, 255, 0.16),
+    inset -26px -18px 40px rgba(5, 10, 20, 0.85);
+}
+.moonSurfaceStrip {
+  position: absolute;
+  inset: -6%;
+  background:
+    radial-gradient(circle at 22% 38%, rgba(56, 66, 82, 0.65) 0%, transparent 24%),
+    radial-gradient(circle at 52% 44%, rgba(62, 72, 88, 0.58) 0%, transparent 28%),
+    radial-gradient(circle at 76% 34%, rgba(54, 64, 78, 0.6) 0%, transparent 22%),
+    radial-gradient(circle at 36% 68%, rgba(235, 243, 255, 0.55) 0%, transparent 14%);
+  background-size: 200% 100%;
+  animation: moonHorizontalSpin 34s linear infinite;
+}
+.moonAtmosphereOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow:
+    inset 4px 3px 10px rgba(236, 245, 255, 0.48),
+    inset -28px -18px 44px rgba(5, 10, 20, 0.88);
+}
+@keyframes moonHorizontalSpin {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: -200% 50%;
+  }
 }
 .planetLabel {
   position: absolute;
@@ -650,7 +666,7 @@
   .formContent > [role='tabpanel']:not([hidden]) {
     animation: arrive 0.3s ease-out both;
   }
-  .planet {
+  .moon3dStage {
     animation: drift 4s ease-in-out 1;
   }
   .discoveryTag {
@@ -673,8 +689,8 @@
   .artwork h2 {
     font-size: 2.35rem;
   }
-  .planet {
-    width: 235px;
+  .moon3dStage {
+    width: 260px;
   }
   .chapterNumber {
     display: none;
@@ -731,12 +747,8 @@
   .planetScene {
     height: 180px;
   }
-  .planet {
-    width: 165px;
-  }
-  .orbit {
-    width: 90%;
-    height: 65%;
+  .moon3dStage {
+    width: 190px;
   }
   .planetFigure figcaption {
     position: absolute;
