@@ -539,3 +539,49 @@
     transform: none;
   }
 }
+
+/* Keep explorer identity and editing on the same glass surface system. */
+.identity,
+.panel,
+.session {
+  background: var(--observatory-glass);
+  border: 1px solid var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(22px);
+  border-radius: 24px;
+}
+.layout {
+  max-width: none;
+  gap: 32px;
+}
+.identity {
+  overflow: clip;
+}
+.copy {
+  padding: clamp(24px, 3vw, 40px);
+  gap: 24px;
+}
+.panel {
+  padding: clamp(20px, 3vw, 32px);
+}
+.save,
+.register {
+  min-height: 46px;
+  border-radius: 999px;
+  padding-inline: 24px;
+}
+.avatarOption {
+  background: #0b142170;
+  border-color: #c4dff52b;
+  border-radius: 18px;
+  min-height: 88px;
+}
+.avatarOption[aria-checked='true'] {
+  background: #d4ff9a0f;
+  border-color: var(--color-landing-lime);
+}
+.input {
+  border-radius: 12px;
+  background: #070f1dcc;
+  min-height: 48px;
+}

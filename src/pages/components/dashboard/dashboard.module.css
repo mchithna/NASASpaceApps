@@ -260,7 +260,11 @@
   overflow: hidden;
   border: 1px solid var(--color-landing-border);
   border-radius: 1.4rem;
-  background: linear-gradient(160deg, var(--color-landing-elevated), var(--color-landing-surface));
+  background: linear-gradient(
+    160deg,
+    var(--color-landing-elevated),
+    var(--color-landing-surface)
+  );
   box-shadow: 0 12px 28px rgb(0 0 0 / 0.24);
 }
 
@@ -555,5 +559,121 @@
 
   to {
     transform: none;
+  }
+}
+
+/* Observatory surfaces: shared glass, purposeful imagery, aligned actions. */
+.hero,
+.metric,
+.card,
+.spotlight {
+  background: var(--observatory-glass);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(20px);
+}
+.hero {
+  min-height: 22rem;
+  border-radius: 28px;
+}
+.stage .hero {
+  padding: clamp(24px, 4vw, 40px);
+  overflow: clip;
+}
+.copy {
+  gap: 1rem;
+}
+.metric {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 32px;
+  height: 2px;
+  background: var(--color-landing-lime);
+}
+.metricValue {
+  font-size: clamp(1.4rem, 2.3vw, 2rem);
+}
+.card {
+  border-radius: 24px;
+  transition:
+    border-color 0.25s,
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+.media {
+  aspect-ratio: 1.5;
+}
+.scrim {
+  background: linear-gradient(180deg, #050a1410 25%, #050a1480);
+}
+.body {
+  gap: 0.8rem;
+  padding: 1.5rem 1.5rem 0.75rem;
+}
+.title {
+  font-size: 1.8rem;
+  letter-spacing: -0.04em;
+}
+.summary {
+  line-height: 1.85;
+}
+.chapter {
+  color: var(--color-landing-lime);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+.footer {
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 1.5rem 1.4rem;
+  margin-top: auto;
+  background: transparent;
+}
+.primary,
+.action {
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--color-landing-lime);
+  color: #050a14;
+  border: 1px solid #eaffc7;
+  padding: 0.75rem 1.1rem;
+  text-align: center;
+  box-shadow: 0 4px 22px #d4ff9a12;
+}
+.quiet {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-5px);
+    border-color: #d4ff9a70;
+    box-shadow: 0 24px 60px #0005;
+  }
+  .media img {
+    transition: transform 0.7s;
+  }
+  .card:hover .media img {
+    transform: scale(1.04);
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    min-height: 19rem;
+  }
+  .body {
+    padding: 1.25rem;
+  }
+  .footer {
+    padding-inline: 1.25rem;
   }
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { Lock, CheckCircle2, Sparkles } from 'lucide-react'
+import { SpaceArtwork } from '@/pages/components/SpaceArtwork.tsx'
 import { Badge } from '@/components/ui/Badge.tsx'
 import type { MissionDefinition } from '@/missions/types.ts'
 import styles from './achievements.module.css'
@@ -28,6 +29,12 @@ export function AchievementCard({ badge }: AchievementCardProps) {
         badge.isUnlocked ? styles.badgeCardUnlocked : styles.badgeCardLocked
       }`}
     >
+      {badge.mission ? (
+        <SpaceArtwork
+          visual={badge.mission.id}
+          className={styles.missionImage}
+        />
+      ) : null}
       <div className="flex flex-col gap-3">
         <div className={styles.cardTopRow}>
           <Badge variant="neutral">{destination}</Badge>
@@ -59,7 +66,9 @@ export function AchievementCard({ badge }: AchievementCardProps) {
 
           <div className={styles.cardHeadingGroup}>
             <h4 className={styles.cardMissionTitle}>{missionName} Story</h4>
-            <h5 className="text-sm font-semibold text-[#d4ff9a]">{badge.title}</h5>
+            <h5 className="text-sm font-semibold text-[#d4ff9a]">
+              {badge.title}
+            </h5>
             <span className={styles.cardChapterTitle}>
               {badge.mission?.chapterTitle ?? badge.description}
             </span>

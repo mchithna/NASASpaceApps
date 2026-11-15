@@ -57,16 +57,22 @@ test('academy pages share the home visual language and preserve learner flows', 
   })
   await open(page, '/onboarding?acceptance=training')
   await checkScreen(page, 'Explorer Setup')
+  await expect(page.locator('.observatory-sky')).toBeVisible()
+  await expect(page.locator('.observatory-sky-photo')).toHaveCSS(
+    'animation-name',
+    'none',
+  )
+  await expect(
+    page.getByRole('link', { name: /Night-sky photo/ }),
+  ).toBeVisible()
   const setupPanel = page.locator('main .animate-page-rise').first()
-  await expect(setupPanel).toHaveCSS(
-    'animation-name',
-    'none',
-  )
+  await expect(setupPanel).toHaveCSS('animation-name', 'none')
   await page.emulateMedia({ reducedMotion: 'no-preference' })
-  await expect(setupPanel).not.toHaveCSS(
+  await expect(page.locator('.observatory-sky-photo')).not.toHaveCSS(
     'animation-name',
     'none',
   )
+  await expect(setupPanel).not.toHaveCSS('animation-name', 'none')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.getByLabel('Choose Callsign').fill('Orbit Scout')
   await page.getByRole('radio', { name: /Mars Rover Pilot/ }).click()
@@ -74,11 +80,36 @@ test('academy pages share the home visual language and preserve learner flows', 
     .getByRole('button', { name: 'Save Profile & Enter Mission Control' })
     .click()
   await checkScreen(page, 'Mission Control')
-  await expect(page.getByRole('link', { name: /^Begin Story for / })).toHaveCount(5)
+  const explorerHero = page.locator(
+    'section[aria-labelledby="explorer-hero-name"]',
+  )
+  await expect(explorerHero).toHaveJSProperty('scrollLeft', 0)
+  const explorerBounds = await explorerHero.boundingBox()
+  const callsignBounds = await page.locator('#explorer-hero-name').boundingBox()
+  expect(callsignBounds!.x).toBeGreaterThan(explorerBounds!.x)
+  if (page.viewportSize()!.width < 1024) {
+    const menu = page.getByRole('button', {
+      name: 'Open navigation menu',
+      exact: true,
+    })
+    await menu.click()
+    await expect(
+      page.getByRole('button', { name: 'Close navigation menu' }),
+    ).toHaveAttribute('aria-expanded', 'true')
+    await page.keyboard.press('Escape')
+    await expect(menu).toBeFocused()
+  }
+  await expect(
+    page.getByRole('link', { name: /^Begin Story for / }),
+  ).toHaveCount(5)
   if (page.viewportSize()!.width < 640) {
-    await page.getByRole('button', { name: 'Open navigation menu', exact: true }).focus()
+    await page
+      .getByRole('button', { name: 'Open navigation menu', exact: true })
+      .focus()
     await page.keyboard.press('Enter')
-    await expect(page.getByRole('button', { name: 'Close navigation menu' })).toHaveAttribute('aria-expanded', 'true')
+    await expect(
+      page.getByRole('button', { name: 'Close navigation menu' }),
+    ).toHaveAttribute('aria-expanded', 'true')
     await page
       .getByRole('navigation', { name: 'Main Navigation', exact: true })
       .getByRole('link', { name: 'Explorer Profile', exact: true })
@@ -134,7 +165,9 @@ test('academy pages share the home visual language and preserve learner flows', 
   })
   await open(page, '/missions/pioneer-10')
   await checkScreen(page, 'Pioneer 10')
-  await expect(page.getByText('Chapter In Development', { exact: true })).toBeVisible()
+  await expect(
+    page.getByText('Chapter In Development', { exact: true }),
+  ).toBeVisible()
   await open(page, '/not-a-real-page')
   await checkScreen(page, 'Page not found')
   await open(page, '/auth')

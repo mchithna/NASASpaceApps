@@ -1,3 +1,5 @@
+import { SpaceBackground } from '@/components/layout/SpaceBackground.tsx'
+import { Footer } from '@/components/layout/Footer.tsx'
 import { Link } from 'react-router'
 import { ArrowLeft, Orbit } from 'lucide-react'
 import { useRouteFocus } from '@/hooks/useRouteFocus.ts'
@@ -7,7 +9,8 @@ import '@/styles/platform.css'
 export function NotFoundPage() {
   const mainRef = useRouteFocus()
   return (
-    <div className="nova-platform">
+    <div className="nova-platform nova-inner">
+      <SpaceBackground />
       <main
         id="main-content"
         ref={mainRef}
@@ -31,6 +34,7 @@ export function NotFoundPage() {
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

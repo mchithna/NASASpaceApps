@@ -774,3 +774,47 @@
     border: 2px solid ButtonText;
   }
 }
+
+/* Let the shared night sky remain visible around the authentication glass. */
+.page {
+  min-height: auto;
+  background: transparent;
+  padding: 0;
+}
+.header {
+  display: none;
+}
+.shell {
+  background: var(--observatory-glass);
+  backdrop-filter: blur(24px);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  margin-block: 0;
+}
+.artwork {
+  background:
+    radial-gradient(ellipse at 45% 60%, #53cbff16, transparent 65%), #0b142144;
+}
+.formSide {
+  background: #0b142159;
+}
+.tabs {
+  border-radius: 999px;
+  background: #050a1480;
+}
+.tabs button {
+  border-radius: 999px;
+}
+.tabs button[aria-selected='true'] {
+  background: #d4ff9a;
+  color: #050a14;
+}
+.inputWrap {
+  border-radius: 12px;
+  background: #070f1dcc;
+}
+.submit,
+.guestButton {
+  min-height: 48px;
+  border-radius: 999px;
+}

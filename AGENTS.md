@@ -150,6 +150,14 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The inner-page observatory redesign adds a locally served NASA/JAXA night-sky
+photograph, decorative animated stars, glass panels, refreshed page heroes,
+mission imagery on achievement cards, consistent actions and a rebuilt footer.
+The home page, its components, styles, assets and footer are unchanged. Tablet
+navigation now exposes the menu; reduced motion disables the new animations.
+This is presentation work only; hosted acceptance gates remain open. See
+`docs/OBSERVATORY_REDESIGN.md` for scope, image provenance and validation.
+
 Opportunity now exports seven authored scenes through the existing chapter loader,
 with rover hotspots, water clues, a four-crater expedition, evidence matching,
 a qualitative airborne-dust simulation and a final timeline. Milestones remain
