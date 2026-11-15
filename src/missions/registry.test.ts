@@ -55,14 +55,18 @@ describe('mission registry', () => {
       expect(mission.status).toBe(
         mission.id === 'surveyor-3' ||
           mission.id === 'opportunity' ||
-          mission.id === 'insight'
+          mission.id === 'insight' ||
+          mission.id === 'ingenuity' ||
+          mission.id === 'pioneer-10'
           ? 'available'
           : 'planned',
       )
       expect(mission.coverImage).toBe(
         mission.id === 'opportunity'
           ? '/assets/missions/opportunity/victoria-crater.jpg'
-          : `/assets/missions/${mission.id}/cover.svg`,
+          : mission.id === 'ingenuity'
+            ? '/assets/missions/ingenuity/ingenuity-mars.webp'
+            : `/assets/missions/${mission.id}/cover.svg`,
       )
 
       for (const field of requiredText) {

@@ -1,0 +1,267 @@
+/* Scoped Nova Chat Launcher styles */
+.nova-chat-launcher {
+  --nova-lime: #c6f68d;
+  --nova-lime-2: #a8e86a;
+  --nova-ink: #07101f;
+  --nova-panel: #0c1830;
+  --nova-line: rgba(198, 246, 141, 0.28);
+  --nova-text: #e8eefc;
+
+  position: fixed;
+  left: max(24px, env(safe-area-inset-left));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.nova-badge {
+  position: relative;
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  flex: none;
+  border: 2px solid var(--nova-lime);
+  box-shadow:
+    0 0 0 3px rgba(198, 246, 141, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(198, 246, 141, 0.35);
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+
+.nova-badge svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.nova-label {
+  margin-left: -18px;
+  padding: 8px 16px 8px 26px;
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(135deg, var(--nova-lime), var(--nova-lime-2));
+  color: var(--nova-ink);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: padding 0.3s ease;
+}
+
+.nova-chat-launcher:hover .nova-badge {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.nova-chat-launcher:hover .nova-label {
+  padding-right: 20px;
+}
+
+.nova-chat-launcher:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+/* greeting bubble: neatly positioned above the badge */
+.nova-hello {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  white-space: nowrap;
+  background: #ffffff;
+  color: var(--nova-ink);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  animation: novaHello 7s 2s ease forwards;
+  z-index: 10;
+}
+
+.nova-hello::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 22px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #ffffff;
+}
+
+.nova-chat-launcher[aria-expanded="true"] .nova-hello {
+  display: none !important;
+}
+
+@keyframes novaHello {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  8%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ===== Astronaut animations ===== */
+.nx-ship {
+  transform-origin: 60px 72px;
+  animation: nxFly 4s ease-in-out infinite;
+}
+
+.nx-thumb {
+  transform-origin: 50px 56px;
+  animation: nxThumb 1.8s ease-in-out infinite;
+}
+
+.nx-beam {
+  animation: nxBeam 2s ease-in-out infinite;
+}
+
+.nx-flow {
+  stroke-dasharray: 5 7;
+  animation: nxFlow 1s linear infinite;
+}
+
+.nx-ring {
+  transform-origin: 60px 72px;
+  animation: nxRing 2.6s ease-out infinite;
+}
+
+.nx-glow {
+  animation: nxBeam 1.2s ease-in-out infinite;
+}
+
+.nx-led {
+  animation: nxChase 1.5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+.nx-star {
+  animation: nxTwinkle 3s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+.nx-peb {
+  animation: nxDrift 6s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes nxFly {
+  0%,
+  100% {
+    transform: translateY(1px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(2deg);
+  }
+}
+
+@keyframes nxThumb {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes nxBeam {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes nxFlow {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+@keyframes nxRing {
+  0% {
+    transform: scale(0.93);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 0.2;
+  }
+}
+
+@keyframes nxChase {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes nxTwinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes nxDrift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+  50% {
+    transform: translate(3px, -4px) rotate(12deg);
+  }
+}
+
+.nova-chat-launcher:hover .nx-ship {
+  animation-duration: 1.8s;
+}
+
+.nova-chat-launcher:hover .nx-thumb {
+  animation-duration: 0.45s;
+}
+
+/* Responsive: on screens under 480px, show only the round badge without the pill label */
+@media (max-width: 480px) {
+  .nova-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nova-badge svg *,
+  .nova-hello {
+    animation: none !important;
+  }
+  .nova-hello {
+    display: none;
+  }
+}

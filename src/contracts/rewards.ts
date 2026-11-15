@@ -186,7 +186,12 @@ export const discoveryCatalog = [
   {
     discoveryId: 'ingenuity-notes',
     missionId: 'ingenuity',
-    title: 'Placeholder: Ingenuity',
+    title: 'The Final Flight of Ingenuity',
+    summary:
+      'January 18, 2024: Flight 72 ended with a hard landing and rotor damage. Terrain images, navigation analysis and a damaged rotor shadow informed NASA’s investigation. Insufficient visual-navigation information over relatively featureless terrain was the likely beginning of the accident sequence. Reliable autonomous navigation and safe landing conditions are essential. NASA source: https://www.nasa.gov/missions/mars-2020-perseverance/ingenuity-helicopter/nasa-performs-first-aircraft-accident-investigation-on-another-world/',
+    contentStatus: 'sourced',
+    sourceUrl:
+      'https://www.nasa.gov/missions/mars-2020-perseverance/ingenuity-helicopter/nasa-performs-first-aircraft-accident-investigation-on-another-world/',
   },
   {
     discoveryId: 'insight-notes',
@@ -201,7 +206,11 @@ export const discoveryCatalog = [
   {
     discoveryId: 'pioneer-10-notes',
     missionId: 'pioneer-10',
-    title: 'Placeholder: Pioneer 10',
+    title: 'The Pioneer Plaque — A Message From Humanity',
+    summary:
+      'Pioneer 10 carries a physical plaque intended to identify humanity and its origin if found in the distant future. Hydrogen provides a shared physical reference; a pulsar map encodes the Sun’s location; human figures beside the spacecraft show appearance and scale; a solar-system diagram identifies Earth as the departure planet. The plaque is not a radio message, and no discovery or reply by another civilization is confirmed. NASA source: https://science.nasa.gov/resource/pioneer-plaque/',
+    contentStatus: 'sourced',
+    sourceUrl: 'https://science.nasa.gov/resource/pioneer-plaque/',
   },
 ] as const
 
