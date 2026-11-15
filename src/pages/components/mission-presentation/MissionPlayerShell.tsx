@@ -7,6 +7,7 @@ import {
   Info,
   Moon,
   Orbit,
+  RotateCw,
   Sparkles,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button.tsx'
@@ -91,10 +92,15 @@ export function MissionPlayerShell({
         </header>
       ) : null}
 
-      {/* Loading state */}
+      {/* Loading state: cinematic card with loading indicator */}
       {load.status === 'loading' ? (
         <div className={styles.playerCard}>
-          <LoadingState label="Loading your mission" />
+          <div className="flex flex-col gap-2 py-4">
+            <LoadingState label="Loading your mission" />
+            <p className="text-xs text-muted">
+              Synchronizing explorer telemetry and loading chapter sequence...
+            </p>
+          </div>
         </div>
       ) : null}
 
@@ -163,15 +169,24 @@ export function MissionPlayerShell({
         </article>
       ) : null}
 
-      {/* Error state */}
+      {/* Error / Recovery State */}
       {load.status === 'error' ? (
         <div className={styles.playerCard}>
-          <ErrorState title="Mission unavailable" message={load.message} />
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link to="/auth" className={styles.buttonLink}>
-              Sign in or continue as a guest
-            </Link>
-          </div>
+          <ErrorState
+            title="Mission unavailable"
+            message={load.message}
+            action={
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Button variant="secondary" onClick={onRetry}>
+                  <RotateCw size={14} className="mr-1 inline" aria-hidden="true" />
+                  Reload saved place
+                </Button>
+                <Link to="/auth" className={styles.buttonLink}>
+                  Sign in or continue as a guest
+                </Link>
+              </div>
+            }
+          />
         </div>
       ) : null}
 
@@ -195,10 +210,11 @@ export function MissionPlayerShell({
         </div>
       ) : null}
 
-      {/* Consistent navigation actions across all states */}
+      {/* Consistent navigation actions across all states in normal document flow */}
       <nav aria-label="Player navigation" className={styles.playerNavLinks}>
-        {load.status === 'error' || load.status === 'ready' ? (
+        {load.status === 'ready' ? (
           <Button variant="secondary" onClick={onRetry}>
+            <RotateCw size={14} className="mr-1 inline" aria-hidden="true" />
             Reload saved place
           </Button>
         ) : null}
