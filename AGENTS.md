@@ -150,6 +150,13 @@ The recommended next step is a suggestion only. Do not implement it in the same 
 
 ## Current development status
 
+The shared Nova companion is now mounted once through App.tsx, with a visible
+launcher, local sourced mission briefings, simple explanations, glossary and app
+help. This is explicitly source guide mode, not connected generative AI. Live
+text/voice and roadmap capabilities 6–20 remain unimplemented; eligible provider
+access for the 10–17 audience is unresolved. The unused browser Gemini key
+accessor was removed. See `docs/AI_INTEGRATION.md` for scope and validation.
+
 Opportunity now exports seven authored scenes through the existing chapter loader,
 with rover hotspots, water clues, a four-crater expedition, evidence matching,
 a qualitative airborne-dust simulation and a final timeline. Milestones remain
