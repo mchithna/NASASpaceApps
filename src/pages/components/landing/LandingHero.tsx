@@ -98,7 +98,7 @@ export function LandingHero() {
 
             {/* Main Heading */}
             <div className="flex flex-col gap-2">
-              <h1
+              <h2
                 id="hero-heading"
                 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08]"
               >
@@ -106,8 +106,9 @@ export function LandingHero() {
                 <span className="block text-[#D9FCA7] drop-shadow-[0_0_24px_rgba(217,252,167,0.35)]">
                   Their Stories Don&apos;t.
                 </span>
-              </h1>
+              </h2>
             </div>
+
 
             {/* Supporting Paragraph */}
             <p className="max-w-2xl text-base sm:text-lg lg:text-xl font-normal leading-relaxed text-[#AAB7C8]">

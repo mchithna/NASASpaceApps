@@ -15,7 +15,7 @@ describe('application routes', () => {
     render(<App />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /Some Missions End/i }),
+      screen.getByRole('heading', { level: 1, name: 'NovaExplorer' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: 'Skip to content' }),

@@ -74,19 +74,20 @@ export function LandingNavbar() {
       >
         {/* Left Side: Brand Logo, Wordmark, and Separator */}
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => scrollTo('top', 'home')}
+          <Link
+            to="/"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollTo('top', 'home')
+            }}
             className="flex items-center gap-2.5 rounded-full text-left transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-[#53CBFF]"
             aria-label="NovaExplorer Home"
           >
             <NovaLogo size={30} className="size-7 sm:size-8" />
-            <div className="flex items-center gap-2">
-              <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-[#F5F7FB]">
-                Nova<span className="text-[#53CBFF]">Explorer</span>
-              </span>
-            </div>
-          </button>
+            <h1 className="m-0 p-0 font-heading text-lg sm:text-xl font-bold tracking-tight text-[#F5F7FB]">
+              Nova<span className="text-[#53CBFF]">Explorer</span>
+            </h1>
+          </Link>
 
           {/* Thin Vertical Separator */}
           <span className="hidden sm:inline-block h-4 w-px bg-[#344354]" aria-hidden="true" />

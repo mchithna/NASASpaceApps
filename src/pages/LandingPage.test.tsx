@@ -36,7 +36,11 @@ describe('LandingPage component', () => {
     renderLanding()
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /Some Missions End/i }),
+      screen.getByRole('heading', { level: 1, name: 'NovaExplorer' }),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Some Missions End/i }),
     ).toBeInTheDocument()
 
     expect(
@@ -141,7 +145,7 @@ describe('LandingPage component', () => {
 
     const nav = screen.getByRole('navigation', { name: 'Main Navigation' })
     expect(nav).toBeInTheDocument()
-    expect(within(nav).getByRole('button', { name: 'NovaExplorer Home' })).toBeInTheDocument()
+    expect(within(nav).getByRole('link', { name: 'NovaExplorer Home' })).toBeInTheDocument()
     expect(within(nav).getByRole('button', { name: 'Explore Missions' })).toBeInTheDocument()
     expect(within(nav).getByRole('button', { name: 'How It Works' })).toBeInTheDocument()
     expect(within(nav).getByRole('button', { name: 'About' })).toBeInTheDocument()
