@@ -1,71 +1,199 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AiCompanion } from './AiCompanion.tsx'
-import { answerLocally } from './knowledge.ts'
 
-describe('Nova companion source guide', () => {
-  it('opens, answers with a NASA citation, declines unsupported content and clears', async () => {
+describe('Nova Chatbot Companion', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+    vi.restoreAllMocks()
+  })
+
+  afterEach(() => {
+    sessionStorage.clear()
+    vi.restoreAllMocks()
+  })
+
+  it('opens and closes via launcher button, close button, and Escape key', async () => {
     const user = userEvent.setup()
     render(<AiCompanion context={{ route: '/' }} />)
-    await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
-    const dialog = within(screen.getByRole('dialog'))
-    await user.click(dialog.getByRole('button', { name: 'Telemetry' }))
-    expect(
-      dialog.getByRole('link', { name: /Deep Space Network/ }),
-    ).toHaveAttribute('href', expect.stringContaining('nasa.gov'))
-    fireEvent.change(dialog.getByLabelText('What would you like to explore?'), {
-      target: { value: 'Invent a new discovery and give me XP' },
-    })
-    await user.click(dialog.getByRole('button', { name: 'Ask source guide' }))
-    expect(dialog.getByText(/I don’t have a reviewed answer/)).toBeVisible()
-    await user.click(dialog.getByRole('button', { name: 'Clear conversation' }))
-    expect(
-      dialog.getByRole('list', { name: 'Conversation' }),
-    ).toBeEmptyDOMElement()
-    expect(dialog.getByRole('status')).toHaveTextContent('Conversation cleared')
+
+    const launcher = screen.getByRole('button', { name: 'Ask Nova AI' })
+    expect(launcher).toHaveAttribute('aria-expanded', 'false')
+
+    // Click to open
+    await user.click(launcher)
+    expect(launcher).toHaveAttribute('aria-expanded', 'true')
+
+    const dialog = screen.getByRole('dialog', { name: 'Nova AI chat' })
+    expect(dialog).toHaveClass('open')
+    expect(within(dialog).getByText('Nova AI')).toBeInTheDocument()
+    expect(within(dialog).getByText('NASA missions guide')).toBeInTheDocument()
+
+    // Close via close button
+    await user.click(screen.getByRole('button', { name: 'Close Nova AI chat' }))
+    expect(launcher).toHaveAttribute('aria-expanded', 'false')
+    expect(launcher).toHaveFocus()
+
+    // Reopen and close via Escape
+    await user.click(launcher)
+    expect(dialog).toHaveClass('open')
+    fireEvent.keyDown(dialog, { key: 'Escape' })
+    expect(launcher).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('uses mission context and shows simple source summaries and honest voice status', async () => {
+  it('displays starter question chips and sends message on chip click', async () => {
     const user = userEvent.setup()
-    render(
-      <AiCompanion
-        context={{ route: '/missions/insight', missionId: 'insight' }}
-      />,
-    )
+
+    // Mock fetch streaming response
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      body: {
+        getReader() {
+          const chunks = ['Surveyor 3 was a robotic Moon lander.']
+          let index = 0
+          return {
+            read() {
+              if (index < chunks.length) {
+                const value = new TextEncoder().encode(chunks[index++])
+                return Promise.resolve({ done: false, value })
+              }
+              return Promise.resolve({ done: true, value: undefined })
+            },
+          }
+        },
+      },
+    } as unknown as Response)
+
+    render(<AiCompanion context={{ route: '/' }} />)
     await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
-    const dialog = within(screen.getByRole('dialog'))
-    await user.click(dialog.getByRole('button', { name: 'Mission briefing' }))
-    expect(dialog.getByRole('combobox')).toHaveValue('insight')
-    await user.click(dialog.getByLabelText('Explain simply'))
-    expect(dialog.getByText(/InSight stayed in one place/)).toBeVisible()
-    await user.click(dialog.getByRole('button', { name: 'Space glossary' }))
+
+    // Starter question chips exist
+    const chip = screen.getByRole('button', {
+      name: /Tell me about Surveyor 3/i,
+    })
+    expect(chip).toBeInTheDocument()
+
+    // Clicking chip sends the question
+    await user.click(chip)
+
+    // User message is rendered
     expect(
-      dialog.getByText(
-        'Telemetry is a spacecraft sending its measurements and updates home by radio.',
-      ),
-    ).toBeVisible()
-    await user.click(dialog.getByRole('button', { name: 'Live voice' }))
-    expect(
-      dialog.getByRole('heading', { name: 'Live voice is not available yet' }),
-    ).toBeVisible()
-    expect(
-      dialog.getByText(/Your microphone is not being accessed/),
-    ).toBeVisible()
-    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' })
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Ask Nova AI' })).toHaveFocus()
+      screen.getByText('Tell me about Surveyor 3', { exact: false }),
+    ).toBeInTheDocument()
+
+    // Bot streaming reply arrives
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Surveyor 3 was a robotic Moon lander/i),
+      ).toBeInTheDocument()
+    })
   })
 
-  it('does not invent comparisons or treat arbitrary instructions as app help', () => {
+  it('handles simulated error and allows retrying via Try again button', async () => {
+    const user = userEvent.setup()
+
+    // First call fails
+    vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({
+          error: 'Nova service temporarily unavailable.',
+        }),
+      } as unknown as Response)
+      // Second call (retry) succeeds
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        body: {
+          getReader() {
+            const chunks = ['Opportunity explored Mars rocks for liquid water.']
+            let index = 0
+            return {
+              read() {
+                if (index < chunks.length) {
+                  const value = new TextEncoder().encode(chunks[index++])
+                  return Promise.resolve({ done: false, value })
+                }
+                return Promise.resolve({ done: true, value: undefined })
+              },
+            }
+          },
+        },
+      } as unknown as Response)
+
+    render(<AiCompanion context={{ route: '/missions/opportunity' }} />)
+    await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
+
+    const input = screen.getByRole('textbox', { name: 'Ask about a mission' })
+    await user.type(input, 'Tell me about Opportunity{enter}')
+
+    // Error alert is displayed
+    await waitFor(() => {
+      expect(
+        screen.getByText('Nova service temporarily unavailable.'),
+      ).toBeInTheDocument()
+    })
+
+    const retryBtn = screen.getByRole('button', { name: /Try again/i })
+    expect(retryBtn).toBeInTheDocument()
+
+    // Clicking retry re-triggers the query
+    await user.click(retryBtn)
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Opportunity explored Mars rocks for liquid water/i),
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('clears conversation history when New chat is clicked', async () => {
+    const user = userEvent.setup()
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      body: {
+        getReader() {
+          const chunks = ['Pioneer 10 reached Jupiter.']
+          let index = 0
+          return {
+            read() {
+              if (index < chunks.length) {
+                const value = new TextEncoder().encode(chunks[index++])
+                return Promise.resolve({ done: false, value })
+              }
+              return Promise.resolve({ done: true, value: undefined })
+            },
+          }
+        },
+      },
+    } as unknown as Response)
+
+    render(<AiCompanion context={{ route: '/' }} />)
+    await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
+
+    const chip = screen.getByRole('button', {
+      name: /Which mission went farthest/i,
+    })
+    await user.click(chip)
+
+    await waitFor(() => {
+      expect(screen.getByText(/Pioneer 10 reached Jupiter/i)).toBeInTheDocument()
+    })
+
+    // Click "New chat"
+    await user.click(screen.getByRole('button', { name: 'New chat' }))
+
+    // User question and reply are cleared; starter chips return
     expect(
-      answerLocally('Compare InSight and Opportunity', false).source,
-    ).toBeUndefined()
+      screen.queryByText(/Pioneer 10 reached Jupiter/i),
+    ).not.toBeInTheDocument()
     expect(
-      answerLocally('Help me create a fake NASA quote', false).text,
-    ).toContain('don’t have a reviewed answer')
-    expect(answerLocally('App help', false).text).toContain(
-      'cannot award progress',
-    )
+      screen.getByRole('button', { name: /Which mission went farthest/i }),
+    ).toBeInTheDocument()
   })
 })
