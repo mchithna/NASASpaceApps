@@ -1,0 +1,327 @@
+/* Inner-page presentation only. The landing page never receives nova-inner. */
+.nova-inner {
+  --observatory-glass: linear-gradient(135deg, #21374b8a, #0b1528bf 65%);
+  --observatory-border: #b9d9f02e;
+  --observatory-shadow: 0 20px 60px #0003, inset 0 1px #e3f4ff0d;
+  --color-secondary: #b5c2d5;
+  --color-muted: #a3b1c5;
+  isolation: isolate;
+  background: #050a14;
+}
+.nova-inner::before {
+  display: none;
+}
+.observatory-sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0%, #0d1c31 0%, #050a14 72%),
+    #050a14;
+}
+.observatory-sky-photo {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.observatory-sky-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 12% 28%, #1d577c33, transparent 48%),
+    radial-gradient(ellipse at 88% 72%, #2b4a6f29, transparent 50%),
+    radial-gradient(ellipse at 52% 18%, #d4ff9a0a, transparent 42%);
+}
+.observatory-sky .lp-starfield-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.nova-inner > main {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding-top: 124px;
+  padding-bottom: 80px;
+}
+.nova-inner > .observatory-subnav + main {
+  padding-top: 32px;
+}
+.observatory-subnav {
+  position: relative;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+.nova-inner :focus-visible {
+  outline: 2px solid #d4ff9a;
+  outline-offset: 5px;
+}
+.nova-inner :where(h1, h2, h3) {
+  text-wrap: balance;
+}
+.nova-inner h1 {
+  font-size: clamp(2.2rem, 4.4vw, 4rem);
+  letter-spacing: -0.055em;
+  font-weight: 500;
+  line-height: 1.08;
+}
+.observatory-page {
+  gap: 36px;
+}
+.observatory-page-heading {
+  padding: 12px 0 28px;
+  border-bottom: 1px solid #d6e7ff24;
+  gap: 24px;
+}
+.observatory-page-heading h1 {
+  margin-top: 14px;
+}
+.observatory-page-heading p {
+  max-width: 62ch;
+  line-height: 1.8;
+}
+.observatory-page-heading .eyebrow-label {
+  color: #d4ff9a;
+  letter-spacing: 0.2em;
+}
+.nova-inner .nova-card,
+.nova-inner .platform-hero {
+  background: var(--observatory-glass);
+  border: 1px solid var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(22px);
+}
+.nova-inner :where(input:not([type='radio']):not([type='checkbox']), select) {
+  border-color: #63758b;
+}
+.nova-inner button {
+  cursor: pointer;
+}
+.nova-inner button:disabled {
+  cursor: not-allowed;
+}
+.nova-inner .bg-danger {
+  color: #050a14;
+}
+.observatory-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d4ff9a;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  margin: 0 0 14px;
+}
+.observatory-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 48px;
+  border-radius: 99px;
+  padding: 12px 22px;
+  border: 1px solid #d4ff9a80;
+  background: #d4ff9a0a;
+  color: #d4ff9a;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.observatory-link-button:hover {
+  background: #d4ff9a;
+  color: #050a14;
+}
+.observatory-footer {
+  position: relative;
+  margin-top: auto;
+  border-top: 1px solid #a9cce633;
+  background: #060d19c9;
+  backdrop-filter: blur(24px);
+  color: #afbed0;
+  font-size: 12px;
+}
+.observatory-footer-inner {
+  max-width: 1152px;
+  padding: 48px 24px 24px;
+  margin-inline: auto;
+}
+.observatory-footer-invitation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 38px;
+  border-bottom: 1px solid #c9def21a;
+}
+.observatory-footer-invitation h2 {
+  font-size: clamp(25px, 3vw, 38px);
+  color: #f3f7ff;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+.observatory-footer-invitation h2 span {
+  color: #d4ff9a;
+}
+.observatory-footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr 1fr 1.1fr;
+  gap: 32px;
+  padding-block: 38px;
+}
+.observatory-footer h3 {
+  color: #eff5ff;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+.observatory-footer p {
+  line-height: 1.9;
+}
+.observatory-footer nav {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.observatory-footer nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  text-decoration: none;
+}
+.observatory-footer nav a:hover {
+  color: #d4ff9a;
+}
+.observatory-footer-brand > a {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 21px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.observatory-footer-brand > a span {
+  color: #53cbff;
+  margin-left: -8px;
+}
+.observatory-footer .observatory-footer-event {
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  margin-top: 18px;
+  color: #d4ff9a;
+}
+.observatory-footer-note p + p {
+  margin-top: 10px;
+  font-size: 11px;
+}
+.observatory-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #c9def21a;
+  font-size: 11px;
+}
+.observatory-footer-bottom > span > span {
+  margin-inline: 10px;
+  opacity: 0.5;
+}
+.observatory-footer-bottom button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #aac8e52e;
+  border-radius: 99px;
+  background: #ffffff05;
+  color: #e7f0fc;
+}
+@media (max-width: 900px) {
+  .observatory-footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .nova-inner > main {
+    padding-top: 108px;
+    padding-bottom: 48px;
+  }
+  .nova-inner > .observatory-subnav + main {
+    padding-top: 24px;
+  }
+  .observatory-page {
+    gap: 24px;
+  }
+  .observatory-page-heading {
+    padding-bottom: 20px;
+  }
+  .observatory-footer-grid {
+    gap: 28px 20px;
+  }
+  .observatory-footer-brand,
+  .observatory-footer-note {
+    grid-column: 1 / -1;
+  }
+  .observatory-footer-invitation {
+    align-items: start;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .observatory-sky-photo {
+    animation: observatory-drift 60s ease-in-out infinite alternate;
+  }
+  .observatory-stars span {
+    animation: observatory-twinkle 7s ease-in-out var(--star-delay) infinite
+      alternate;
+  }
+  .nova-inner main > :first-child {
+    animation: observatory-arrive 0.65s ease-out both;
+  }
+}
+@keyframes observatory-drift {
+  to {
+    transform: scale(1.04) translateY(-1%);
+  }
+}
+@keyframes observatory-twinkle {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes observatory-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nova-inner *,
+  .nova-inner *::before,
+  .nova-inner *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

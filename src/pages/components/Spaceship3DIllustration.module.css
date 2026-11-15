@@ -1,0 +1,99 @@
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 380ms ease;
+}
+
+.webglActive .canvas {
+  opacity: 1;
+}
+
+.webglActive .fallback {
+  display: none;
+}
+
+.fallback {
+  position: relative;
+  width: min(19rem, 90%);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.shipRig {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  animation: shipFloat3d 9s ease-in-out infinite;
+}
+
+.svgShip {
+  width: 88%;
+  height: 88%;
+  overflow: visible;
+  filter:
+    drop-shadow(0 16px 28px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 22px rgba(83, 203, 255, 0.22));
+}
+
+.telemetryBadge {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 255, 154, 0.28);
+  background: rgba(5, 10, 20, 0.72);
+  backdrop-filter: blur(12px);
+  color: #b8c7da;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.telemetryDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d4ff9a;
+  box-shadow: 0 0 10px #d4ff9a;
+}
+
+@keyframes shipFloat3d {
+  0%,
+  100% {
+    transform: rotateX(10deg) rotateY(-14deg) translateY(0);
+  }
+  50% {
+    transform: rotateX(15deg) rotateY(14deg) translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shipRig {
+    animation: none !important;
+  }
+}

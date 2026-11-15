@@ -1,100 +1,95 @@
 import { Link } from 'react-router'
-import { ArrowUp, ExternalLink } from 'lucide-react'
+import { ArrowUp, ArrowUpRight, Orbit } from 'lucide-react'
 import { NovaLogo } from '@/pages/components/landing/NovaLogo.tsx'
 
 export function Footer() {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const reduceMotion = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'instant' : 'smooth' })
   }
-
   return (
-    <footer className="mt-auto border-t border-white/[0.08] bg-[#070d17]/80 backdrop-blur-md pt-12 pb-8 px-6 text-[#9aa7bd] text-xs">
-      <div className="max-w-6xl mx-auto flex flex-col gap-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand Info */}
-          <div className="flex flex-col gap-3">
-            <Link
-              to="/"
-              className="flex items-center gap-2 text-white font-heading font-semibold text-lg tracking-tight"
-            >
-              <NovaLogo size={24} />
-              <span>
-                Nova<span className="text-[#53cbff]">Explorer</span>
-              </span>
-            </Link>
-            <p className="leading-relaxed max-w-sm">
-              An educational space exploration platform bringing the stories and
-              legacies of NASA missions to a new generation of explorers.
+    <footer className="observatory-footer">
+      <div className="observatory-footer-inner">
+        <div className="observatory-footer-invitation">
+          <div>
+            <p className="observatory-kicker">
+              <Orbit size={15} aria-hidden="true" /> THE EXPLORATION CONTINUES
             </p>
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 text-[#d4ff9a] hover:underline font-medium mt-1"
-            >
-              <span>Mission Control</span>
-              <ExternalLink size={13} aria-hidden="true" />
-            </Link>
+            <h2>
+              Every mission leaves <span>a story.</span>
+            </h2>
           </div>
-
-          {/* NASA Resources */}
-          <div className="flex flex-col gap-2.5">
-            <h4 className="font-heading font-semibold text-white text-sm">
-              NASA Science Resources
-            </h4>
+          <Link to="/dashboard" className="observatory-link-button">
+            Find your next mission <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="observatory-footer-grid">
+          <div className="observatory-footer-brand">
+            <Link to="/" aria-label="NovaExplorer Home">
+              <NovaLogo size={30} /> Nova<span>Explorer</span>
+            </Link>
+            <p>
+              Forgotten spacecraft. Extraordinary stories.
+              <br />A new generation of explorers.
+            </p>
+            <p className="observatory-footer-event">
+              NASA SPACE APPS CHALLENGE 2026
+            </p>
+          </div>
+          <nav aria-label="Explore NovaExplorer">
+            <h3>Your academy</h3>
+            <Link to="/dashboard">Mission Control</Link>
+            <Link to="/profile">Explorer Profile</Link>
+            <Link to="/journal">Discovery Journal</Link>
+            <Link to="/achievements">Achievements</Link>
+          </nav>
+          <nav aria-label="NASA resources">
+            <h3>Beyond the academy</h3>
             <a
               href="https://science.nasa.gov"
               target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+              rel="noopener noreferrer"
             >
-              <span>NASA Science Official</span>
-              <ExternalLink size={12} aria-hidden="true" />
+              NASA Science <ArrowUpRight size={13} aria-hidden="true" />
             </a>
             <a
               href="https://www.jpl.nasa.gov"
               target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+              rel="noopener noreferrer"
             >
-              <span>NASA Jet Propulsion Laboratory</span>
-              <ExternalLink size={12} aria-hidden="true" />
+              Jet Propulsion Laboratory{' '}
+              <ArrowUpRight size={13} aria-hidden="true" />
             </a>
             <a
-              href="https://science.nasa.gov/missions/"
+              href="https://www.nasa.gov/image-article/milky-way-views/"
               target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+              rel="noopener noreferrer"
             >
-              <span>NASA Space Missions Directory</span>
-              <ExternalLink size={12} aria-hidden="true" />
+              Night-sky photo &middot; NASA/JAXA{' '}
+              <ArrowUpRight size={13} aria-hidden="true" />
             </a>
-          </div>
-
-          {/* Space Apps Challenge Badge */}
-          <div className="flex flex-col gap-2.5">
-            <span className="eyebrow-label text-[10px]">
-              <span className="eyebrow-dot" /> NASA SPACE APPS CHALLENGE 2026
-            </span>
-            <h4 className="font-heading font-semibold text-white text-sm">
-              Abandoned But Not Forgotten
-            </h4>
-            <p className="leading-relaxed">
-              NovaExplorer is an independent educational experience and is not
-              officially endorsed by NASA. Sourced facts and citations preserve
-              original mission credits.
+          </nav>
+          <div className="observatory-footer-note">
+            <h3>Abandoned But Not Forgotten</h3>
+            <p>
+              An independent educational experience, not officially endorsed by
+              NASA. Mission imagery and scientific sources retain their original
+              credits.
+            </p>
+            <p>
+              Background: archival photograph with decorative star animation.
             </p>
           </div>
         </div>
-
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/[0.06] text-[11px]">
-          <span>© 2026 NovaExplorer · Keep curiosity alive.</span>
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="inline-flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
-          >
-            <span>Back to top</span>
-            <ArrowUp size={13} aria-hidden="true" />
+        <div className="observatory-footer-bottom">
+          <span>
+            &copy; 2026 NovaExplorer <span aria-hidden="true">/</span> Keep
+            curiosity alive.
+          </span>
+          <button type="button" onClick={scrollToTop}>
+            Back to top <ArrowUp size={15} aria-hidden="true" />
           </button>
         </div>
       </div>

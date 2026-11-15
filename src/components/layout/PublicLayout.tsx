@@ -24,7 +24,7 @@ export function PublicLayout() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14] relative">
+    <div className="nova-inner flex min-h-svh flex-col bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14] relative">
       <SkipLink />
       <Navbar />
       <SpaceBackground />

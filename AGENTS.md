@@ -167,6 +167,14 @@ the trusted catalog migration `20261115134651` is prepared locally, not hosted.
 See `src/missions/ingenuity/README.md` for validation and deployment limits.
 No home page, auth, routing, reward logic or other chapter source was changed.
 
+The inner-page observatory redesign adds a locally served NASA/JAXA night-sky
+photograph, decorative animated stars, glass panels, refreshed page heroes,
+mission imagery on achievement cards, consistent actions and a rebuilt footer.
+The home page, its components, styles, assets and footer are unchanged. Tablet
+navigation now exposes the menu; reduced motion disables the new animations.
+This is presentation work only; hosted acceptance gates remain open. See
+`docs/OBSERVATORY_REDESIGN.md` for scope, image provenance and validation.
+
 The shared Nova companion is now mounted once through App.tsx, with a visible
 launcher, local sourced mission briefings, simple explanations, glossary and app
 help. This is explicitly source guide mode, not connected generative AI. Live

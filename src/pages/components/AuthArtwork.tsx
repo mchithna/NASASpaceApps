@@ -1,4 +1,5 @@
 import { ArrowUpRight, Orbit, Sparkles } from 'lucide-react'
+import { Moon3DIllustration } from '@/pages/components/Moon3DIllustration.tsx'
 import styles from '@/pages/AuthPage.module.css'
 
 export function AuthArtwork() {
@@ -23,20 +24,9 @@ export function AuthArtwork() {
 
       <figure className={styles.planetFigure}>
         <div className={styles.planetScene}>
-          <div className={styles.orbit} aria-hidden="true">
-            <span />
-          </div>
-          <div className={styles.planet}>
-            <img
-              src="/assets/common/auth-mars.jpg"
-              alt="A mosaic of Mars, with the dark canyons of Valles Marineris across its surface"
-              width="1000"
-              height="944"
-              fetchPriority="high"
-            />
-          </div>
+          <Moon3DIllustration />
           <div className={styles.planetLabel} aria-hidden="true">
-            <span /> MARS <small>A world of stories</small>
+            <span /> LUNA <small>A world of stories</small>
           </div>
           <div className={styles.discoveryTag}>
             <Sparkles size={17} aria-hidden="true" />
@@ -49,11 +39,11 @@ export function AuthArtwork() {
         </div>
         <figcaption>
           <a
-            href="https://science.nasa.gov/photojournal/valles-marineris-hemisphere/"
+            href="https://science.nasa.gov/moon/"
             target="_blank"
             rel="noreferrer"
           >
-            Mars image: NASA/JPL/USGS{' '}
+            3D Lunar Model · NASA Lunar Science{' '}
             <ArrowUpRight size={12} aria-hidden="true" />
           </a>
         </figcaption>

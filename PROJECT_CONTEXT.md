@@ -17,6 +17,14 @@ Open questions are listed where a decision has not been made. Do not fill those 
 
 ## Current state
 
+**Inner-page observatory redesign:** the non-home application layouts now show a
+credited NASA/JAXA night-sky photograph with decorative star animation. Scoped
+glass styling covers the dashboard, setup, auth, profile, journal, achievements,
+mission dossier/player and not-found page; achievement cards show matching mission
+imagery. The inner-page footer and tablet navigation are refreshed. Home page
+source, styles, assets and footer are unchanged. No services, rewards, persistence
+or mission content changed. See `docs/OBSERVATORY_REDESIGN.md` for validation.
+
 **Nova companion:** a shared visible launcher now opens local source guide tools:
 five mission briefings, simple explanations, glossary and app help. Answers are
 reviewed fixed summaries with NASA links. Generative chat, text streaming, Live

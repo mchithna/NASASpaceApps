@@ -97,65 +97,13 @@
 
 .scene {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(32rem, 62%);
   z-index: 0;
   perspective: 900px;
   pointer-events: none;
-}
-
-.planet {
-  position: absolute;
-  top: 8%;
-  right: -6%;
-  width: min(22rem, 58%);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow:
-    0 0 70px rgb(83 203 255 / 0.18),
-    inset 0 0 30px rgb(0 0 0 / 0.25);
-}
-
-.planet img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.orbits {
-  position: absolute;
-  inset: 8% -8% auto auto;
-  width: min(28rem, 78%);
-  height: auto;
-  stroke: rgb(217 252 167 / 0.45);
-  stroke-width: 1;
-}
-
-.credit {
-  position: relative;
-  z-index: 1;
-  align-self: end;
-  justify-self: start;
-  max-width: 18rem;
-  margin: 0;
-  padding: 0.3rem 0.45rem;
-  border-radius: 0.45rem;
-  background: rgb(5 10 18 / 0.72);
-  color: var(--color-landing-muted);
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
-}
-
-.credit a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.credit a:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
 }
 
 .metrics {
@@ -220,29 +168,13 @@
 }
 
 @media (max-width: 639px) {
-  .planet {
+  .scene {
+    width: 100%;
     opacity: 0.45;
   }
 
   .copy {
     max-width: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
-  .orbits {
-    transform-origin: 62% 48%;
-    animation: drift 90s linear infinite;
-  }
-}
-
-@keyframes drift {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -260,7 +192,11 @@
   overflow: hidden;
   border: 1px solid var(--color-landing-border);
   border-radius: 1.4rem;
-  background: linear-gradient(160deg, var(--color-landing-elevated), var(--color-landing-surface));
+  background: linear-gradient(
+    160deg,
+    var(--color-landing-elevated),
+    var(--color-landing-surface)
+  );
   box-shadow: 0 12px 28px rgb(0 0 0 / 0.24);
 }
 
@@ -281,6 +217,12 @@
 .media[data-mission='opportunity'] img,
 .spotlightMedia[data-mission='opportunity'] img {
   object-position: 50% 68%;
+}
+
+.media[data-mission='ingenuity'] img,
+.spotlightMedia[data-mission='ingenuity'] img {
+  object-position: 50% 62%;
+  transform: scale(1.06);
 }
 
 .scrim {
@@ -555,5 +497,121 @@
 
   to {
     transform: none;
+  }
+}
+
+/* Observatory surfaces: shared glass, purposeful imagery, aligned actions. */
+.hero,
+.metric,
+.card,
+.spotlight {
+  background: var(--observatory-glass);
+  border-color: var(--observatory-border);
+  box-shadow: var(--observatory-shadow);
+  backdrop-filter: blur(20px);
+}
+.hero {
+  min-height: 22rem;
+  border-radius: 28px;
+}
+.stage .hero {
+  padding: clamp(24px, 4vw, 40px);
+  overflow: clip;
+}
+.copy {
+  gap: 1rem;
+}
+.metric {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 32px;
+  height: 2px;
+  background: var(--color-landing-lime);
+}
+.metricValue {
+  font-size: clamp(1.4rem, 2.3vw, 2rem);
+}
+.card {
+  border-radius: 24px;
+  transition:
+    border-color 0.25s,
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+.media {
+  aspect-ratio: 1.5;
+}
+.scrim {
+  background: linear-gradient(180deg, #050a1410 25%, #050a1480);
+}
+.body {
+  gap: 0.8rem;
+  padding: 1.5rem 1.5rem 0.75rem;
+}
+.title {
+  font-size: 1.8rem;
+  letter-spacing: -0.04em;
+}
+.summary {
+  line-height: 1.85;
+}
+.chapter {
+  color: var(--color-landing-lime);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+.footer {
+  align-items: center;
+  gap: 12px;
+  padding: 1rem 1.5rem 1.4rem;
+  margin-top: auto;
+  background: transparent;
+}
+.primary,
+.action {
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--color-landing-lime);
+  color: #050a14;
+  border: 1px solid #eaffc7;
+  padding: 0.75rem 1.1rem;
+  text-align: center;
+  box-shadow: 0 4px 22px #d4ff9a12;
+}
+.quiet {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-5px);
+    border-color: #d4ff9a70;
+    box-shadow: 0 24px 60px #0005;
+  }
+  .media img {
+    transition: transform 0.7s;
+  }
+  .card:hover .media img {
+    transform: scale(1.04);
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    min-height: 19rem;
+  }
+  .body {
+    padding: 1.25rem;
+  }
+  .footer {
+    padding-inline: 1.25rem;
   }
 }

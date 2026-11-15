@@ -37,7 +37,7 @@ export function PageShell({
   }, [title])
 
   return (
-    <div className="flex flex-col gap-8 animate-page-rise">
+    <div className="observatory-page flex flex-col gap-8 animate-page-rise">
       {visual ? (
         <PageHero
           title={title}
@@ -47,7 +47,7 @@ export function PageShell({
           actions={actions}
         />
       ) : (
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <header className="observatory-page-heading flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             {eyebrow ? (
               <div className="eyebrow-label mb-2">

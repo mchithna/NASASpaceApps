@@ -24,13 +24,13 @@ export function MissionLayout() {
   const isPlay = location.pathname.endsWith('/play')
 
   return (
-    <div className="flex min-h-svh flex-col bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14] relative">
+    <div className="nova-inner flex min-h-svh flex-col bg-[#050a14] text-[#ffffff] selection:bg-[#d4ff9a] selection:text-[#050a14] relative">
       <SkipLink />
       <Navbar />
       <SpaceBackground showOrbits={true} />
 
       {/* Sub-bar for Mission Navigation */}
-      <div className="pt-24 sm:pt-28 pb-4 px-4 sm:px-6 max-w-6xl mx-auto w-full flex items-center justify-between border-b border-white/[0.08]">
+      <div className="observatory-subnav pt-24 sm:pt-28 pb-4 px-4 sm:px-6 max-w-6xl mx-auto w-full flex items-center justify-between border-b border-white/[0.08]">
         <div className="flex items-center gap-3">
           <Link
             to="/dashboard"

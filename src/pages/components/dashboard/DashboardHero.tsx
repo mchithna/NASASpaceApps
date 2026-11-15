@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { marsImage } from '@/pages/components/dashboard/marsImage.ts'
+import { Spaceship3DIllustration } from '@/pages/components/Spaceship3DIllustration.tsx'
 import styles from '@/pages/components/dashboard/dashboard.module.css'
 
 type DashboardHeroProps = {
@@ -12,13 +12,10 @@ export function DashboardHero({ nickname, rankName, resumeTo }: DashboardHeroPro
   return (
     <section className={styles.hero} aria-labelledby="explorer-hero-name">
       <div className={styles.scene} aria-hidden="true">
-        <div className={styles.planet}>
-          <img src={marsImage.src} alt="" width="1000" height="1000" />
-        </div>
-        <svg className={styles.orbits} viewBox="0 0 640 420" fill="none">
-          <ellipse cx="390" cy="210" rx="250" ry="78" transform="rotate(-24 390 210)" />
-          <ellipse cx="390" cy="210" rx="190" ry="120" transform="rotate(-24 390 210)" />
-        </svg>
+        <Spaceship3DIllustration
+          variant="command"
+          badgeLabel="Orbital Command Craft · Active Telemetry"
+        />
       </div>
       <div className={styles.copy}>
         <p className={styles.kicker}>Explorer</p>
@@ -36,10 +33,6 @@ export function DashboardHero({ nickname, rankName, resumeTo }: DashboardHeroPro
           </a>
         )}
       </div>
-      <p className={styles.credit}>
-        {marsImage.alt}.{' '}
-        <a href={marsImage.source}>{marsImage.credit}</a>
-      </p>
     </section>
   )
 }

@@ -15,6 +15,26 @@ export type AiContext = { route: string; missionId?: MissionId }
 export type AiCompanionProps = { context: AiContext }
 type Message = LocalAnswer & { question: string; id: number }
 
+function NovaAi3DOrb({ size = 'launcher' }: { size?: 'launcher' | 'dialog' }) {
+  return (
+    <span
+      className={`nova-ai-3d-orb ${size === 'dialog' ? 'nova-ai-3d-orb-lg' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="nova-ai-3d-halo" />
+      <span className="nova-ai-3d-ring nova-ai-3d-ring-outer" />
+      <span className="nova-ai-3d-ring nova-ai-3d-ring-inner" />
+      <span className="nova-ai-3d-core">
+        <span className="nova-ai-3d-visor">
+          <span className="nova-ai-3d-eye" />
+          <span className="nova-ai-3d-eye" />
+        </span>
+      </span>
+      <span className="nova-ai-3d-node" />
+    </span>
+  )
+}
+
 export function AiCompanion({ context }: AiCompanionProps) {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<'ask' | 'briefing' | 'glossary' | 'voice'>(
@@ -61,8 +81,15 @@ export function AiCompanion({ context }: AiCompanionProps) {
         className="nova-ai-launcher"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
+        aria-label="Ask Nova AI"
       >
-        <Bot size={22} aria-hidden="true" /> <span>Ask Nova AI</span>
+        <NovaAi3DOrb size="launcher" />
+        <span className="nova-ai-launcher-copy">
+          <span className="nova-ai-launcher-kicker" aria-hidden="true">
+            3D AI Telemetry Guide
+          </span>
+          <span className="nova-ai-launcher-title">Ask Nova AI</span>
+        </span>
       </button>
       <Dialog
         open={open}
@@ -71,10 +98,13 @@ export function AiCompanion({ context }: AiCompanionProps) {
         description="Your space learning companion. Source guide mode is available now; live AI chat and voice are not connected."
       >
         <div className="nova-ai-panel">
-          <p className="nova-ai-disclosure">
-            Reviewed NASA summaries · Runs on this device · No XP or journal
-            changes
-          </p>
+          <div className="nova-ai-hero-banner">
+            <NovaAi3DOrb size="dialog" />
+            <p className="nova-ai-disclosure">
+              Reviewed NASA summaries · Runs on this device · No XP or journal
+              changes
+            </p>
+          </div>
           <nav aria-label="Companion tools" className="nova-ai-tools">
             {(
               [

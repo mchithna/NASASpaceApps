@@ -39,7 +39,10 @@ export function Navbar() {
       setScrolled(window.scrollY > 20)
     }
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape' && open) {
+        setOpen(false)
+        toggleRef.current?.focus()
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('keydown', onKey)
@@ -48,7 +51,7 @@ export function Navbar() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('keydown', onKey)
     }
-  }, [])
+  }, [open])
 
   const isSessionActive =
     session?.status === 'authenticated' || session?.status === 'guest'
@@ -168,16 +171,20 @@ export function Navbar() {
           ref={toggleRef}
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex sm:hidden items-center justify-center size-9 rounded-full border border-white/15 bg-white/[0.04] text-[#9aa7bd] hover:text-white hover:border-[#d4ff9a] transition-colors"
+          className="flex lg:hidden items-center justify-center size-9 rounded-full border border-white/15 bg-white/[0.04] text-[#9aa7bd] hover:text-white hover:border-[#d4ff9a] transition-colors"
           aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={open}
         >
-          {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+          {open ? (
+            <X size={18} aria-hidden="true" />
+          ) : (
+            <Menu size={18} aria-hidden="true" />
+          )}
         </button>
 
         {/* Mobile Navigation Dropdown Drawer */}
         {open && (
-          <div className="absolute top-[calc(100%+8px)] inset-x-4 sm:hidden flex flex-col gap-2 p-4 rounded-2xl border border-white/15 bg-[#0b1421]/95 backdrop-blur-2xl shadow-2xl animate-page-rise">
+          <div className="absolute top-[calc(100%+8px)] inset-x-4 lg:hidden flex flex-col gap-2 p-4 rounded-2xl border border-white/15 bg-[#0b1421]/95 backdrop-blur-2xl shadow-2xl animate-page-rise">
             {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
