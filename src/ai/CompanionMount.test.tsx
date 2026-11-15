@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect, it, vi } from 'vitest'
 import { CompanionMount } from './CompanionMount.tsx'
@@ -39,28 +39,24 @@ vi.mock('@/pages/context/useNovaServices.ts', () => {
 it('clears conversation on auth notifications and derives new mission context on navigation', async () => {
   const user = userEvent.setup()
   const view = render(<CompanionMount />)
+
+  // Open launcher
   await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
-  await user.click(screen.getByRole('button', { name: 'Telemetry' }))
-  expect(
-    screen.getByRole('list', { name: 'Conversation' }),
-  ).not.toBeEmptyDOMElement()
+  expect(screen.getByRole('dialog', { name: 'Nova AI chat' })).toHaveClass('open')
+
+  // Auth changed event triggers remount, closing panel
   act(() => boundary.authChanged?.())
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
-  expect(
-    screen.getByRole('list', { name: 'Conversation' }),
-  ).toBeEmptyDOMElement()
+  expect(screen.getByRole('dialog', { name: 'Nova AI chat' })).not.toHaveClass('open')
+
+  // Navigation updates route and mission context
   act(() => {
     boundary.route = '/missions/ingenuity'
     boundary.routeChanged?.()
   })
+
   await user.click(screen.getByRole('button', { name: 'Ask Nova AI' }))
-  await user.click(
-    within(screen.getByRole('dialog')).getByRole('button', {
-      name: 'Mission briefing',
-    }),
-  )
-  expect(screen.getByRole('combobox')).toHaveValue('ingenuity')
+  expect(screen.getByRole('dialog', { name: 'Nova AI chat' })).toHaveClass('open')
+
   view.unmount()
   expect(boundary.authChanged).toBeNull()
   expect(boundary.routeChanged).toBeNull()

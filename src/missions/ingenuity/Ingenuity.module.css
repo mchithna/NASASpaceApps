@@ -1,0 +1,520 @@
+.activity {
+  --mars: #e78a54;
+  --flight-cyan: #8fe6ff;
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+  color: var(--color-foreground, #f4f6fb);
+}
+.activity h3 {
+  font-size: 1.2rem;
+  font-weight: 650;
+  margin-bottom: 0.65rem;
+}
+.activity p {
+  line-height: 1.65;
+}
+.activity button,
+.activity input,
+.activity summary,
+.activity a {
+  outline-offset: 5px;
+}
+.activity button:focus-visible,
+.activity input:focus-visible,
+.activity summary:focus-visible,
+.activity a:focus-visible {
+  outline: 3px solid var(--flight-cyan);
+}
+.activity a {
+  color: var(--flight-cyan);
+  text-decoration: underline;
+}
+.activity details {
+  border: 1px solid #425069;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.activity summary {
+  cursor: pointer;
+  padding: 0.4rem 0;
+}
+.activity figure img {
+  width: 100%;
+  max-height: 36rem;
+  object-fit: contain;
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #151e32;
+}
+.hero figure {
+  margin: 0;
+}
+.hero figure img {
+  min-height: 22rem;
+  max-height: 32rem;
+  object-fit: cover;
+  animation: reveal 1.4s ease-out both;
+}
+.heroLabel {
+  pointer-events: none;
+  position: absolute;
+  left: 5%;
+  top: 9%;
+  display: grid;
+  gap: 0.8rem;
+  text-shadow: 0 2px 10px #000;
+  padding: 1rem;
+  background: #0b1020c9;
+  border-left: 2px solid var(--mars);
+  border-radius: 0.4rem;
+}
+.heroLabel span,
+.eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  font-weight: 650;
+  color: var(--flight-cyan);
+}
+.heroLabel strong {
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 1.05;
+}
+.objective,
+.panel,
+.success {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid #455169;
+  background: #151e32d9;
+}
+.objective {
+  border-left: 3px solid var(--mars);
+  background: linear-gradient(100deg, #e78a5414, #151e32);
+}
+.success {
+  border-color: #53cbff80;
+  background: linear-gradient(120deg, #53cbff15, #7c6cff12);
+  animation: reveal 0.4s ease-out;
+}
+.success > button {
+  margin: 0.6rem 0.6rem 0 0;
+}
+.twoColumns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+.stack {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.componentList {
+  display: grid;
+  gap: 0.65rem;
+}
+.componentList button,
+.trackingCard {
+  text-align: left;
+  min-height: 48px;
+  border: 1px solid #526079;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: #151e32;
+  color: #eff5ff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.componentList button[aria-pressed='true'],
+.trackingCard[aria-pressed='true'] {
+  border-color: var(--flight-cyan);
+  background: #20324c;
+}
+.diagram {
+  position: relative;
+  padding: 1rem;
+  background: radial-gradient(ellipse, #4e35285e, #0b1020);
+  border: 1px solid #455169;
+  border-radius: 1rem;
+}
+.helicopter {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 12px 12px #0008);
+}
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0b1020;
+  border: 2px solid var(--flight-cyan);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 16px #53cbff35;
+  cursor: pointer;
+}
+.hotspot[aria-pressed='true'] {
+  background: #2c5578;
+}
+.caption {
+  font-size: 0.82rem;
+  color: #bdc9d9;
+  line-height: 1.6;
+}
+.rotor {
+  animation: rotate 0.19s linear infinite;
+}
+.counterRotor {
+  animation: rotate 0.23s linear infinite reverse;
+}
+.chamber {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid #526079;
+  background: radial-gradient(ellipse at 50% 95%, #ac725340, #0b1020);
+  padding: 1rem;
+}
+.particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #8fe6ff80;
+}
+.labAircraft {
+  position: absolute;
+  width: 85%;
+  bottom: 1rem;
+  left: 7.5%;
+  transition: transform 1.2s ease;
+}
+.chamber[data-lift='true'] .labAircraft {
+  transform: translateY(-45px);
+}
+.groundLine {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 5%;
+  width: 90%;
+  border-bottom: 2px solid #e78a54a0;
+}
+.choices {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid #526079;
+  border-radius: 1rem;
+  min-width: 0;
+}
+.choices legend {
+  padding: 0 0.4rem;
+  color: #d2ecff;
+  font-weight: 650;
+}
+.choices label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.65rem;
+  border-radius: 0.6rem;
+  background: #0b102080;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.choices input {
+  margin-top: 0.3rem;
+  flex: 0 0 auto;
+  accent-color: #53cbff;
+  width: 18px;
+  height: 18px;
+}
+.flightWindow {
+  position: relative;
+  height: clamp(350px, 45vw, 520px);
+  isolation: isolate;
+  border: 1px solid #5d6374;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #654a3a;
+}
+.flightBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(#0b1020b0, #0b102020 60%, #0b1020a0),
+    url('/assets/missions/ingenuity/first-flight.webp') center / cover;
+  filter: saturate(0.65);
+}
+.flightTop {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #fff;
+  background: #0b1020b8;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+.flightAircraft {
+  position: absolute;
+  width: clamp(170px, 33%, 290px);
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: bottom 1.4s ease-in-out;
+}
+.flightWindow[data-stage='takeoff'] .flightAircraft {
+  bottom: 135px;
+}
+.flightWindow[data-stage='hover'] .flightAircraft {
+  bottom: 195px;
+}
+.flightWindow[data-stage='descent'] .flightAircraft {
+  bottom: 125px;
+}
+.flightWindow[data-stage='spin-up'] .rotor {
+  animation-duration: 0.45s;
+}
+.flightWindow[data-stage='descent'] .rotor {
+  animation-duration: 0.3s;
+}
+.hud {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: #0b1020ed;
+  border-top: 1px solid #53cbff60;
+}
+.hud span {
+  padding: 0.8rem;
+  font-size: 0.75rem;
+  color: #c6d8e6;
+  min-width: 0;
+}
+.hud strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #fff;
+  text-transform: capitalize;
+}
+.dust {
+  position: absolute;
+  width: 50%;
+  height: 24px;
+  left: 25%;
+  bottom: 95px;
+  background: #e4b77c40;
+  border-radius: 50%;
+  filter: blur(10px);
+  animation: dust 1.6s ease-in-out infinite alternate;
+}
+.stageStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  counter-reset: stages;
+}
+.stageStrip li {
+  counter-increment: stages;
+  border: 1px solid #425069;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  text-transform: capitalize;
+  font-size: 0.85rem;
+}
+.stageStrip li::before {
+  content: counter(stages) ' / ';
+  color: var(--flight-cyan);
+}
+.stageStrip li[aria-current] {
+  border-color: var(--flight-cyan);
+  background: #53cbff20;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.map {
+  border: 1px solid #647183;
+  border-radius: 1.3rem;
+  overflow: hidden;
+  background: #0b1020;
+}
+.map > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.map > span {
+  display: block;
+  padding: 0.8rem;
+}
+.route,
+.routeComplete {
+  stroke: #b8d5e7;
+  stroke-width: 4;
+  stroke-dasharray: 9 8;
+  fill: none;
+}
+.routeComplete {
+  stroke: #53cbff;
+  stroke-dasharray: 800;
+  animation: route 1.8s ease-out both;
+}
+.scoutMarker {
+  offset-path: path('M78 215Q167 315 312 285T478 264Q550 240 586 180');
+  animation: scout 2.5s ease-in-out both;
+}
+.trackingCard {
+  display: grid;
+  gap: 0.7rem;
+}
+.trackingCard svg {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+.zoomed {
+  overflow: auto;
+  max-height: 32rem;
+  border: 2px solid var(--flight-cyan);
+}
+.zoomed figure img {
+  width: 160%;
+  max-width: none;
+  max-height: none;
+}
+.counters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.counters span {
+  display: grid;
+  padding: 1rem;
+  background: #151e32;
+  border: 1px solid #526079;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+}
+.counters strong {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #f7c66a;
+}
+.rewardList {
+  display: grid;
+  gap: 0.5rem;
+  padding-block: 0.8rem;
+}
+.rewardList > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+@keyframes rotate {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes dust {
+  to {
+    transform: scaleX(1.2);
+    opacity: 0.45;
+  }
+}
+@keyframes route {
+  from {
+    stroke-dashoffset: 800;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scout {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+@media (max-width: 700px) {
+  .flightWindow {
+    height: 430px;
+  }
+  .twoColumns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .heroLabel {
+    left: 4%;
+    top: 5%;
+    max-width: 92%;
+  }
+  .heroLabel span {
+    font-size: 0.65rem;
+  }
+  .hud {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .flightAircraft {
+    bottom: 115px;
+  }
+  .flightWindow[data-stage='hover'] .flightAircraft {
+    bottom: 205px;
+  }
+  .hotspot {
+    display: none;
+  }
+  .counters {
+    gap: 0.6rem;
+  }
+  .objective,
+  .panel,
+  .success {
+    padding: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .activity *,
+  .activity *::before,
+  .activity *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .scoutMarker {
+    offset-distance: 100%;
+  }
+}
+
+.flightWindow[data-paused='true'] .rotor,
+.flightWindow[data-paused='true'] .counterRotor,
+.flightWindow[data-paused='true'] .dust {
+  animation-play-state: paused;
+}
